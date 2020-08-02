@@ -1,295 +1,350 @@
 package net.imklib2
 
 import net.imglib2.*
-import net.imglib2.RandomAccessible as RA
-import net.imglib2.RandomAccessibleInterval as RAI
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
+import net.imglib2.converter.Converters
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
-import net.imklib2.IntegerTypeExtensions.Companion.plus
-import net.imklib2.IntegerTypeExtensions.Companion.times
-import net.imklib2.RealTypeExtensions.Companion.minus
-import net.imklib2.RealTypeExtensions.Companion.minusAssign
-import net.imklib2.RealTypeExtensions.Companion.plus
-import net.imklib2.RealTypeExtensions.Companion.times
-import net.imklib2.RealTypeExtensions.Companion.timesAssign
-import net.imklib2.IntegerTypeExtensions as ITE
-import net.imklib2.RandomAccessibleExtensions as RAE
-import net.imklib2.RealTypeExtensions as RTE
+import net.imglib2.type.numeric.integer.*
+import net.imglib2.type.numeric.real.DoubleType
+import net.imglib2.type.numeric.real.FloatType
+import net.imglib2.util.Intervals
+import net.imglib2.view.Views
+import net.imglib2.RandomAccessible as RA
+import net.imglib2.RandomAccessibleInterval as RAI
 
 
 // types
 
 // RealType
 // createWithValue
-fun <T: RealType<T>> T.createWithValue(value: Byte) = with(RTE) { createWithValue(value) }
-fun <T: RealType<T>> T.createWithValue(value: Short) = with(RTE) { createWithValue(value) }
-fun <T: RealType<T>> T.createWithValue(value: Int) = with(RTE) { createWithValue(value) }
-fun <T: RealType<T>> T.createWithValue(value: Long) = with(RTE) { createWithValue(value) }
-fun <T: RealType<T>> T.createWithValue(value: Float) = with(RTE) { createWithValue(value) }
-fun <T: RealType<T>> T.createWithValue(value: Double) = with(RTE) { createWithValue(value) }
+fun <T: RealType<T>> T.createWithValue(value: Byte) = createVariable().also { it.setReal(value.toDouble()) }
+fun <T: RealType<T>> T.createWithValue(value: Short) = createVariable().also { it.setReal(value.toDouble()) }
+fun <T: RealType<T>> T.createWithValue(value: Int) = createVariable().also { it.setReal(value.toDouble()) }
+fun <T: RealType<T>> T.createWithValue(value: Long) = createVariable().also { it.setReal(value.toDouble()) }
+fun <T: RealType<T>> T.createWithValue(value: Float) = createVariable().also { it.setReal(value) }
+fun <T: RealType<T>> T.createWithValue(value: Double) = createVariable().also { it.setReal(value) }
 
-fun <T: RealType<T>> Byte.asType(type: T) = with(RTE) { asType(type) }
-fun <T: RealType<T>> Short.asType(type: T) = with(RTE) { asType(type) }
-fun <T: RealType<T>> Int.asType(type: T) = with(RTE) { asType(type) }
-fun <T: RealType<T>> Long.asType(type: T) = with(RTE) { asType(type) }
-fun <T: RealType<T>> Float.asType(type: T) = with(RTE) { asType(type) }
-fun <T: RealType<T>> Double.asType(type: T) = with(RTE) { asType(type) }
+fun <T: RealType<T>> Byte.asType(type: T) = type.createWithValue(this)
+fun <T: RealType<T>> Short.asType(type: T) = type.createWithValue(this)
+fun <T: RealType<T>> Int.asType(type: T) = type.createWithValue(this)
+fun <T: RealType<T>> Long.asType(type: T) = type.createWithValue(this)
+fun <T: RealType<T>> Float.asType(type: T) = type.createWithValue(this)
+fun <T: RealType<T>> Double.asType(type: T) = type.createWithValue(this)
 
-fun Float.asType() = with(RTE) { asType() }
-fun Double.asType() = with(RTE) { asType() }
+fun Float.asType() = asType(FloatType())
+fun Double.asType() = asType(DoubleType())
 
 // conversion
-val <T: RealType<T>> T.floatType get() = with(RTE) { floatType }
-val <T: RealType<T>> T.doubleType get() = with(RTE) { doubleType }
+val <T: RealType<T>> T.floatType get() = when(this) {
+    is FloatType -> copy()
+    else -> FloatType(realFloat)
+}
+val <T: RealType<T>> T.doubleType get() = when(this) {
+    is DoubleType -> copy()
+    else -> DoubleType(realDouble)
+}
 
 // add
-operator fun <T: RealType<T>> T.plusAssign(value: T) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: T) = with(RTE) { this@plus + value }
+operator fun <T: RealType<T>> T.plusAssign(value: T) = add(value)
+operator fun <T: RealType<T>> T.plus(value: T) = copy().also { it += value }
 // T + primitive type
-operator fun <T: RealType<T>> T.plusAssign(value: Byte) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: Byte) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> T.plusAssign(value: Short) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: Short) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> T.plusAssign(value: Int) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: Int) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> T.plusAssign(value: Long) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: Long) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> T.plusAssign(value: Float) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: Float) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> T.plusAssign(value: Double) = with(RTE) { this@plusAssign += value }
-operator fun <T: RealType<T>> T.plus(value: Double) = with(RTE) { this@plus + value }
+operator fun <T: RealType<T>> T.plusAssign(value: Byte) = setReal(realDouble + value)
+operator fun <T: RealType<T>> T.plus(value: Byte) = createWithValue(value).also { it += this }
+operator fun <T: RealType<T>> T.plusAssign(value: Short) = setReal(realDouble + value)
+operator fun <T: RealType<T>> T.plus(value: Short) = createWithValue(value).also { it += this }
+operator fun <T: RealType<T>> T.plusAssign(value: Int) = setReal(realDouble + value)
+operator fun <T: RealType<T>> T.plus(value: Int) = createWithValue(value).also { it += this }
+operator fun <T: RealType<T>> T.plusAssign(value: Long) = setReal(realDouble + value)
+operator fun <T: RealType<T>> T.plus(value: Long) = createWithValue(value).also { it += this }
+operator fun <T: RealType<T>> T.plusAssign(value: Float) = setReal(realDouble + value)
+operator fun <T: RealType<T>> T.plus(value: Float) = createWithValue(value).also { it += this }
+operator fun <T: RealType<T>> T.plusAssign(value: Double) = setReal(realDouble + value)
+operator fun <T: RealType<T>> T.plus(value: Double) = createWithValue(value).also { it += this }
 // primitive type + T
-operator fun <T: RealType<T>> Byte.plus(value: T) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> Short.plus(value: T) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> Int.plus(value: T) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> Long.plus(value: T) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> Float.plus(value: T) = with(RTE) { this@plus + value }
-operator fun <T: RealType<T>> Double.plus(value: T) = with(RTE) { this@plus + value }
+operator fun <T: RealType<T>> Byte.plus(value: T) = value + this
+operator fun <T: RealType<T>> Short.plus(value: T) = value + this
+operator fun <T: RealType<T>> Int.plus(value: T) = value + this
+operator fun <T: RealType<T>> Long.plus(value: T) = value + this
+operator fun <T: RealType<T>> Float.plus(value: T) = value + this
+operator fun <T: RealType<T>> Double.plus(value: T) = value + this
 
 // subtract
-operator fun <T: RealType<T>> T.minusAssign(value: T) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: T) = with(RTE) { this@minus - value }
+operator fun <T: RealType<T>> T.minusAssign(value: T) = sub(value)
+operator fun <T: RealType<T>> T.minus(value: T) = copy().also { it -= value }
 // T - primitive type
-operator fun <T: RealType<T>> T.minusAssign(value: Byte) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: Byte) = with (RTE) { this@minus - value }
-operator fun <T: RealType<T>> T.minusAssign(value: Short) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: Short) = with (RTE) { this@minus - value }
-operator fun <T: RealType<T>> T.minusAssign(value: Int) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: Int) = with (RTE) { this@minus - value }
-operator fun <T: RealType<T>> T.minusAssign(value: Long) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: Long) = with (RTE) { this@minus - value }
-operator fun <T: RealType<T>> T.minusAssign(value: Float) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: Float) = with (RTE) { this@minus - value }
-operator fun <T: RealType<T>> T.minusAssign(value: Double) = with(RTE) { this@minusAssign -= value }
-operator fun <T: RealType<T>> T.minus(value: Double) = with (RTE) { this@minus - value }
+operator fun <T: RealType<T>> T.minusAssign(value: Byte) = setReal(realDouble - value)
+operator fun <T: RealType<T>> T.minus(value: Byte) = copy().also { it -= value }
+operator fun <T: RealType<T>> T.minusAssign(value: Short) = setReal(realDouble - value)
+operator fun <T: RealType<T>> T.minus(value: Short) = copy().also { it -= value }
+operator fun <T: RealType<T>> T.minusAssign(value: Int) = setReal(realDouble - value)
+operator fun <T: RealType<T>> T.minus(value: Int) = copy().also { it -= value }
+operator fun <T: RealType<T>> T.minusAssign(value: Long) = setReal(realDouble - value)
+operator fun <T: RealType<T>> T.minus(value: Long) = copy().also { it -= value }
+operator fun <T: RealType<T>> T.minusAssign(value: Float) = setReal(realDouble - value)
+operator fun <T: RealType<T>> T.minus(value: Float) = copy().also { it -= value }
+operator fun <T: RealType<T>> T.minusAssign(value: Double) = setReal(realDouble - value)
+operator fun <T: RealType<T>> T.minus(value: Double) = copy().also { it -= value }
 // primitive type - T
-operator fun <T: RealType<T>> Byte.minus(value: T) = with(RTE) { this@minus - value }
-operator fun <T: RealType<T>> Short.minus(value: T) = with(RTE) { this@minus - value }
-operator fun <T: RealType<T>> Int.minus(value: T) = with(RTE) { this@minus - value }
-operator fun <T: RealType<T>> Long.minus(value: T) = with(RTE) { this@minus - value }
-operator fun <T: RealType<T>> Float.minus(value: T) = with(RTE) { this@minus - value }
-operator fun <T: RealType<T>> Double.minus(value: T) = with(RTE) { this@minus - value }
+operator fun <T: RealType<T>> Byte.minus(value: T) = asType(value) - value
+operator fun <T: RealType<T>> Short.minus(value: T) = asType(value) - value
+operator fun <T: RealType<T>> Int.minus(value: T) = asType(value) - value
+operator fun <T: RealType<T>> Long.minus(value: T) = asType(value) - value
+operator fun <T: RealType<T>> Float.minus(value: T) = asType(value) - value
+operator fun <T: RealType<T>> Double.minus(value: T) = asType(value) - value
 
 // multiply
-operator fun <T: RealType<T>> T.timesAssign(value: T) = with(RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: T) = with(RTE) { this@times * value }
+operator fun <T: RealType<T>> T.timesAssign(value: T) = mul(value)
+operator fun <T: RealType<T>> T.times(value: T) = copy().also { it *= value }
 // T * primitive type
-operator fun <T: RealType<T>> T.timesAssign(value: Byte) = with (RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: Byte) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> T.timesAssign(value: Short) = with (RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: Short) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> T.timesAssign(value: Int) = with (RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: Int) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> T.timesAssign(value: Long) = with (RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: Long) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> T.timesAssign(value: Float) = with (RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: Float) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> T.timesAssign(value: Double) = with (RTE) { this@timesAssign *= value }
-operator fun <T: RealType<T>> T.times(value: Double) = with(RTE) { this@times * value }
+operator fun <T: RealType<T>> T.timesAssign(value: Byte) = mul(value.toDouble())
+operator fun <T: RealType<T>> T.times(value: Byte) = copy().also { it *= value }
+operator fun <T: RealType<T>> T.timesAssign(value: Short) = mul(value.toDouble())
+operator fun <T: RealType<T>> T.times(value: Short) = copy().also { it *= value }
+operator fun <T: RealType<T>> T.timesAssign(value: Int) = mul(value.toDouble())
+operator fun <T: RealType<T>> T.times(value: Int) = copy().also { it *= value }
+operator fun <T: RealType<T>> T.timesAssign(value: Long) = mul(value.toDouble())
+operator fun <T: RealType<T>> T.times(value: Long) = copy().also { it *= value }
+operator fun <T: RealType<T>> T.timesAssign(value: Float) = mul(value)
+operator fun <T: RealType<T>> T.times(value: Float) = copy().also { it *= value }
+operator fun <T: RealType<T>> T.timesAssign(value: Double) = mul(value)
+operator fun <T: RealType<T>> T.times(value: Double) = copy().also { it *= value }
 // primitive type * T
-operator fun <T: RealType<T>> Byte.times(value: T) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> Short.times(value: T) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> Int.times(value: T) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> Long.times(value: T) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> Float.times(value: T) = with(RTE) { this@times * value }
-operator fun <T: RealType<T>> Double.times(value: T) = with(RTE) { this@times * value }
+operator fun <T: RealType<T>> Byte.times(value: T) = value * this
+operator fun <T: RealType<T>> Short.times(value: T) = value * this
+operator fun <T: RealType<T>> Int.times(value: T) = value * this
+operator fun <T: RealType<T>> Long.times(value: T) = value * this
+operator fun <T: RealType<T>> Float.times(value: T) = value * this
+operator fun <T: RealType<T>> Double.times(value: T) = value * this
 
 // divide
-operator fun <T: RealType<T>> T.divAssign(value: T) = with(RTE) { this@divAssign /= value }
-// T * primitive type
-operator fun <T: RealType<T>> T.divAssign(value: Byte) = with (RTE) { this@divAssign /= value }
-operator fun <T: RealType<T>> T.div(value: Byte) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> T.divAssign(value: Short) = with (RTE) { this@divAssign /= value }
-operator fun <T: RealType<T>> T.div(value: Short) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> T.divAssign(value: Int) = with (RTE) { this@divAssign /= value }
-operator fun <T: RealType<T>> T.div(value: Int) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> T.divAssign(value: Long) = with (RTE) { this@divAssign /= value }
-operator fun <T: RealType<T>> T.div(value: Long) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> T.divAssign(value: Float) = with (RTE) { this@divAssign /= value }
-operator fun <T: RealType<T>> T.div(value: Float) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> T.divAssign(value: Double) = with (RTE) { this@divAssign /= value }
-operator fun <T: RealType<T>> T.div(value: Double) = with(RTE) { this@div / value }
-// primitive type * T
-operator fun <T: RealType<T>> Byte.div(value: T) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> Short.div(value: T) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> Int.div(value: T) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> Long.div(value: T) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> Float.div(value: T) = with(RTE) { this@div / value }
-operator fun <T: RealType<T>> Double.div(value: T) = with(RTE) { this@div / value }
+operator fun <T: RealType<T>> T.divAssign(value: T) = div(value)
+// T / primitive type
+operator fun <T: RealType<T>> T.divAssign(value: Byte) = setReal(realDouble / value)
+operator fun <T: RealType<T>> T.div(value: Byte) = copy().also { it /= value }
+operator fun <T: RealType<T>> T.divAssign(value: Short) = setReal(realDouble / value)
+operator fun <T: RealType<T>> T.div(value: Short) = copy().also { it /= value }
+operator fun <T: RealType<T>> T.divAssign(value: Int) = setReal(realDouble / value)
+operator fun <T: RealType<T>> T.div(value: Int) = copy().also { it /= value }
+operator fun <T: RealType<T>> T.divAssign(value: Long) = setReal(realDouble / value)
+operator fun <T: RealType<T>> T.div(value: Long) = copy().also { it /= value }
+operator fun <T: RealType<T>> T.divAssign(value: Float) = setReal(realDouble / value)
+operator fun <T: RealType<T>> T.div(value: Float) = copy().also { it /= value }
+operator fun <T: RealType<T>> T.divAssign(value: Double) = setReal(realDouble / value)
+operator fun <T: RealType<T>> T.div(value: Double) = copy().also { it /= value }
+// primitive Type / T
+operator fun <T: RealType<T>> Byte.div(value: T) = asType(value).also { it /= value }
+operator fun <T: RealType<T>> Short.div(value: T) = asType(value).also { it /= value }
+operator fun <T: RealType<T>> Int.div(value: T) = asType(value).also { it /= value }
+operator fun <T: RealType<T>> Long.div(value: T) = asType(value).also { it /= value }
+operator fun <T: RealType<T>> Float.div(value: T) = asType(value).also { it /= value }
+operator fun <T: RealType<T>> Double.div(value: T) = asType(value).also { it /= value }
 
 
 // IntegerType
 // createWithValue
-fun <T: IntegerType<T>> T.createWithValue(value: Byte) = with(ITE) { createWithValue(value) }
-fun <T: IntegerType<T>> T.createWithValue(value: Short) = with(ITE) { createWithValue(value) }
-fun <T: IntegerType<T>> T.createWithValue(value: Int) = with(ITE) { createWithValue(value) }
-fun <T: IntegerType<T>> T.createWithValue(value: Long) = with(ITE) { createWithValue(value) }
+fun <T: IntegerType<T>> T.createWithValue(value: Byte) = createVariable().also { it.setInteger(value.toInt()) }
+fun <T: IntegerType<T>> T.createWithValue(value: Short) = createVariable().also { it.setInteger(value.toInt()) }
+fun <T: IntegerType<T>> T.createWithValue(value: Int) = createVariable().also { it.setInteger(value) }
+fun <T: IntegerType<T>> T.createWithValue(value: Long) = createVariable().also { it.setInteger(value) }
 
-fun <T: IntegerType<T>> Byte.asType(type: T) = with(ITE) { asType(type) }
-fun <T: IntegerType<T>> Short.asType(type: T) = with(ITE) { asType(type) }
-fun <T: IntegerType<T>> Int.asType(type: T) = with(ITE) { asType(type) }
-fun <T: IntegerType<T>> Long.asType(type: T) = with(ITE) { asType(type) }
+fun <T: IntegerType<T>> Byte.asType(type: T) = type.createWithValue(this)
+fun <T: IntegerType<T>> Short.asType(type: T) = type.createWithValue(this)
+fun <T: IntegerType<T>> Int.asType(type: T) = type.createWithValue(this)
+fun <T: IntegerType<T>> Long.asType(type: T) = type.createWithValue(this)
 
-fun Byte.asType() = with(ITE) { asType() }
-fun Short.asType() = with(ITE) { asType() }
-fun Int.asType() = with(ITE) { asType() }
-fun Long.asType() = with(ITE) { asType() }
+fun Byte.asType() = asType(ByteType())
+fun Short.asType() = asType(ShortType())
+fun Int.asType() = asType(IntType())
+fun Long.asType() = asType(LongType())
 
-fun Byte.asUnsignedType() = with(ITE) { asUnsignedType() }
-fun Short.asUnsignedType() = with(ITE) { asUnsignedType() }
-fun Int.asUnsignedType() = with(ITE) { asUnsignedType() }
-fun Long.asUnsignedType() = with(ITE) { asUnsignedType() }
+fun Byte.asUnsignedType() = asType(UnsignedByteType())
+fun Short.asUnsignedType() = asType(UnsignedShortType())
+fun Int.asUnsignedType() = asType(UnsignedIntType())
+fun Long.asUnsignedType() = asType(UnsignedLongType())
 
 // conversion
-val <T: IntegerType<T>> T.byteType get() = with(ITE) { byteType }
-val <T: IntegerType<T>> T.unsignedByteType get() = with(ITE) { unsignedByteType }
-val <T: IntegerType<T>> T.shortType get() = with(ITE) { shortType }
-val <T: IntegerType<T>> T.unsignedShortType get() = with(ITE) { unsignedShortType }
-val <T: IntegerType<T>> T.intType get() = with(ITE) { intType }
-val <T: IntegerType<T>> T.unsignedIntType get() = with(ITE) { unsignedIntType }
-val <T: IntegerType<T>> T.longType get() = with(ITE) { longType }
-val <T: IntegerType<T>> T.unsignedLongType get() = with(ITE) { unsignedLongType }
+val <T: IntegerType<T>> T.byteType get() = when(this) {
+    is ByteType -> copy()
+    else -> ByteType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.unsignedByteType get() = when(this) {
+    is UnsignedByteType -> copy()
+    else -> UnsignedByteType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.shortType get() = when(this) {
+    is ShortType -> copy()
+    else -> ShortType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.unsignedShortType get() = when(this) {
+    is UnsignedShortType -> copy()
+    else -> UnsignedShortType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.intType get() = when(this) {
+    is IntType -> copy()
+    else -> IntType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.unsignedIntType get() = when(this) {
+    is UnsignedIntType -> copy()
+    else -> UnsignedIntType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.longType get() = when(this) {
+    is LongType -> copy()
+    else -> LongType().also { it.setInteger(integerLong) }
+}
+val <T: IntegerType<T>> T.unsignedLongType get() = when(this) {
+    is UnsignedLongType -> copy()
+    else -> UnsignedLongType().also { it.setInteger(integerLong) }
+}
 
 // add
 // T + primitive type
-operator fun <T: IntegerType<T>> T.plusAssign(value: Byte) = with(ITE) { this@plusAssign += value }
-operator fun <T: IntegerType<T>> T.plus(value: Byte) = with(ITE) { this@plus + value }
-operator fun <T: IntegerType<T>> T.plusAssign(value: Short) = with(ITE) { this@plusAssign += value }
-operator fun <T: IntegerType<T>> T.plus(value: Short) = with(ITE) { this@plus + value }
-operator fun <T: IntegerType<T>> T.plusAssign(value: Int) = with(ITE) { this@plusAssign += value }
-operator fun <T: IntegerType<T>> T.plus(value: Int) = with(ITE) { this@plus + value }
-operator fun <T: IntegerType<T>> T.plusAssign(value: Long) = with(ITE) { this@plusAssign += value }
-operator fun <T: IntegerType<T>> T.plus(value: Long) = with(ITE) { this@plus + value }
+operator fun <T: IntegerType<T>> T.plusAssign(value: Byte) = setInteger(integerLong + value)
+operator fun <T: IntegerType<T>> T.plus(value: Byte) = copy().also { it += value }
+operator fun <T: IntegerType<T>> T.plusAssign(value: Short) = setInteger(integerLong + value)
+operator fun <T: IntegerType<T>> T.plus(value: Short) = copy().also { it += value }
+operator fun <T: IntegerType<T>> T.plusAssign(value: Int) = setInteger(integerLong + value)
+operator fun <T: IntegerType<T>> T.plus(value: Int) = copy().also { it += value }
+operator fun <T: IntegerType<T>> T.plusAssign(value: Long) = setInteger(integerLong + value)
+operator fun <T: IntegerType<T>> T.plus(value: Long) = copy().also { it += value }
 // primitive type + T
-operator fun <T: IntegerType<T>> Byte.plus(value: T) = with(ITE) { this@plus + value }
-operator fun <T: IntegerType<T>> Short.plus(value: T) = with(ITE) { this@plus + value }
-operator fun <T: IntegerType<T>> Int.plus(value: T) = with(ITE) { this@plus + value }
-operator fun <T: IntegerType<T>> Long.plus(value: T) = with(ITE) { this@plus + value }
+operator fun <T: IntegerType<T>> Byte.plus(value: T) = value + this
+operator fun <T: IntegerType<T>> Short.plus(value: T) = value + this
+operator fun <T: IntegerType<T>> Int.plus(value: T) = value + this
+operator fun <T: IntegerType<T>> Long.plus(value: T) = value + this
 
 // subtract
 // T - primitive type
-operator fun <T: IntegerType<T>> T.minusAssign(value: Byte) = with(ITE) { this@minusAssign -= value }
-operator fun <T: IntegerType<T>> T.minus(value: Byte) = with(ITE) { this@minus - value }
-operator fun <T: IntegerType<T>> T.minusAssign(value: Short) = with(ITE) { this@minusAssign -= value }
-operator fun <T: IntegerType<T>> T.minus(value: Short) = with(ITE) { this@minus - value }
-operator fun <T: IntegerType<T>> T.minusAssign(value: Int) = with(ITE) { this@minusAssign -= value }
-operator fun <T: IntegerType<T>> T.minus(value: Int) = with(ITE) { this@minus - value }
-operator fun <T: IntegerType<T>> T.minusAssign(value: Long) = with(ITE) { this@minusAssign -= value }
-operator fun <T: IntegerType<T>> T.minus(value: Long) = with(ITE) { this@minus - value }
+operator fun <T: IntegerType<T>> T.minusAssign(value: Byte) = setInteger(integerLong - value)
+operator fun <T: IntegerType<T>> T.minus(value: Byte) = copy().also { it -= value }
+operator fun <T: IntegerType<T>> T.minusAssign(value: Short) = setInteger(integerLong - value)
+operator fun <T: IntegerType<T>> T.minus(value: Short) = copy().also { it -= value }
+operator fun <T: IntegerType<T>> T.minusAssign(value: Int) = setInteger(integerLong - value)
+operator fun <T: IntegerType<T>> T.minus(value: Int) = copy().also { it -= value }
+operator fun <T: IntegerType<T>> T.minusAssign(value: Long) = setInteger(integerLong - value)
+operator fun <T: IntegerType<T>> T.minus(value: Long) = copy().also { it -= value }
 // primitive type - T
-operator fun <T: IntegerType<T>> Byte.minus(value: T) = with(ITE) { this@minus - value }
-operator fun <T: IntegerType<T>> Short.minus(value: T) = with(ITE) { this@minus - value }
-operator fun <T: IntegerType<T>> Int.minus(value: T) = with(ITE) { this@minus - value }
-operator fun <T: IntegerType<T>> Long.minus(value: T) = with(ITE) { this@minus - value }
+operator fun <T: IntegerType<T>> Byte.minus(value: T) = asType(value) - value
+operator fun <T: IntegerType<T>> Short.minus(value: T) = asType(value) - value
+operator fun <T: IntegerType<T>> Int.minus(value: T) = asType(value) - value
+operator fun <T: IntegerType<T>> Long.minus(value: T) = asType(value) - value
 
 // multiply
 // T * primitive type
-operator fun <T: IntegerType<T>> T.timesAssign(value: Byte) = with(ITE) { this@timesAssign *= value }
-operator fun <T: IntegerType<T>> T.times(value: Byte) = with(ITE) { this@times * value }
-operator fun <T: IntegerType<T>> T.timesAssign(value: Short) = with(ITE) { this@timesAssign *= value }
-operator fun <T: IntegerType<T>> T.times(value: Short) = with(ITE) { this@times * value }
-operator fun <T: IntegerType<T>> T.timesAssign(value: Int) = with(ITE) { this@timesAssign *= value }
-operator fun <T: IntegerType<T>> T.times(value: Int) = with(ITE) { this@times * value }
-operator fun <T: IntegerType<T>> T.timesAssign(value: Long) = with(ITE) { this@timesAssign *= value }
-operator fun <T: IntegerType<T>> T.times(value: Long) = with(ITE) { this@times * value }
+operator fun <T: IntegerType<T>> T.timesAssign(value: Byte) = setInteger(integerLong * value)
+operator fun <T: IntegerType<T>> T.times(value: Byte) = copy().also { it *= value }
+operator fun <T: IntegerType<T>> T.timesAssign(value: Short) = setInteger(integerLong * value)
+operator fun <T: IntegerType<T>> T.times(value: Short) = copy().also { it *= value }
+operator fun <T: IntegerType<T>> T.timesAssign(value: Int) = setInteger(integerLong * value)
+operator fun <T: IntegerType<T>> T.times(value: Int) = copy().also { it *= value }
+operator fun <T: IntegerType<T>> T.timesAssign(value: Long) = setInteger(integerLong * value)
+operator fun <T: IntegerType<T>> T.times(value: Long) = copy().also { it *= value }
 // primitive type * T
-operator fun <T: IntegerType<T>> Byte.times(value: T) = with(ITE) { this@times * value }
-operator fun <T: IntegerType<T>> Short.times(value: T) = with(ITE) { this@times * value }
-operator fun <T: IntegerType<T>> Int.times(value: T) = with(ITE) { this@times * value }
-operator fun <T: IntegerType<T>> Long.times(value: T) = with(ITE) { this@times * value }
+operator fun <T: IntegerType<T>> Byte.times(value: T) = value * this
+operator fun <T: IntegerType<T>> Short.times(value: T) = value * this
+operator fun <T: IntegerType<T>> Int.times(value: T) = value * this
+operator fun <T: IntegerType<T>> Long.times(value: T) = value * this
 
 // divide
 // T / primtive type
-operator fun <T: IntegerType<T>> T.divAssign(value: Byte) = with(ITE) { this@divAssign /= value }
-operator fun <T: IntegerType<T>> T.div(value: Byte) = with(ITE) { this@div / value }
-operator fun <T: IntegerType<T>> T.divAssign(value: Short) = with(ITE) { this@divAssign /= value }
-operator fun <T: IntegerType<T>> T.div(value: Short) = with(ITE) { this@div / value }
-operator fun <T: IntegerType<T>> T.divAssign(value: Int) = with(ITE) { this@divAssign /= value }
-operator fun <T: IntegerType<T>> T.div(value: Int) = with(ITE) { this@div / value }
-operator fun <T: IntegerType<T>> T.divAssign(value: Long) = with(ITE) { this@divAssign /= value }
-operator fun <T: IntegerType<T>> T.div(value: Long) = with(ITE) { this@div / value }
+operator fun <T: IntegerType<T>> T.divAssign(value: Byte) = setInteger(integerLong / value)
+operator fun <T: IntegerType<T>> T.div(value: Byte) = copy().also { it /= value }
+operator fun <T: IntegerType<T>> T.divAssign(value: Short) = setInteger(integerLong / value)
+operator fun <T: IntegerType<T>> T.div(value: Short) = copy().also { it /= value }
+operator fun <T: IntegerType<T>> T.divAssign(value: Int) = setInteger(integerLong / value)
+operator fun <T: IntegerType<T>> T.div(value: Int) = copy().also { it /= value }
+operator fun <T: IntegerType<T>> T.divAssign(value: Long) = setInteger(integerLong / value)
+operator fun <T: IntegerType<T>> T.div(value: Long) = copy().also { it /= value }
 // primitive type / T
-operator fun <T: IntegerType<T>> Byte.div(value: T) = with(ITE) { this@div / value }
-operator fun <T: IntegerType<T>> Short.div(value: T) = with(ITE) { this@div / value }
-operator fun <T: IntegerType<T>> Int.div(value: T) = with(ITE) { this@div / value }
-operator fun <T: IntegerType<T>> Long.div(value: T) = with(ITE) { this@div / value }
+operator fun <T: IntegerType<T>> Byte.div(value: T) = asType(value).also { it /= value }
+operator fun <T: IntegerType<T>> Short.div(value: T) = asType(value).also { it /= value }
+operator fun <T: IntegerType<T>> Int.div(value: T) = asType(value).also { it /= value }
+operator fun <T: IntegerType<T>> Long.div(value: T) = asType(value).also { it /= value }
 
 
 // RandomAccessible, RandomAccessibleInterval, Interval
-fun <T> RA<T>.get(vararg position: Long): T? = with(RAE) { get(*position) }
-fun <T> RA<T>.get(vararg position: Int): T? = with(RAE) { get(*position) }
-fun <T> RA<T>.get(position: Localizable): T? = with(RAE) { get(position) }
+operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
+operator fun <T> RA<T>.get(vararg position: Int): T = getAt(*position)
+operator fun <T> RA<T>.get(position: Localizable): T = getAt(position)
 
-fun <T> RA<T>.translate(vararg translation: Long) = with(RAE) { translate(*translation) }
-fun <T> RAI<T>.translate(vararg translation: Long) = with(RAE) { translate(*translation) }
+fun <T> RA<T>.translate(vararg translation: Long): RA<T> = Views.translate(this, *translation)
+fun <T> RAI<T>.translate(vararg translation: Long): RAI<T> = Views.translate(this, *translation)
 
-val <T> RA<T>.type get() = with(RAE) { type }
-val <T: Type<T>> RA<T>.type get() = with(RAE) { type }
-val <T> RAI<T>.type get() = with(RAE) { type }
-val <T: Type<T>> RAI<T>.type get() = with(RAE) { type }
+val <T> RA<T>.type get() = randomAccess().get()
+val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
+val <T> RAI<T>.type get() = this[minAsPoint()]
+val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 
-fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = with(RAE) { convert(u, converter) }
-inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = with(RAE) { convert(u, converter) }
-fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = with(RAE) { convert(that, v, converter) }
-inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = with(RAE) { convert(that, v, converter) }
-operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = with(RAE) { plus(that) }
+fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
+inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
+fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
+inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) =  convert(that, type) { t, u, v -> v.set(t); v += u }
 
-fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = with(RAE) { convert(u, converter) }
-inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = with(RAE) { convert(u, converter) }
-fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = with(RAE) { convert(that, v, converter) }
-inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = with(RAE) { convert(that, v, converter) }
-operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) = with(RAE) { plus(that) }
+fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
+inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
+fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
+inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) =  convert(that, type) { t, u, v -> v.set(t); v += u }
 
-val Interval.minAsLongs: LongArray get() = with(RAE) { minAsLongs }
-val Interval.maxAsLongs: LongArray get() = with(RAE) { maxAsLongs }
-val Interval.minAsInts: IntArray get() = with(RAE) { minAsInts }
-val Interval.maxAsInts: IntArray get() = with(RAE) { maxAsInts }
-val Interval.minAsPoint: Point get() = with(RAE) { minAsPoint }
-val Interval.maxAsPoint: Point get() = with(RAE) { maxAsPoint }
-val RealInterval.minAsDoubles: DoubleArray get() = with(RAE) { minAsDoubles }
-val RealInterval.maxAsDoubles: DoubleArray get() = with(RAE) { maxAsDoubles }
-val RealInterval.minAsFloats: FloatArray get() = with(RAE) { minAsFloats }
-val RealInterval.maxAsFloats: FloatArray get() = with(RAE) { maxAsFloats }
-val RealInterval.minAsRealPoint: RealPoint get() = with(RAE) { minAsRealPoint }
-val RealInterval.maxAsRealPoint: RealPoint get() = with(RAE) { maxAsRealPoint }
+val Interval.minAsLongs: LongArray get() = minAsLongArray()
+val Interval.maxAsLongs: LongArray get() = maxAsLongArray()
+val Interval.minAsInts: IntArray get() = IntArray(numDimensions()) { min(it).toInt() }
+val Interval.maxAsInts: IntArray get() = IntArray(numDimensions()) { max(it).toInt() }
+val Interval.minAsPoint: Point get() = minAsPoint()
+val Interval.maxAsPoint: Point get() = maxAsPoint()
+val RealInterval.minAsDoubles: DoubleArray get() = minAsDoubleArray()
+val RealInterval.maxAsDoubles: DoubleArray get() = maxAsDoubleArray()
+val RealInterval.minAsFloats: FloatArray get() = FloatArray(numDimensions()) { realMin(it).toFloat() }
+val RealInterval.maxAsFloats: FloatArray get() = FloatArray(numDimensions()) { realMax(it).toFloat() }
+val RealInterval.minAsRealPoint: RealPoint get() = minAsRealPoint()
+// TODO wait for imglib/imglib2#292 before reverting back to maxAsRealPoint()
+val RealInterval.maxAsRealPoint: RealPoint get() = RealPoint(numDimensions()).also { realMax(it) }
 
-infix fun Interval.intersect(that: Interval) = with (RAE) { intersect(that) }
-infix fun Interval.union(that: Interval) = with (RAE) { union(that) }
-operator fun Interval.contains(that: Interval) = with (RAE) { contains(that) }
-operator fun Interval.contains(location: Localizable) = with (RAE) { contains(location) }
-operator fun Interval.contains(location: IntArray) = with (RAE) { contains(location) }
-operator fun Interval.contains(location: LongArray) = with (RAE) { contains(location) }
-fun Interval.containsAll(vararg location: Int) = contains(location)
-fun Interval.containsAll(location: LongArray) = contains(location)
+infix fun Interval.intersect(that: Interval) = Intervals.intersect(this, that)
+infix fun Interval.union(that: Interval) = Intervals.union(this, that)
+operator fun Interval.contains(that: Interval) = Intervals.contains(this, that)
+operator fun Interval.contains(location: Localizable) = Intervals.contains(this, location)
+operator fun Interval.contains(location: IntArray) = containsAll(*location)
+operator fun Interval.contains(location: LongArray) = containsAll(*location)
+fun Interval.containsAll(vararg location: Int): Boolean {
+    for (d in 0 until numDimensions()) {
+        val p = location[d]
+        if (p < min(d) || p > max(d))
+            return false
+    }
+    return true
+}
+fun Interval.containsAll(vararg location: Long): Boolean {
+    for (d in 0 until numDimensions()) {
+        val p = location[d]
+        if (p < min(d) || p > max(d))
+            return false
+    }
+    return true
+}
 
-infix fun RealInterval.intersect(that: RealInterval) = with(RAE) { intersect(that) }
-infix fun RealInterval.union(that: RealInterval) = with(RAE) { union(that) }
-operator fun RealInterval.contains(that: RealInterval) = with(RAE) { contains(that) }
-operator fun RealInterval.contains(location: RealLocalizable) = with (RAE) { contains(location) }
-operator fun RealInterval.contains(location: FloatArray) = with(RAE) { contains(location) }
-operator fun RealInterval.contains(location: DoubleArray) = with(RAE) { contains(location) }
-fun RealInterval.containsAll(vararg location: Float) = contains(location)
-fun RealInterval.containsAll(vararg location: Double) = contains(location)
+infix fun RealInterval.intersect(that: RealInterval) = Intervals.intersect(this, that)
+infix fun RealInterval.union(that: RealInterval) = Intervals.union(this, that)
+operator fun RealInterval.contains(that: RealInterval) = Intervals.contains(this, that)
+operator fun RealInterval.contains(location: RealLocalizable) = Intervals.contains(this, location)
+operator fun RealInterval.contains(location: FloatArray) = containsAll(*location)
+operator fun RealInterval.contains(location: DoubleArray) = containsAll(*location)
+fun RealInterval.containsAll(vararg location: Float): Boolean {
+    for (d in 0 until numDimensions()) {
+        val p = location[d]
+        if (p < realMin(d) || p > realMax(d))
+            return false
+    }
+    return true
+}
+fun RealInterval.containsAll(vararg location: Double): Boolean {
+    for (d in 0 until numDimensions()) {
+        val p = location[d]
+        if (p < realMin(d) || p > realMax(d))
+            return false
+    }
+    return true
+}
