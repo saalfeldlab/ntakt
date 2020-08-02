@@ -1,22 +1,42 @@
 package net.imklib2
 
 import net.imglib2.*
+import net.imglib2.converter.BiConverter
+import net.imglib2.RandomAccessible as RA
+import net.imglib2.RandomAccessibleInterval as RAI
+import net.imglib2.converter.Converter
+import net.imglib2.converter.Converters
+import net.imglib2.type.Type
+import net.imglib2.type.numeric.RealType
 import net.imglib2.util.Intervals
 import net.imglib2.view.Views
 
 class RandomAccessibleExtensions {
 
     companion object {
-        fun <T> RandomAccessible<T>.get(vararg position: Long): T? = getAt(*position)
-        fun <T> RandomAccessible<T>.get(vararg position: Int): T? = getAt(*position)
-        fun <T> RandomAccessible<T>.get(position: Localizable): T? = getAt(position)
+        operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
+        operator fun <T> RA<T>.get(vararg position: Int): T = getAt(*position)
+        operator fun <T> RA<T>.get(position: Localizable): T = getAt(position)
 
-        fun <T> RandomAccessible<T>.translate(vararg translation: Long): RandomAccessible<T> = Views.translate(
-            this,
-            *translation)
-        fun <T> RandomAccessibleInterval<T>.translate(vararg translation: Long): RandomAccessibleInterval<T> = Views.translate(
-            this,
-            *translation)
+        fun <T> RA<T>.translate(vararg translation: Long): RA<T> = Views.translate(this, *translation)
+        fun <T> RAI<T>.translate(vararg translation: Long): RAI<T> = Views.translate(this, *translation)
+
+        val <T> RA<T>.type get() = randomAccess().get()
+        val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
+        val <T> RAI<T>.type get() = this[minAsPoint()]
+        val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
+
+        fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
+        inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
+        fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
+        inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+        operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) =  convert(that, type) { t, u, v -> v.set(t); v += u }
+
+        fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
+        inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
+        fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
+        inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+        fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) =  convert(that, type) { t, u, v -> v.set(t); v += u }
 
         val Interval.minAsLongs: LongArray get() = minAsLongArray()
         val Interval.maxAsLongs: LongArray get() = maxAsLongArray()

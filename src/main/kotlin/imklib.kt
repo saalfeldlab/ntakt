@@ -1,15 +1,15 @@
 package net.imklib2
 
 import net.imglib2.*
+import net.imglib2.RandomAccessible as RA
+import net.imglib2.RandomAccessibleInterval as RAI
+import net.imglib2.converter.BiConverter
+import net.imglib2.converter.Converter
+import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
-import net.imglib2.type.numeric.integer.*
-import net.imglib2.type.numeric.real.DoubleType
-import net.imglib2.type.numeric.real.FloatType
-import net.imklib2.IntegerTypeExtensions.Companion.asType
 import net.imklib2.IntegerTypeExtensions.Companion.plus
 import net.imklib2.IntegerTypeExtensions.Companion.times
-import net.imklib2.RealTypeExtensions.Companion.asType
 import net.imklib2.RealTypeExtensions.Companion.minus
 import net.imklib2.RealTypeExtensions.Companion.minusAssign
 import net.imklib2.RealTypeExtensions.Companion.plus
@@ -239,12 +239,29 @@ operator fun <T: IntegerType<T>> Long.div(value: T) = with(ITE) { this@div / val
 
 
 // RandomAccessible, RandomAccessibleInterval, Interval
-fun <T> RandomAccessible<T>.get(vararg position: Long): T? = with(RAE) { get(*position) }
-fun <T> RandomAccessible<T>.get(vararg position: Int): T? = with(RAE) { get(*position) }
-fun <T> RandomAccessible<T>.get(position: Localizable): T? = with(RAE) { get(position) }
+fun <T> RA<T>.get(vararg position: Long): T? = with(RAE) { get(*position) }
+fun <T> RA<T>.get(vararg position: Int): T? = with(RAE) { get(*position) }
+fun <T> RA<T>.get(position: Localizable): T? = with(RAE) { get(position) }
 
-fun <T> RandomAccessible<T>.translate(vararg translation: Long) = with(RAE) { translate(*translation) }
-fun <T> RandomAccessibleInterval<T>.translate(vararg translation: Long) = with(RAE) { translate(*translation) }
+fun <T> RA<T>.translate(vararg translation: Long) = with(RAE) { translate(*translation) }
+fun <T> RAI<T>.translate(vararg translation: Long) = with(RAE) { translate(*translation) }
+
+val <T> RA<T>.type get() = with(RAE) { type }
+val <T: Type<T>> RA<T>.type get() = with(RAE) { type }
+val <T> RAI<T>.type get() = with(RAE) { type }
+val <T: Type<T>> RAI<T>.type get() = with(RAE) { type }
+
+fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = with(RAE) { convert(u, converter) }
+inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = with(RAE) { convert(u, converter) }
+fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = with(RAE) { convert(that, v, converter) }
+inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = with(RAE) { convert(that, v, converter) }
+operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = with(RAE) { plus(that) }
+
+fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = with(RAE) { convert(u, converter) }
+inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = with(RAE) { convert(u, converter) }
+fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = with(RAE) { convert(that, v, converter) }
+inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = with(RAE) { convert(that, v, converter) }
+operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) = with(RAE) { plus(that) }
 
 val Interval.minAsLongs: LongArray get() = with(RAE) { minAsLongs }
 val Interval.maxAsLongs: LongArray get() = with(RAE) { maxAsLongs }
