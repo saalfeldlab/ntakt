@@ -10,7 +10,7 @@ fun main() {
     val example1D = ArrayImgs.doubles(DoubleArray(100) { it.toDouble() }, 100)
     val mean = 50.0
     val variance = 30.0
-    val exponent = (example1D - mean) `**` 2.0 * -1.0 / (variance * variance)
+    val exponent = (((example1D - mean) `**` 2.0) * -1.0) / (variance * variance)
     val bellCurve = exponent.exp()
     print(Views.flatIterable(bellCurve).joinToString(", "))
 }
