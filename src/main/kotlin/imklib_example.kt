@@ -1,7 +1,6 @@
-package net.imklib2
-
 import net.imglib2.img.array.ArrayImgs
 import net.imglib2.view.Views
+import net.imklib2.*
 
 fun main() {
     val im1 = ArrayImgs.doubles(doubleArrayOf(1.0, 2.0), 1L, 2L)
