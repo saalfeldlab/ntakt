@@ -12,6 +12,8 @@ import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.util.Intervals
 import net.imglib2.view.Views
+import kotlin.math.E
+import kotlin.math.pow
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
@@ -141,6 +143,24 @@ operator fun <T: RealType<T>> Int.div(value: T) = asType(value).also { it /= val
 operator fun <T: RealType<T>> Long.div(value: T) = asType(value).also { it /= value }
 operator fun <T: RealType<T>> Float.div(value: T) = asType(value).also { it /= value }
 operator fun <T: RealType<T>> Double.div(value: T) = asType(value).also { it /= value }
+
+// power
+fun <T: RealType<T>> T.pow(exponent: Float) = setReal(realFloat.pow(exponent))
+fun <T: RealType<T>> T.pow(exponent: Int) = setReal(realDouble.pow(exponent))
+fun <T: RealType<T>> Double.pow(exponent: T) = pow(exponent.realDouble)
+fun <T: RealType<T>> Float.pow(exponent: T) = pow(exponent.realFloat)
+fun <T: RealType<T>> Int.pow(exponent: T) = toDouble().pow(exponent.realDouble)
+fun <T: RealType<T>> T.pow(exponent: RealType<*>) = pow(exponent.getRealDouble())
+fun <T: RealType<T>> T.pow(exponent: IntegerType<*>) = pow(exponent.getInteger())
+infix fun <T: RealType<T>> T.`**`(exponent: Double) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`**`(exponent: Float) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`**`(exponent: RealType<*>) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`**`(exponent: IntegerType<*>) = copy().also { pow(exponent) }
+
+// exp
+fun <T: RealType<T>> T.exp(base: Double = E) = { setReal(base.pow(realDouble)) }
+fun <T: RealType<T>> T.exp(base: Float = E.toFloat()) = { setReal(base.pow(realFloat)) }
+fun <T: RealType<T>> T.exp(base: RealType<*>) = { setReal(base.getRealDouble().pow(realDouble)) }
 
 
 // IntegerType
@@ -277,17 +297,99 @@ val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
 val <T> RAI<T>.type get() = this[minAsPoint()]
 val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 
+// RA
 fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
 inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
 fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
 inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
-operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) =  convert(that, type) { t, u, v -> v.set(t); v += u }
 
+operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
+operator fun <T: RealType<T>> RA<T>.plus(value: Byte) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RA<T>.plus(value: Short) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RA<T>.plus(value: Int) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RA<T>.plus(value: Long) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RA<T>.plus(value: Float) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RA<T>.plus(value: Double) = convert(type) { s, t -> t.set(s); t += value }
+
+operator fun <T: RealType<T>> RA<T>.minus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v -= u }
+operator fun <T: RealType<T>> RA<T>.minus(value: Byte) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RA<T>.minus(value: Short) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RA<T>.minus(value: Int) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RA<T>.minus(value: Long) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RA<T>.minus(value: Float) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RA<T>.minus(value: Double) = convert(type) { s, t -> t.set(s); t -= value }
+
+operator fun <T: RealType<T>> RA<T>.times(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v *= u }
+operator fun <T: RealType<T>> RA<T>.times(value: Byte) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RA<T>.times(value: Short) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RA<T>.times(value: Int) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RA<T>.times(value: Long) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RA<T>.times(value: Float) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RA<T>.times(value: Double) = convert(type) { s, t -> t.set(s); t *= value }
+
+operator fun <T: RealType<T>> RA<T>.div(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v /= u }
+operator fun <T: RealType<T>> RA<T>.div(value: Byte) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RA<T>.div(value: Short) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RA<T>.div(value: Int) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RA<T>.div(value: Long) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RA<T>.div(value: Float) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RA<T>.div(value: Double) = convert(type) { s, t -> t.set(s); t /= value }
+
+infix fun <T: RealType<T>> RA<T>.`**`(exponent: RA<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
+infix fun <T: RealType<T>> RA<T>.`**`(exponent: Double) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
+infix fun <T: RealType<T>> RA<T>.`**`(exponent: Float) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
+infix fun <T: RealType<T>> RA<T>.`**`(exponent: RealType<*>) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
+fun <T: RealType<T>> RA<T>.exp(base: RA<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
+fun <T: RealType<T>> RA<T>.exp(base: Double = E) = convert(type) { s, t -> t.set(s); t.exp(base) }
+fun <T: RealType<T>> RA<T>.exp(base: Float) = exp(base.toDouble())
+fun <T: RealType<T>> RA<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
+
+// RAI
 fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
 inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
 fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
 inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
-operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) =  convert(that, type) { t, u, v -> v.set(t); v += u }
+
+operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
+operator fun <T: RealType<T>> RAI<T>.plus(value: Byte) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RAI<T>.plus(value: Short) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RAI<T>.plus(value: Int) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RAI<T>.plus(value: Long) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RAI<T>.plus(value: Float) = convert(type) { s, t -> t.set(s); t += value }
+operator fun <T: RealType<T>> RAI<T>.plus(value: Double) = convert(type) { s, t -> t.set(s); t += value }
+
+operator fun <T: RealType<T>> RAI<T>.minus(that: RAI<T>) = convert(that, type) { t, u, v -> v.set(t); v -= u }
+operator fun <T: RealType<T>> RAI<T>.minus(value: Byte) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RAI<T>.minus(value: Short) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RAI<T>.minus(value: Int) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RAI<T>.minus(value: Long) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RAI<T>.minus(value: Float) = convert(type) { s, t -> t.set(s); t -= value }
+operator fun <T: RealType<T>> RAI<T>.minus(value: Double) = convert(type) { s, t -> t.set(s); t -= value }
+
+operator fun <T: RealType<T>> RAI<T>.times(that: RAI<T>) = convert(that, type) { t, u, v -> v.set(t); v *= u }
+operator fun <T: RealType<T>> RAI<T>.times(value: Byte) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RAI<T>.times(value: Short) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RAI<T>.times(value: Int) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RAI<T>.times(value: Long) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RAI<T>.times(value: Float) = convert(type) { s, t -> t.set(s); t *= value }
+operator fun <T: RealType<T>> RAI<T>.times(value: Double) = convert(type) { s, t -> t.set(s); t *= value }
+
+operator fun <T: RealType<T>> RAI<T>.div(that: RAI<T>) = convert(that, type) { t, u, v -> v.set(t); v /= u }
+operator fun <T: RealType<T>> RAI<T>.div(value: Byte) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RAI<T>.div(value: Short) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RAI<T>.div(value: Int) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RAI<T>.div(value: Long) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RAI<T>.div(value: Float) = convert(type) { s, t -> t.set(s); t /= value }
+operator fun <T: RealType<T>> RAI<T>.div(value: Double) = convert(type) { s, t -> t.set(s); t /= value }
+
+infix fun <T: RealType<T>> RAI<T>.`**`(exponent: RAI<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
+infix fun <T: RealType<T>> RAI<T>.`**`(exponent: Double) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
+infix fun <T: RealType<T>> RAI<T>.`**`(exponent: Float) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
+infix fun <T: RealType<T>> RAI<T>.`**`(exponent: RealType<*>) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
+fun <T: RealType<T>> RAI<T>.exp(base: RAI<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
+fun <T: RealType<T>> RAI<T>.exp(base: Double = E) = convert(type) { s, t -> t.set(s); t.exp(base) }
+fun <T: RealType<T>> RAI<T>.exp(base: Float) = exp(base.toDouble())
+fun <T: RealType<T>> RAI<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
 
 val Interval.minAsLongs: LongArray get() = minAsLongArray()
 val Interval.maxAsLongs: LongArray get() = maxAsLongArray()

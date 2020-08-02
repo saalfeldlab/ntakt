@@ -1,5 +1,8 @@
 plugins {
     kotlin("jvm") version "1.3.72"
+
+    // add support for building CLI application
+    application
 }
 
 // group = "net.imglib2"
@@ -20,4 +23,9 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = "ImkLibExampleKt"
 }
