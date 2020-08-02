@@ -158,9 +158,9 @@ infix fun <T: RealType<T>> T.`**`(exponent: RealType<*>) = copy().also { pow(exp
 infix fun <T: RealType<T>> T.`**`(exponent: IntegerType<*>) = copy().also { pow(exponent) }
 
 // exp
-fun <T: RealType<T>> T.exp(base: Double = E) = { setReal(base.pow(realDouble)) }
-fun <T: RealType<T>> T.exp(base: Float = E.toFloat()) = { setReal(base.pow(realFloat)) }
-fun <T: RealType<T>> T.exp(base: RealType<*>) = { setReal(base.getRealDouble().pow(realDouble)) }
+fun <T: RealType<T>> T.exp(base: Double = E) = setReal(base.pow(realDouble))
+fun <T: RealType<T>> T.exp(base: Float = E.toFloat()) = setReal(base.pow(realFloat))
+fun <T: RealType<T>> T.exp(base: RealType<*>) = setReal(base.getRealDouble().pow(realDouble))
 
 
 // IntegerType
