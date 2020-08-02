@@ -297,11 +297,30 @@ val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
 val <T> RAI<T>.type get() = this[minAsPoint()]
 val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 
+val <T> RAI<T>.iterable get() = Views.iterable(this)
+val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
+
 // RA
 fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
 inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
 fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
 inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+
+fun <T: RealType<T>, U: RealType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
+fun <T: IntegerType<T>, U: IntegerType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
+val <T: RealType<T>> RA<T>.asBytes get() = asType(ByteType())
+val <T: RealType<T>> RA<T>.asShorts get() = asType(ShortType())
+val <T: RealType<T>> RA<T>.asInts get() = asType(IntType())
+val <T: RealType<T>> RA<T>.asLongs get() = asType(LongType())
+val <T: RealType<T>> RA<T>.asUnsignedBytes get() = asType(UnsignedByteType())
+val <T: RealType<T>> RA<T>.asUnsignedShorts get() = asType(UnsignedShortType())
+val <T: RealType<T>> RA<T>.asUnsignedInts get() = asType(UnsignedIntType())
+val <T: RealType<T>> RA<T>.asUnsignedLongs get() = asType(UnsignedLongType())
+val <T: RealType<T>> RA<T>.asFloats get() = asType(FloatType())
+val <T: RealType<T>> RA<T>.asDoubles get() = asType(DoubleType())
+
+operator fun <T: RealType<T>> RA<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
+operator fun <T: RealType<T>> RA<T>.unaryPlus() = this
 
 operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
 operator fun <T: RealType<T>> RA<T>.plus(value: Byte) = convert(type) { s, t -> t.set(s); t += value }
@@ -349,6 +368,22 @@ fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converter
 inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
 fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
 inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+
+fun <T: RealType<T>, U: RealType<U>> RAI<T>.asType(u: U) = if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
+fun <T: IntegerType<T>, U: IntegerType<U>> RAI<T>.asType(u: U) = if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
+val <T: RealType<T>> RAI<T>.asBytes get() = asType(ByteType())
+val <T: RealType<T>> RAI<T>.asShorts get() = asType(ShortType())
+val <T: RealType<T>> RAI<T>.asInts get() = asType(IntType())
+val <T: RealType<T>> RAI<T>.asLongs get() = asType(LongType())
+val <T: RealType<T>> RAI<T>.asUnsignedBytes get() = asType(UnsignedByteType())
+val <T: RealType<T>> RAI<T>.asUnsignedShorts get() = asType(UnsignedShortType())
+val <T: RealType<T>> RAI<T>.asUnsignedInts get() = asType(UnsignedIntType())
+val <T: RealType<T>> RAI<T>.asUnsignedLongs get() = asType(UnsignedLongType())
+val <T: RealType<T>> RAI<T>.asFloats get() = asType(FloatType())
+val <T: RealType<T>> RAI<T>.asDoubles get() = asType(DoubleType())
+
+operator fun <T: RealType<T>> RAI<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
+operator fun <T: RealType<T>> RAI<T>.unaryPlus() = this
 
 operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
 operator fun <T: RealType<T>> RAI<T>.plus(value: Byte) = convert(type) { s, t -> t.set(s); t += value }
