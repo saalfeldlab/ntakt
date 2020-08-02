@@ -275,4 +275,4 @@ operator fun RealInterval.contains(location: RealLocalizable) = with (RAE) { con
 operator fun RealInterval.contains(location: FloatArray) = with(RAE) { contains(location) }
 operator fun RealInterval.contains(location: DoubleArray) = with(RAE) { contains(location) }
 fun RealInterval.containsAll(vararg location: Float) = contains(location)
-fun RealInterval.containsAll(vararg location: Double) = contains(location)``
+fun RealInterval.containsAll(vararg location: Double) = contains(location)
