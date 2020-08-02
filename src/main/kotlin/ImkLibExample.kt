@@ -16,4 +16,10 @@ fun main() {
     val bellCurve = exponent.exp()
     println(bellCurve.flatIterable.joinToString(", "))
     println((bellCurve * 255).asUnsignedBytes.flatIterable.joinToString(", "))
+
+    val largeValue = 11123456789
+    val longImg = ArrayImgs.longs(1L)
+    val largeValueImg = longImg + largeValue
+    val largeValueImgFloat = longImg.asFloats + largeValue
+    println("${longImg.joinToString()} ${largeValueImg.flatIterable.joinToString()} ${largeValueImgFloat.flatIterable.joinToString()}")
 }
