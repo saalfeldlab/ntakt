@@ -22,4 +22,9 @@ fun main() {
     val largeValueImg = longImg + largeValue
     val largeValueImgFloat = longImg.asFloats + largeValue
     println("${longImg.joinToString()} ${largeValueImg.flatIterable.joinToString()} ${largeValueImgFloat.flatIterable.joinToString()}")
+
+    val im1Extended = im1.extendZero()
+    val extendedSum1 = im1 + im1Extended
+    val extendedSum2 = im1Extended + im1
+    println("${im1.flatIterable.joinToString(", ")} -- ${extendedSum1.flatIterable.joinToString(", ")} -- ${extendedSum2.flatIterable.joinToString(", ")}")
 }
