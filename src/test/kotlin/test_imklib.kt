@@ -1,4 +1,4 @@
-package net.imklib2
+package net.imglib2.imklib
 
 import net.imglib2.*
 import net.imglib2.img.array.ArrayImgs

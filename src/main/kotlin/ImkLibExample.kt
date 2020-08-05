@@ -1,7 +1,13 @@
+import net.imglib2.Interval
+import net.imglib2.Localizable
+import net.imglib2.Point
 import net.imglib2.img.array.ArrayImgs
-import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.view.Views
-import net.imklib2.*
+import net.imglib2.imklib.*
+import net.imglib2.util.Intervals
+
+// backtick functions work with unicode characters as well:
+infix fun Localizable.`∈`(interval: Interval) = this in interval
 
 fun main() {
     val im1 = ArrayImgs.doubles(doubleArrayOf(1.0, 2.0), 1L, 2L)
@@ -27,4 +33,12 @@ fun main() {
     val extendedSum1 = im1 + im1Extended
     val extendedSum2 = im1Extended + im1
     println("${im1.flatIterable.joinToString(", ")} -- ${extendedSum1.flatIterable.joinToString(", ")} -- ${extendedSum2.flatIterable.joinToString(", ")}")
+
+    println("(1) ∈ [2, 3]: ${Point(1L) `∈` Intervals.createMinMax(2, 3)}")
+
+    // gradient:
+    val img = ArrayImgs.doubles(doubleArrayOf(0.0, 0.1, 0.3, 0.7, 2.8, 0.7, 0.3, 0.1, 0.0), 9)
+    val offset = Point(1L)
+    val gradient = (img.extendZero() + offset) - (img.extendZero() - offset)
+    println("Gradient: [${gradient[img].flatIterable.joinToString(", ")}]")
 }
