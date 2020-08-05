@@ -2,19 +2,26 @@ package net.imglib2.imklib
 
 import net.imglib2.Interval
 import net.imglib2.Localizable
+import net.imglib2.Sampler
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 import net.imglib2.converter.BiConverter
+import net.imglib2.converter.ComplexImaginaryFloatConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
+import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
+import net.imglib2.util.ConstantUtils
 import net.imglib2.view.Views
 import kotlin.math.E
+
+fun <T> constant(constant: T, numDimensions: Int) = ConstantUtils.constantRandomAccessible(constant, numDimensions)
 
 operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
 operator fun <T> RA<T>.get(vararg position: Int): T = getAt(*position)
@@ -35,6 +42,13 @@ fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = Converters
 inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
 fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
 inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+fun <T, U: Type<U>> RA<T>.convert(converter: SamplerConverter<in T, U>) = Converters.convert(this, converter)
+inline fun <T, U: Type<U>> RA<T>.convert(crossinline converter: (Sampler<out T>) -> U) = convert(SamplerConverter{ t: Sampler<out T> -> converter(t) })
+
+fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
+fun <C: ComplexType<C>, R: RealType<R>> RA<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
+val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
+val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())
 
 fun <T> RA<T>.interval(min: LongArray, max: LongArray) = Views.interval(this, min, max)
 fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }, LongArray(dims.size) { dims[it] - 1L })

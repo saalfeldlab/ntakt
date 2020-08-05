@@ -1,20 +1,31 @@
 package net.imglib2.imklib
 
+import net.imglib2.Interval
 import net.imglib2.Localizable
+import net.imglib2.Sampler
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
+import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
+import net.imglib2.util.ConstantUtils
 import net.imglib2.view.Views
 import kotlin.math.E
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
+
+fun <T> constant(constant: T, interval: Interval) = ConstantUtils.constantRandomAccessibleInterval(constant, interval)
+fun <T: NumericType<T>> zeros(interval: Interval, type: T) = type.also { it.setZero() }.let { constant(it, interval) }
+fun zeros(interval: Interval) = zeros(interval, DoubleType())
+fun <T: NumericType<T>> ones(interval: Interval, type: T) = type.also { it.setOne() }.let { constant(it, interval) }
+fun ones(interval: Interval) = ones(interval, DoubleType())
 
 fun <T> RAI<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
 fun <T> RAI<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
@@ -35,6 +46,13 @@ fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converter
 inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
 fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
 inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+fun <T, U: Type<U>> RAI<T>.convert(converter: SamplerConverter<in T, U>) = Converters.convert(this, converter)
+inline fun <T, U: Type<U>> RAI<T>.convert(crossinline converter: (Sampler<out T>) -> U) = convert(SamplerConverter{ t: net.imglib2.Sampler<out T> -> converter(t) })
+
+fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
+fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
+val <C: ComplexType<C>> RAI<C>.real get() = real(DoubleType())
+val <C: ComplexType<C>> RAI<C>.imaginary get() = imaginary(DoubleType())
 
 fun <T: Type<T>> RAI<T>.extendValue(extension: T) = Views.extendValue(this, extension)
 fun <T: RealType<T>> RAI<T>.extendValue(extension: Float) = Views.extendValue(this, extension)

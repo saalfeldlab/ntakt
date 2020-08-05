@@ -41,4 +41,16 @@ fun main() {
     val offset = Point(1L)
     val gradient = (img.extendZero() + offset) - (img.extendZero() - offset)
     println("Gradient: [${gradient[img].flatIterable.joinToString(", ")}]")
+
+    // complex -> real/imaginary
+    val complex = ArrayImgs.complexDoubles(2, 3)
+    complex.forEachIndexed { index, t -> t.setComplexNumber(index.toDouble(), -index.toDouble()) }
+    println("Complex: [${complex.joinToString(", ")}]")
+    println("Real: [${complex.real.flatIterable.joinToString(", ")}]")
+    println("Imaginary: [${complex.imaginary.flatIterable.joinToString(", ")}]")
+    complex.real.iterable.forEach { it *= -2 }
+    complex.imaginary.iterable.forEach { it *= -3 }
+    println("Complex: [${complex.joinToString(", ")}]")
+    println("Real: [${complex.real.flatIterable.joinToString(", ")}]")
+    println("Imaginary: [${complex.imaginary.flatIterable.joinToString(", ")}]")
 }

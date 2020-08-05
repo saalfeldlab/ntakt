@@ -3,6 +3,22 @@ package net.imglib2.imklib
 import net.imglib2.*
 import net.imglib2.util.Intervals
 
+val LongArray.interval get() = FinalInterval(*this)
+val Collection<Long>.interval get() = toLongArray().interval
+val IntArray.interval get() = map { it.toLong() }.interval
+
+val LongArray.intervalMinMax get() = Intervals.createMinMax(*this)
+val Collection<Long>.intervalMinMax get() = toLongArray().intervalMinMax
+val IntArray.intervalMinMax get() = map { it.toLong() }.intervalMinMax
+
+val DoubleArray.interval get() = FinalRealInterval(DoubleArray(size) { 0.0 }, this)
+val Collection<Double>.interval get() = toDoubleArray().interval
+val FloatArray.interval get() = map { it.toDouble() }.interval
+
+val DoubleArray.intervalMinMax get() = Intervals.createMinMaxReal(*this)
+val Collection<Double>.intervalMinMax get() = toDoubleArray().intervalMinMax
+val FloatArray.intervalMinMax get() = map { it.toDouble() }.intervalMinMax
+
 fun Interval.translate(vararg translation: Long) = Intervals.translate(this, *translation)
 fun Interval.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
 fun Interval.translateInverse(vararg translation: Long) = Intervals.translateInverse(this, *translation)
