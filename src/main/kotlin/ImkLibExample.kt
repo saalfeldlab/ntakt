@@ -37,20 +37,22 @@ fun main() {
     println("(1) ∈ [2, 3]: ${Point(1L) `∈` Intervals.createMinMax(2, 3)}")
 
     // gradient:
+    println("\ngradient")
     val img = ArrayImgs.doubles(doubleArrayOf(0.0, 0.1, 0.3, 0.7, 2.8, 0.7, 0.3, 0.1, 0.0), 9)
     val offset = Point(1L)
     val gradient = (img.extendZero() + offset) - (img.extendZero() - offset)
     println("Gradient: [${gradient[img].flatIterable.joinToString(", ")}]")
 
     // complex -> real/imaginary
+    println("\ncomplex -> real/imaginary")
     val complex = ArrayImgs.complexDoubles(2, 3)
     complex.forEachIndexed { index, t -> t.setComplexNumber(index.toDouble(), -index.toDouble()) }
-    println("Complex: [${complex.joinToString(", ")}]")
-    println("Real: [${complex.real.flatIterable.joinToString(", ")}]")
+    println("Complex:   [${complex.joinToString(", ")}]")
+    println("Real:      [${complex.real.flatIterable.joinToString(", ")}]")
     println("Imaginary: [${complex.imaginary.flatIterable.joinToString(", ")}]")
     complex.real.iterable.forEach { it *= -2 }
     complex.imaginary.iterable.forEach { it *= -3 }
-    println("Complex: [${complex.joinToString(", ")}]")
-    println("Real: [${complex.real.flatIterable.joinToString(", ")}]")
+    println("Complex:   [${complex.joinToString(", ")}]")
+    println("Real:      [${complex.real.flatIterable.joinToString(", ")}]")
     println("Imaginary: [${complex.imaginary.flatIterable.joinToString(", ")}]")
 }
