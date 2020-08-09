@@ -156,3 +156,5 @@ fun <T: RealType<T>> RAI<T>.exp(base: RAI<T>) = convert(base, type) { t, u, v ->
 fun <T: RealType<T>> RAI<T>.exp(base: Double = E) = convert(type) { s, t -> t.set(s); t.exp(base) }
 fun <T: RealType<T>> RAI<T>.exp(base: Float) = exp(base.toDouble())
 fun <T: RealType<T>> RAI<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
+
+val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(" ,", "[", "]")}"
