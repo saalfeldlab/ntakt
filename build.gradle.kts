@@ -3,10 +3,10 @@ plugins {
 
     // add support for building CLI application
     application
-}
 
-// group = "net.imglib2"
-// version = "1.0-SNAPSHOT"
+    // publish to maven (only local repo for now)
+    `maven-publish`
+}
 
 repositories {
     mavenCentral()
@@ -27,5 +27,22 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "ImkLibExampleKt"
+     mainClassName = "ImkLibExampleKt"
+}
+
+tasks.register("publishToFiji", Copy::class) {
+    dependsOn("jar")
+    val fijiAppDir = project.properties["fiji.app.dir"]
+    if (fijiAppDir == null)
+        println("Fiji app dir not defined. Specify -Pfiji.app.dir=/path/to/Fiji.app")
+    else {
+        from("build/libs/${project.name}-${project.version}.jar")
+        destinationDir = File("$fijiAppDir/jars")
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") { from(components["kotlin"]) }
+    }
 }
