@@ -1,3 +1,5 @@
+package net.imglib2.imklib
+
 import net.imglib2.Sampler
 import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.img.basictypeaccess.ByteAccess as BA

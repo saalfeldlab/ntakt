@@ -15,6 +15,7 @@ import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorARGBFactory
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
+import net.imglib2.loops.LoopBuilder
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.*
 import net.imglib2.type.numeric.integer.*
@@ -22,6 +23,7 @@ import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.util.ConstantUtils
 import net.imglib2.view.Views
+import java.util.function.BiConsumer
 import kotlin.math.E
 
 operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
@@ -160,3 +162,5 @@ val <T> RA<T>.interpolatedNearestNeigbor get() = interpolate(NearestNeighborInte
 val <T: NumericType<T>> RA<T>.interpolatedNLinear get() = interpolate(NLinearInterpolatorFactory())
 val RA<ARGBType>.interpoalteNLinear get() = interpolate(NLinearInterpolatorARGBFactory())
 val <T: RealType<T>> RA<T>.interpolatedLanczos get() = interpolate(LanczosInterpolatorFactory())
+
+fun <T: Type<T>> RA<T>.writeInto(target: RAI<T>) = LoopBuilder.setImages(this[target], target).forEachPixel(BiConsumer { s, t -> t.set(s) })

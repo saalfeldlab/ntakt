@@ -1,3 +1,5 @@
+package net.imglib2.imklib
+
 import net.imglib2.img.array.ArrayImg
 import net.imglib2.img.array.ArrayImgs
 import net.imglib2.type.NativeType

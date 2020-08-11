@@ -3,10 +3,16 @@ package net.imglib2.imklib
 import net.imglib2.Interval
 import net.imglib2.Localizable
 import net.imglib2.Sampler
+import net.imglib2.cache.LoaderCache
+import net.imglib2.cache.ref.SoftRefLoaderCache
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
 import net.imglib2.converter.readwrite.SamplerConverter
+import net.imglib2.img.ImgFactory
+import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess
+import net.imglib2.img.cell.Cell
+import net.imglib2.type.NativeType
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
@@ -16,6 +22,7 @@ import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.util.ConstantUtils
+import net.imglib2.util.Util
 import net.imglib2.view.Views
 import kotlin.math.E
 import net.imglib2.RandomAccessible as RA
@@ -158,3 +165,16 @@ fun <T: RealType<T>> RAI<T>.exp(base: Float) = exp(base.toDouble())
 fun <T: RealType<T>> RAI<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
 
 val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(" ,", "[", "]")}"
+
+val <T> RAI<T>.isZeroMin get() = Views.isZeroMin(this)
+val <T> RAI<T>.zeroMin get() = if (isZeroMin) this else Views.zeroMin(this)
+
+fun <T: NativeType<T>> RAI<T>.materialize(factory: ImgFactory<T> = Util.getSuitableImgFactory(this, type)) = factory
+        .create(this)
+        .also { this.writeInto(it) }
+        .let { if (this.isZeroMin) it else it + minAsPoint } as RAI<T>
+val <T: NativeType<T>> RAI<T>.materialized get() = materialize()
+
+fun <T: NativeType<T>> RAI<T>.cache(
+        vararg blockSize: Int = IntArray(numDimensions()) { 32 },
+        loaderCache: LoaderCache<Long, Cell<VolatileArrayDataAccess<*>>> = SoftRefLoaderCache()) = cacheRAI(this, blockSize, loaderCache)

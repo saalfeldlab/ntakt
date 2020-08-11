@@ -1,3 +1,5 @@
+package net.imglib2.imklib
+
 import net.imglib2.Interval
 import net.imglib2.Localizable
 import net.imglib2.Point
