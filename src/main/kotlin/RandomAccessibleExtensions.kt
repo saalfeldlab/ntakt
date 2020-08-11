@@ -10,11 +10,13 @@ import net.imglib2.converter.ComplexImaginaryFloatConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
 import net.imglib2.converter.readwrite.SamplerConverter
+import net.imglib2.interpolation.InterpolatorFactory
+import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorARGBFactory
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
 import net.imglib2.type.Type
-import net.imglib2.type.numeric.ComplexType
-import net.imglib2.type.numeric.IntegerType
-import net.imglib2.type.numeric.NumericType
-import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.*
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
@@ -152,3 +154,9 @@ fun <T: RealType<T>> RA<T>.exp(base: RA<T>) = convert(base, type) { t, u, v -> v
 fun <T: RealType<T>> RA<T>.exp(base: Double = E) = convert(type) { s, t -> t.set(s); t.exp(base) }
 fun <T: RealType<T>> RA<T>.exp(base: Float) = exp(base.toDouble())
 fun <T: RealType<T>> RA<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
+
+fun <T> RA<T>.interpolate(factory: InterpolatorFactory<T, RA<T>>) = Views.interpolate(this, factory)
+val <T> RA<T>.interpolatedNearestNeigbor get() = interpolate(NearestNeighborInterpolatorFactory())
+val <T: NumericType<T>> RA<T>.interpolatedNLinear get() = interpolate(NLinearInterpolatorFactory())
+val RA<ARGBType>.interpoalteNLinear get() = interpolate(NLinearInterpolatorARGBFactory())
+val <T: RealType<T>> RA<T>.interpolatedLanczos get() = interpolate(LanczosInterpolatorFactory())

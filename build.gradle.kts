@@ -10,6 +10,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://maven.scijava.org/content/groups/public") }
 }
 
 dependencies {
@@ -18,6 +19,8 @@ dependencies {
 
     // imglib2
     api("net.imglib2:imglib2:5.10.0")
+    api("net.imglib2:imglib2-realtransform:3.0.0")
+    api("net.imglib2:imglib2-cache:1.0.0-beta-14")
 
     // tests
     testImplementation(kotlin("test"))
