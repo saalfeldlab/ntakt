@@ -1,6 +1,7 @@
 package net.imglib2.imklib
 
 import net.imglib2.*
+import net.imglib2.realtransform.AffineGet
 import net.imglib2.util.Intervals
 
 val LongArray.interval get() = FinalInterval(*this)
@@ -57,3 +58,29 @@ fun Interval.containsAll(vararg location: Long): Boolean {
     }
     return true
 }
+
+fun RealInterval.transformBoundingBox(transformation: AffineGet): RealInterval {
+    val min = DoubleArray(nDim) { Double.POSITIVE_INFINITY }
+    val max = DoubleArray(nDim) { Double.NEGATIVE_INFINITY }
+    val pos = minAsDoubleArray()
+    val posTransform = minAsDoubleArray()
+    var d = 0
+    while (d < nDim) {
+        transformation.apply(pos, posTransform)
+        println("${pos.map { it }} ${posTransform.map{ it }}")
+        (0 until nDim).forEach { min[it] = kotlin.math.min(posTransform[it], min[it]) }
+        (0 until nDim).forEach { max[it] = kotlin.math.max(posTransform[it], max[it]) }
+        d = 0
+        while (d < nDim) {
+            pos[d] = pos[d] + realMax(d) - realMin(d)
+            if (pos[d] <= realMax(d))
+                break
+            else
+                pos[d] = realMin(d)
+            ++d
+        }
+    }
+    return FinalRealInterval(min, max)
+}
+
+val RealInterval.smallestsContaining get() = Intervals.smallestContainingInterval(this)
