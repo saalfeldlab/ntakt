@@ -173,7 +173,6 @@ fun <T: NativeType<T>> RAI<T>.materialize(factory: ImgFactory<T> = Util.getSuita
         .create(this)
         .also { this.writeInto(it) }
         .let { if (this.isZeroMin) it else it + minAsPoint } as RAI<T>
-val <T: NativeType<T>> RAI<T>.materialized get() = materialize()
 
 fun <T: NativeType<T>> RAI<T>.cache(
         vararg blockSize: Int = IntArray(numDimensions()) { 32 },
