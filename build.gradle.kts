@@ -82,9 +82,8 @@ open class SourceGenerator : DefaultTask() {
 
     private val containers = arrayOf(net.imglib2.RandomAccessible::class) //, RandomAccessibleInterval::class, RealRandomAccessible::class)
 
-    private val input = File("src/generate/kotlin/CodeGenerator.kt")
     private val outputDir = File("src/main/kotlin")
-    private val outputName = "CodeGenerator"
+    private val outputName = "ArithmeticExtensions"
     private val outputFile = outputDir.resolve("$outputName.kt")
 
     @org.gradle.api.tasks.TaskAction
