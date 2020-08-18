@@ -1,99 +1,87 @@
 package net.imglib2.imklib
 
-import com.squareup.kotlinpoet.*
+import kotlin.jvm.JvmName
 import net.imglib2.RandomAccessible
-import kotlin.reflect.KClass
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import net.imglib2.RandomAccessibleInterval
-import net.imglib2.RealRandomAccessible
-import net.imglib2.type.numeric.ARGBType
-import net.imglib2.type.numeric.ComplexType
-import net.imglib2.type.numeric.IntegerType
-import net.imglib2.type.numeric.RealType
-import net.imglib2.type.numeric.complex.ComplexDoubleType
-import net.imglib2.type.numeric.complex.ComplexFloatType
-import net.imglib2.type.numeric.integer.*
+import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 
+@JvmName(name = "plus_1")
+operator fun RandomAccessible<ByteType>.plus(that: RandomAccessible<ByteType>):
+    RandomAccessible<ByteType> = convert(that, ByteType()) { t, u, v -> v.set(t); v += u }
 
-fun main() {
+@JvmName(name = "plus_2")
+operator fun RandomAccessible<FloatType>.plus(that: RandomAccessible<FloatType>):
+    RandomAccessible<FloatType> = convert(that, FloatType()) { t, u, v -> v.set(t); v += u }
 
-    val kotlinFile = FileSpec.builder("net.imglib2.imklib", "ArithmeticExtensions")
+@JvmName(name = "plus_3")
+operator fun RandomAccessible<DoubleType>.plus(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = convert(that, DoubleType()) { t, u, v -> v.set(t); v += u }
 
-    for (container in containers) {
-        for ((name, operator) in names) {
-            var index = 0
-            for (type in numericTypes)
-                kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operator, container = container, t = type, jvmName = "${name}_${++index}"))
+@JvmName(name = "plus_4")
+operator fun RandomAccessible<DoubleType>.plus(that: RandomAccessible<FloatType>):
+    RandomAccessible<DoubleType> = asType(DoubleType()) + that.asType(DoubleType())
 
-            for ((t1, t2, o) in numericTypePairs) {
-                kotlinFile.addFunction(generatePlusConverting(name, operator, container, t1, t2, o, false, jvmName = "${name}_${++index}"))
-                kotlinFile.addFunction(generatePlusConverting(name, operator, container, t2, t1, o, true, jvmName = "${name}_${++index}"))
-            }
-        }
-    }
+@JvmName(name = "plus_5")
+operator fun RandomAccessible<FloatType>.plus(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = that + this
 
-    kotlinFile.build().writeTo(System.out)
-}
+@JvmName(name = "minus_1")
+operator fun RandomAccessible<ByteType>.minus(that: RandomAccessible<ByteType>):
+    RandomAccessible<ByteType> = convert(that, ByteType()) { t, u, v -> v.set(t); v -= u }
 
-private val numericTypes = arrayOf(
-//        ARGBType::class,
-        ByteType::class,
-//        ShortType::class,
-//        IntType::class,
-//        LongType::class,
-//        UnsignedByteType::class,
-//        UnsignedShortType::class,
-//        UnsignedIntType::class,
-//        UnsignedLongType::class,
-        FloatType::class,
-        DoubleType::class
-//        ComplexFloatType::class,
-//        ComplexDoubleType::class
-)
+@JvmName(name = "minus_2")
+operator fun RandomAccessible<FloatType>.minus(that: RandomAccessible<FloatType>):
+    RandomAccessible<FloatType> = convert(that, FloatType()) { t, u, v -> v.set(t); v -= u }
 
-private val numericTypePairs = arrayOf(
-//        Triple(ComplexDoubleType::class, ComplexFloatType::class, ComplexDoubleType::class),
-//        Triple(ComplexDoubleType::class, RealType::class, ComplexDoubleType::class),
-//        Triple(ComplexFloatType::class, RealType::class, ComplexDoubleType::class),
-        Triple(DoubleType::class, FloatType::class, DoubleType::class)
-//        Triple(DoubleType::class, IntegerType::class, DoubleType::class),
-//        Triple(FloatType::class, IntegerType::class, FloatType::class),
-//        Triple(LongType::class, IntegerType::class, LongType::class)
-)
+@JvmName(name = "minus_3")
+operator fun RandomAccessible<DoubleType>.minus(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = convert(that, DoubleType()) { t, u, v -> v.set(t); v -= u }
 
-private val names = arrayOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/")
+@JvmName(name = "minus_4")
+operator fun RandomAccessible<DoubleType>.minus(that: RandomAccessible<FloatType>):
+    RandomAccessible<DoubleType> = asType(DoubleType()) - that.asType(DoubleType())
 
-private val containers = arrayOf(RandomAccessible::class) //, RandomAccessibleInterval::class, RealRandomAccessible::class)
+@JvmName(name = "minus_5")
+operator fun RandomAccessible<FloatType>.minus(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = that - this
 
+@JvmName(name = "times_1")
+operator fun RandomAccessible<ByteType>.times(that: RandomAccessible<ByteType>):
+    RandomAccessible<ByteType> = convert(that, ByteType()) { t, u, v -> v.set(t); v *= u }
 
-private fun generatePlusSameGenericTypes(name: String, operator: String, container: KClass<*>, t: KClass<*>, jvmName: String): FunSpec {
+@JvmName(name = "times_2")
+operator fun RandomAccessible<FloatType>.times(that: RandomAccessible<FloatType>):
+    RandomAccessible<FloatType> = convert(that, FloatType()) { t, u, v -> v.set(t); v *= u }
 
-    return FunSpec
-            .builder(name)
-            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
-            .addModifiers(KModifier.OPERATOR)
-            .receiver(container.asTypeName().parameterizedBy(t.asTypeName()))
-            .addParameter("that", container.asTypeName().parameterizedBy(t.asTypeName()))
-            .returns(container.asTypeName().parameterizedBy(t.asTypeName()))
-            .addStatement("return convert(that, ${t.simpleName}()) { t, u, v -> v.set(t); v ${operator}= u }")
-            .build()
-    //.receiver(accessible::class.asTypeName().tag(t1::class))
-}
+@JvmName(name = "times_3")
+operator fun RandomAccessible<DoubleType>.times(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = convert(that, DoubleType()) { t, u, v -> v.set(t); v *= u }
 
-private fun generatePlusConverting(name: String, operator: String, container: KClass<*>, t1: KClass<*>, t2: KClass<*>, o: KClass<*>, isReverse: Boolean, jvmName: String): FunSpec {
-    val p1 = TypeVariableName.invoke(t1.simpleName!!)
-    val builder = TypeSpec.classBuilder(container.asClassName()).addTypeVariable(p1)
+@JvmName(name = "times_4")
+operator fun RandomAccessible<DoubleType>.times(that: RandomAccessible<FloatType>):
+    RandomAccessible<DoubleType> = asType(DoubleType()) * that.asType(DoubleType())
 
-    return FunSpec
-            .builder(name)
-            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
-            .addModifiers(KModifier.OPERATOR)
-            .receiver(container.asTypeName().parameterizedBy(t1.asTypeName()))
-            .addParameter("that", container.asTypeName().parameterizedBy(t2.asTypeName()))
-            .returns(container.asTypeName().parameterizedBy(o.asTypeName()))
-            .also { if (isReverse) it.addStatement("return that $operator this") else it.addStatement("return asType(${t1.simpleName}()) $operator that.asType(${t1.simpleName}())")}
-            .build()
-            //.receiver(accessible::class.asTypeName().tag(t1::class))
-}
+@JvmName(name = "times_5")
+operator fun RandomAccessible<FloatType>.times(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = that * this
+
+@JvmName(name = "div_1")
+operator fun RandomAccessible<ByteType>.div(that: RandomAccessible<ByteType>):
+    RandomAccessible<ByteType> = convert(that, ByteType()) { t, u, v -> v.set(t); v /= u }
+
+@JvmName(name = "div_2")
+operator fun RandomAccessible<FloatType>.div(that: RandomAccessible<FloatType>):
+    RandomAccessible<FloatType> = convert(that, FloatType()) { t, u, v -> v.set(t); v /= u }
+
+@JvmName(name = "div_3")
+operator fun RandomAccessible<DoubleType>.div(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = convert(that, DoubleType()) { t, u, v -> v.set(t); v /= u }
+
+@JvmName(name = "div_4")
+operator fun RandomAccessible<DoubleType>.div(that: RandomAccessible<FloatType>):
+    RandomAccessible<DoubleType> = asType(DoubleType()) / that.asType(DoubleType())
+
+@JvmName(name = "div_5")
+operator fun RandomAccessible<FloatType>.div(that: RandomAccessible<DoubleType>):
+    RandomAccessible<DoubleType> = that / this
