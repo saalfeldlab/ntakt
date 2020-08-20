@@ -1,3 +1,4 @@
+import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.OutputFile
@@ -6,23 +7,30 @@ import org.gradle.kotlin.dsl.invoke
 import java.io.File
 import java.nio.file.Files
 
-
-class ArithmeticExtensionsPlugin : Plugin<Project> {
+private open class GenerateArithmeticExtensionsTask : DefaultTask() {
 
     private val outputDir = File("src/main/kotlin")
     private val outputName = "ArithmeticExtensions"
-    @OutputFile // TODO for some reason this annotation does not add outputFile to the clean set;
-    val outputFile = outputDir.resolve("$outputName.kt")
+    private val outputFile = outputDir.resolve("$outputName.kt")
+    // this annotation has to be on a fun, not a val
+    // https://docs.gradle.org/current/userguide/custom_plugins.html#sec:working_with_files_in_custom_tasks_and_plugins
+    @OutputFile
+    fun getOutputFile () = outputFile
+
+    @org.gradle.api.tasks.TaskAction
+    fun runTask() {
+        println("generating arithmetic extensions")
+        Files.write(outputFile.toPath(), generateSource(outputName).toByteArray())
+    }
+
+}
+
+
+class ArithmeticExtensionsPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
 
-        tasks {
-            register(generateArithmeticExtensionsName) {
-                group = "Code Generation"
-                description = "Generates arithmetic extension source files."
-                doLast { println("Generating arithmetic extensions"); Files.write(outputFile.toPath(), generateSource(outputName).toByteArray()) }
-            }
-        }
+        tasks.register(generateArithmeticExtensionsName, GenerateArithmeticExtensionsTask::class.java)
         tasks["compileKotlin"].dependsOn(tasks[generateArithmeticExtensionsName])
     }
 }
