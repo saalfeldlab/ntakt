@@ -30,12 +30,6 @@ operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
 operator fun <T> RA<T>.get(vararg position: Int): T = getAt(*position)
 operator fun <T> RA<T>.get(position: Localizable): T = getAt(position)
 
-fun <T> constant(constant: T, numDimensions: Int) = ConstantUtils.constantRandomAccessible(constant, numDimensions)
-fun <T: NumericType<T>> zeros(type: T, numDimensions: Int) = type.also { it.setZero() }.let { constant(it, numDimensions) }
-fun zeros(numDimensions: Int) = zeros(DoubleType(), numDimensions)
-fun <T: NumericType<T>> ones(type: T, numDimensions: Int) = type.also { it.setOne() }.let { constant(it, numDimensions) }
-fun ones(numDimensions: Int) = ones(DoubleType(), numDimensions)
-
 fun <T> RA<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
 fun <T> RA<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
 fun <T> RA<T>.translateInverse(vararg translation: Long) = Views.translateInverse(this, *translation)

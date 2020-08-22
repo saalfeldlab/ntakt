@@ -28,12 +28,6 @@ import kotlin.math.E
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
-fun <T> constant(constant: T, interval: Interval) = ConstantUtils.constantRandomAccessibleInterval(constant, interval)
-fun <T: NumericType<T>> zeros(interval: Interval, type: T) = type.also { it.setZero() }.let { constant(it, interval) }
-fun zeros(interval: Interval) = zeros(interval, DoubleType())
-fun <T: NumericType<T>> ones(interval: Interval, type: T) = type.also { it.setOne() }.let { constant(it, interval) }
-fun ones(interval: Interval) = ones(interval, DoubleType())
-
 fun <T> RAI<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
 fun <T> RAI<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
 fun <T> RAI<T>.translateInverse(vararg translation: Long) = Views.translateInverse(this, *translation)
