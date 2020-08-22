@@ -49,17 +49,11 @@ val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 val <T> RAI<T>.iterable get() = Views.iterable(this)
 val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
 
-fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
-inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
-fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
-inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
-fun <T, U: Type<U>> RAI<T>.convert(converter: SamplerConverter<in T, U>) = Converters.convert(this, converter)
-inline fun <T, U: Type<U>> RAI<T>.convert(crossinline converter: (Sampler<out T>) -> U) = convert(SamplerConverter{ t: net.imglib2.Sampler<out T> -> converter(t) })
-
-fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
-fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
-val <C: ComplexType<C>> RAI<C>.real get() = real(DoubleType())
-val <C: ComplexType<C>> RAI<C>.imaginary get() = imaginary(DoubleType())
+// TODO need to fix variance in sampler converter extensions first
+//fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
+//fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
+//val <C: ComplexType<C>> RAI<C>.real get() = real(DoubleType())
+//val <C: ComplexType<C>> RAI<C>.imaginary get() = imaginary(DoubleType())
 
 fun <T: Type<T>> RAI<T>.extendValue(extension: T) = Views.extendValue(this, extension)
 fun <T: RealType<T>> RAI<T>.extendValue(extension: Float) = Views.extendValue(this, extension)

@@ -11,7 +11,9 @@ plugins {
     // publish to maven (only local repo for now)
     `maven-publish`
 
+    // code generation
     `arithmetic-extensions`
+    `converter-extensions`
 
 
 }

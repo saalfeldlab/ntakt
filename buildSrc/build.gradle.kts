@@ -8,6 +8,10 @@ gradlePlugin {
             id = "arithmetic-extensions"
             implementationClass = "ArithmeticExtensionsPlugin"
         }
+        register("converter-extensions-plugin") {
+            id = "converter-extensions"
+            implementationClass = "ConverterExtensionsPlugin"
+        }
     }
 }
 
