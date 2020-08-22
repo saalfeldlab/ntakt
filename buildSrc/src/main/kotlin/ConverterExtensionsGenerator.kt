@@ -113,6 +113,17 @@ private fun FileSpec.Builder.addTypeConversionExtensions(container: ClassName): 
             .addFunction(generateRealTypeConversionExtensions(container))
             .addFunction(generateIntegerTypeConversionExtensions(container))
             .let { generateRealTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+            .let { generateIntegerTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+}
+
+private fun generateIntegerTypeToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateIntegerTypeToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
+
+private fun generateIntegerTypeToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
+    val t = TypeVariableName("T", IntegerType::class.asTypeName().parameterizedBy(TypeVariableName("T")))
+    return typedFuncSpecBuilder(name, container.parameterizedBy(t), t)
+            .addStatement("return asType(%T())", to.asTypeName())
+            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}FromIntegerType").build())
+            .build()
 }
 
 private fun generateRealTypeToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateRealTypeToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
@@ -121,6 +132,7 @@ private fun generateRealTypeToRealTypeConversionExtensions(name: String, contain
     val t = TypeVariableName("T", RealType::class.asTypeName().parameterizedBy(TypeVariableName("T")))
     return typedFuncSpecBuilder(name, container.parameterizedBy(t), t)
             .addStatement("return asType(%T())", to.asTypeName())
+            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}FromRealType").build())
             .build()
 }
 
@@ -141,18 +153,6 @@ private fun generateGenericTypeConversionExtension(container: ClassName, typeT: 
             .addParameter("u", u)
             .addStatement("return if·(u::class·==·type::class)·this·as·%T else·convert(u)·{·s,·t·->·t.$setter(s.$getter)·}", container.parameterizedBy(u))
             .build()
-    // fun <T: RealType<T>, U: RealType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-    //fun <T: IntegerType<T>, U: IntegerType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
-    //val <T: RealType<T>> RA<T>.asBytes get() = asType(ByteType())
-    //val <T: RealType<T>> RA<T>.asShorts get() = asType(ShortType())
-    //val <T: RealType<T>> RA<T>.asInts get() = asType(IntType())
-    //val <T: RealType<T>> RA<T>.asLongs get() = asType(LongType())
-    //val <T: RealType<T>> RA<T>.asUnsignedBytes get() = asType(UnsignedByteType())
-    //val <T: RealType<T>> RA<T>.asUnsignedShorts get() = asType(UnsignedShortType())
-    //val <T: RealType<T>> RA<T>.asUnsignedInts get() = asType(UnsignedIntType())
-    //val <T: RealType<T>> RA<T>.asUnsignedLongs get() = asType(UnsignedLongType())
-    //val <T: RealType<T>> RA<T>.asFloats get() = asType(FloatType())
-    //val <T: RealType<T>> RA<T>.asDoubles get() = asType(DoubleType())
 }
 
 private fun typedFuncSpecBuilder(name: String, receiver: TypeName, vararg typeVariable: TypeVariableName)

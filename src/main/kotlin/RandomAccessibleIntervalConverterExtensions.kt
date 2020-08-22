@@ -1,6 +1,7 @@
 package net.imglib2.imklib
 
 import kotlin.Unit
+import kotlin.jvm.JvmName
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
@@ -48,22 +49,62 @@ fun <T : IntegerType<T>, U : IntegerType<U>> RAI<T>.asType(u: U) =
     if (u::class == type::class) this as RAI<U>
     else convert(u) { s, t -> t.setInteger(s.integerLong) }
 
+@JvmName(name = "asDoublesFromRealType")
 fun <T : RealType<T>> RAI<T>.asDoubles() = asType(DoubleType())
 
+@JvmName(name = "asFloatsFromRealType")
 fun <T : RealType<T>> RAI<T>.asFloats() = asType(FloatType())
 
+@JvmName(name = "asLongsFromRealType")
 fun <T : RealType<T>> RAI<T>.asLongs() = asType(LongType())
 
+@JvmName(name = "asIntsFromRealType")
 fun <T : RealType<T>> RAI<T>.asInts() = asType(IntType())
 
+@JvmName(name = "asShortsFromRealType")
 fun <T : RealType<T>> RAI<T>.asShorts() = asType(ShortType())
 
+@JvmName(name = "asBytesFromRealType")
 fun <T : RealType<T>> RAI<T>.asBytes() = asType(ByteType())
 
+@JvmName(name = "asUnsignedLongsFromRealType")
 fun <T : RealType<T>> RAI<T>.asUnsignedLongs() = asType(UnsignedLongType())
 
+@JvmName(name = "asUnsignedIntsFromRealType")
 fun <T : RealType<T>> RAI<T>.asUnsignedInts() = asType(UnsignedIntType())
 
+@JvmName(name = "asUnsignedShortsFromRealType")
 fun <T : RealType<T>> RAI<T>.asUnsignedShorts() = asType(UnsignedShortType())
 
+@JvmName(name = "asUnsignedBytesFromRealType")
 fun <T : RealType<T>> RAI<T>.asUnsignedBytes() = asType(UnsignedByteType())
+
+@JvmName(name = "asDoublesFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asDoubles() = asType(DoubleType())
+
+@JvmName(name = "asFloatsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asFloats() = asType(FloatType())
+
+@JvmName(name = "asLongsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asLongs() = asType(LongType())
+
+@JvmName(name = "asIntsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asInts() = asType(IntType())
+
+@JvmName(name = "asShortsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asShorts() = asType(ShortType())
+
+@JvmName(name = "asBytesFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asBytes() = asType(ByteType())
+
+@JvmName(name = "asUnsignedLongsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asUnsignedLongs() = asType(UnsignedLongType())
+
+@JvmName(name = "asUnsignedIntsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asUnsignedInts() = asType(UnsignedIntType())
+
+@JvmName(name = "asUnsignedShortsFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asUnsignedShorts() = asType(UnsignedShortType())
+
+@JvmName(name = "asUnsignedBytesFromIntegerType")
+fun <T : IntegerType<T>> RAI<T>.asUnsignedBytes() = asType(UnsignedByteType())
