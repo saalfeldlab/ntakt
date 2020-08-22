@@ -3,6 +3,7 @@ import net.imglib2.IterableInterval
 import net.imglib2.RandomAccessible
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.RealRandomAccessible
+import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType

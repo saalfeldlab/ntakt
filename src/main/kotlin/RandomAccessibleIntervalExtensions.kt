@@ -59,19 +59,6 @@ fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
 fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
 fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
 
-fun <T: RealType<T>, U: RealType<U>> RAI<T>.asType(u: U) = if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-fun <T: IntegerType<T>, U: IntegerType<U>> RAI<T>.asType(u: U) = if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
-val <T: RealType<T>> RAI<T>.asBytes get() = asType(ByteType())
-val <T: RealType<T>> RAI<T>.asShorts get() = asType(ShortType())
-val <T: RealType<T>> RAI<T>.asInts get() = asType(IntType())
-val <T: RealType<T>> RAI<T>.asLongs get() = asType(LongType())
-val <T: RealType<T>> RAI<T>.asUnsignedBytes get() = asType(UnsignedByteType())
-val <T: RealType<T>> RAI<T>.asUnsignedShorts get() = asType(UnsignedShortType())
-val <T: RealType<T>> RAI<T>.asUnsignedInts get() = asType(UnsignedIntType())
-val <T: RealType<T>> RAI<T>.asUnsignedLongs get() = asType(UnsignedLongType())
-val <T: RealType<T>> RAI<T>.asFloats get() = asType(FloatType())
-val <T: RealType<T>> RAI<T>.asDoubles get() = asType(DoubleType())
-
 operator fun <T: RealType<T>> RAI<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
 operator fun <T: RealType<T>> RAI<T>.unaryPlus() = this
 

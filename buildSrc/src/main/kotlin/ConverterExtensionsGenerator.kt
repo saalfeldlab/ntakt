@@ -5,7 +5,28 @@ import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
 import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
+import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.integer.*
+import net.imglib2.type.numeric.real.DoubleType
+import net.imglib2.type.numeric.real.FloatType
+import kotlin.reflect.KClass
 
+private const val convertName = "convert"
+private const val asTypeName = "asType"
+
+private val realAndIntegerTypes = mapOf<String, KClass<out RealType<*>>>(
+        "doubles" to DoubleType::class,
+        "floats" to FloatType::class,
+        "longs" to LongType::class,
+        "ints" to IntType::class,
+        "shorts" to ShortType::class,
+        "bytes" to ByteType::class,
+        "unsignedLongs" to UnsignedLongType::class,
+        "unsignedInts" to UnsignedIntType::class,
+        "unsignedShorts" to UnsignedShortType::class,
+        "unsignedBytes" to UnsignedByteType::class
+)
 
 fun generateConverterExtensions(`as`: String, fileName: String): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
@@ -13,6 +34,7 @@ fun generateConverterExtensions(`as`: String, fileName: String): String {
             .builder("net.imglib2.imklib", fileName)
             .addAliasedImport(container, `as`)
             .addConverterExtensions(container)
+            .addTypeConversionExtensions(container)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
@@ -36,11 +58,7 @@ private fun FileSpec.Builder.addConverterExtensions(container: ClassName): FileS
 }
 
 private fun generateConverterExtension(container: ClassName, t: TypeVariableName, u: TypeVariableName): FunSpec {
-    return FunSpec
-            .builder("convert")
-            .addTypeVariable(t)
-            .addTypeVariable(u)
-            .receiver(container.parameterizedBy(t))
+    return typedFuncSpecBuilder(convertName, container.parameterizedBy(t), t, u)
             .addParameter("u", u)
             .addParameter("converter", Converter::class.asClassName().parameterizedBy(t, u))
             .addStatement("return %T.convert(this,·converter,·u)", Converters::class)
@@ -48,11 +66,7 @@ private fun generateConverterExtension(container: ClassName, t: TypeVariableName
 }
 
 private fun generateConverterExtensionLambda(container: ClassName, t: TypeVariableName, u: TypeVariableName): FunSpec {
-    return FunSpec
-            .builder("convert")
-            .addTypeVariable(t)
-            .addTypeVariable(u)
-            .receiver(container.parameterizedBy(t))
+    return typedFuncSpecBuilder(convertName, container.parameterizedBy(t), t, u)
             .addModifiers(KModifier.INLINE)
             .addParameter("u", u)
             .addParameter(higherOrderFunctionParameter("converter", t, u))
@@ -61,12 +75,7 @@ private fun generateConverterExtensionLambda(container: ClassName, t: TypeVariab
 }
 
 private fun generateBiconverterExtension(container: ClassName, t: TypeVariableName, u: TypeVariableName, v: TypeVariableName): FunSpec {
-    return FunSpec
-            .builder("convert")
-            .addTypeVariable(t)
-            .addTypeVariable(u)
-            .addTypeVariable(v)
-            .receiver(container.parameterizedBy(t))
+    return typedFuncSpecBuilder(convertName, container.parameterizedBy(t), t, u, v)
             .addParameter("that", container.parameterizedBy(u))
             .addParameter("v", v)
             .addParameter("converter", BiConverter::class.asClassName().parameterizedBy(t, u, v))
@@ -75,12 +84,7 @@ private fun generateBiconverterExtension(container: ClassName, t: TypeVariableNa
 }
 
 private fun generateBiconverterExtensionLambda(container: ClassName, t: TypeVariableName, u: TypeVariableName, v: TypeVariableName): FunSpec {
-    return FunSpec
-            .builder("convert")
-            .addTypeVariable(t)
-            .addTypeVariable(u)
-            .addTypeVariable(v)
-            .receiver(container.parameterizedBy(t))
+    return typedFuncSpecBuilder(convertName, container.parameterizedBy(t), t, u, v)
             .addModifiers(KModifier.INLINE)
             .addParameter("that", container.parameterizedBy(u))
             .addParameter("v", v)
@@ -90,11 +94,7 @@ private fun generateBiconverterExtensionLambda(container: ClassName, t: TypeVari
 }
 
 private fun generateSamplerConverterExtension(container: ClassName, t: TypeVariableName, u: TypeVariableName): FunSpec {
-    return FunSpec
-            .builder("convert")
-            .addTypeVariable(TypeVariableName(t.name, variance = null))
-            .addTypeVariable(u)
-            .receiver(container.parameterizedBy(t))
+    return typedFuncSpecBuilder(convertName, container.parameterizedBy(t), TypeVariableName(t.name, variance = null), u)
             .addParameter("converter", SamplerConverter::class.asClassName().parameterizedBy(t, u))
             .addStatement("return %T.convert(this,·converter)", Converters::class)
             .build()
@@ -107,6 +107,56 @@ private fun higherOrderFunctionParameter(
     val lambdaType = LambdaTypeName.get(null, *className, returnType = returnType)
     return ParameterSpec.builder(name, lambdaType, KModifier.CROSSINLINE).build()
 }
+
+private fun FileSpec.Builder.addTypeConversionExtensions(container: ClassName): FileSpec.Builder {
+    return this
+            .addFunction(generateRealTypeConversionExtensions(container))
+            .addFunction(generateIntegerTypeConversionExtensions(container))
+            .let { generateRealTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+}
+
+private fun generateRealTypeToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateRealTypeToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
+
+private fun generateRealTypeToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
+    val t = TypeVariableName("T", RealType::class.asTypeName().parameterizedBy(TypeVariableName("T")))
+    return typedFuncSpecBuilder(name, container.parameterizedBy(t), t)
+            .addStatement("return asType(%T())", to.asTypeName())
+            .build()
+}
+
+private fun generateRealTypeConversionExtensions(container: ClassName)
+        = generateGenericTypeConversionExtension(container, RealType::class.asTypeName(), RealType::class.asTypeName(), "realDouble", "setReal")
+
+private fun generateIntegerTypeConversionExtensions(container: ClassName)
+        = generateGenericTypeConversionExtension(container, IntegerType::class.asTypeName(), IntegerType::class.asTypeName(), "integerLong", "setInteger")
+
+private fun generateGenericTypeConversionExtension(container: ClassName, typeT: ClassName, typeU: ClassName, getter: String, setter: String): FunSpec {
+    val t = TypeVariableName("T")
+    val u = TypeVariableName("U")
+    val typeOfT = typeT.parameterizedBy(t)
+    val typeOfU = typeU.parameterizedBy(u)
+    val tType = TypeVariableName("T", typeOfT)
+    val uType = TypeVariableName("U", typeOfU)
+    return typedFuncSpecBuilder(asTypeName, container.parameterizedBy(t), tType, uType)
+            .addParameter("u", u)
+            .addStatement("return if·(u::class·==·type::class)·this·as·%T else·convert(u)·{·s,·t·->·t.$setter(s.$getter)·}", container.parameterizedBy(u))
+            .build()
+    // fun <T: RealType<T>, U: RealType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
+    //fun <T: IntegerType<T>, U: IntegerType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
+    //val <T: RealType<T>> RA<T>.asBytes get() = asType(ByteType())
+    //val <T: RealType<T>> RA<T>.asShorts get() = asType(ShortType())
+    //val <T: RealType<T>> RA<T>.asInts get() = asType(IntType())
+    //val <T: RealType<T>> RA<T>.asLongs get() = asType(LongType())
+    //val <T: RealType<T>> RA<T>.asUnsignedBytes get() = asType(UnsignedByteType())
+    //val <T: RealType<T>> RA<T>.asUnsignedShorts get() = asType(UnsignedShortType())
+    //val <T: RealType<T>> RA<T>.asUnsignedInts get() = asType(UnsignedIntType())
+    //val <T: RealType<T>> RA<T>.asUnsignedLongs get() = asType(UnsignedLongType())
+    //val <T: RealType<T>> RA<T>.asFloats get() = asType(FloatType())
+    //val <T: RealType<T>> RA<T>.asDoubles get() = asType(DoubleType())
+}
+
+private fun typedFuncSpecBuilder(name: String, receiver: TypeName, vararg typeVariable: TypeVariableName)
+    = FunSpec.builder(name).receiver(receiver).addTypeVariables(typeVariable.map { it })
 
 private fun generatePlusConverting(
         name: String,

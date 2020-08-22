@@ -52,19 +52,6 @@ fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }
 fun <T> RA<T>.interval(interval: Interval) = Views.interval(this, interval)
 operator fun <T> RA<T>.get(interval: Interval) = interval(interval)
 
-fun <T: RealType<T>, U: RealType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-fun <T: IntegerType<T>, U: IntegerType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
-val <T: RealType<T>> RA<T>.asBytes get() = asType(ByteType())
-val <T: RealType<T>> RA<T>.asShorts get() = asType(ShortType())
-val <T: RealType<T>> RA<T>.asInts get() = asType(IntType())
-val <T: RealType<T>> RA<T>.asLongs get() = asType(LongType())
-val <T: RealType<T>> RA<T>.asUnsignedBytes get() = asType(UnsignedByteType())
-val <T: RealType<T>> RA<T>.asUnsignedShorts get() = asType(UnsignedShortType())
-val <T: RealType<T>> RA<T>.asUnsignedInts get() = asType(UnsignedIntType())
-val <T: RealType<T>> RA<T>.asUnsignedLongs get() = asType(UnsignedLongType())
-val <T: RealType<T>> RA<T>.asFloats get() = asType(FloatType())
-val <T: RealType<T>> RA<T>.asDoubles get() = asType(DoubleType())
-
 //operator fun <T: RealType<T>> RA<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
 //operator fun <T: RealType<T>> RA<T>.unaryPlus() = this
 //

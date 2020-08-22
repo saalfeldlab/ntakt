@@ -5,6 +5,18 @@ import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
+import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.integer.ByteType
+import net.imglib2.type.numeric.integer.IntType
+import net.imglib2.type.numeric.integer.LongType
+import net.imglib2.type.numeric.integer.ShortType
+import net.imglib2.type.numeric.integer.UnsignedByteType
+import net.imglib2.type.numeric.integer.UnsignedIntType
+import net.imglib2.type.numeric.integer.UnsignedLongType
+import net.imglib2.type.numeric.integer.UnsignedShortType
+import net.imglib2.type.numeric.real.DoubleType
+import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.RandomAccessibleInterval as RAI
 
 fun <T, U : Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) =
@@ -28,3 +40,30 @@ inline fun <T, U, V : Type<V>> RAI<T>.convert(
     V
   ) -> Unit
 ) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
+
+fun <T : RealType<T>, U : RealType<U>> RAI<T>.asType(u: U) =
+    if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
+
+fun <T : IntegerType<T>, U : IntegerType<U>> RAI<T>.asType(u: U) =
+    if (u::class == type::class) this as RAI<U>
+    else convert(u) { s, t -> t.setInteger(s.integerLong) }
+
+fun <T : RealType<T>> RAI<T>.asDoubles() = asType(DoubleType())
+
+fun <T : RealType<T>> RAI<T>.asFloats() = asType(FloatType())
+
+fun <T : RealType<T>> RAI<T>.asLongs() = asType(LongType())
+
+fun <T : RealType<T>> RAI<T>.asInts() = asType(IntType())
+
+fun <T : RealType<T>> RAI<T>.asShorts() = asType(ShortType())
+
+fun <T : RealType<T>> RAI<T>.asBytes() = asType(ByteType())
+
+fun <T : RealType<T>> RAI<T>.asUnsignedLongs() = asType(UnsignedLongType())
+
+fun <T : RealType<T>> RAI<T>.asUnsignedInts() = asType(UnsignedIntType())
+
+fun <T : RealType<T>> RAI<T>.asUnsignedShorts() = asType(UnsignedShortType())
+
+fun <T : RealType<T>> RAI<T>.asUnsignedBytes() = asType(UnsignedByteType())
