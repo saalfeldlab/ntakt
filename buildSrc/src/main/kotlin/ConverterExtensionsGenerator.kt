@@ -30,7 +30,8 @@ private fun FileSpec.Builder.addConverterExtensions(container: ClassName): FileS
             .addFunction(generateConverterExtensionLambda(container, t, uType))
             .addFunction(generateBiconverterExtension(container, t, u, vType))
             .addFunction(generateBiconverterExtensionLambda(container, t, u, vType))
-            .addFunction(generateSamplerConverterExtension(container, tIn, uType))
+//    TODO need to fix variance for SamplerConverter before we can use this
+//            .addFunction(generateSamplerConverterExtension(container, tIn, uType))
 //    fun <T, U: Type<U>> RA<T>.convert(converter: SamplerConverter<in T, U>) = Converters.convert(this, converter)
 }
 

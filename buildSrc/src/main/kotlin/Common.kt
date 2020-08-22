@@ -1,4 +1,5 @@
 import com.squareup.kotlinpoet.asTypeName
+import net.imglib2.IterableInterval
 import net.imglib2.RandomAccessible
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.RealRandomAccessible
@@ -39,12 +40,13 @@ val outputDir = File("src/main/kotlin")
 val containers = mapOf(
         "RA" to RandomAccessible::class.asTypeName(),
         "RAI" to RandomAccessibleInterval::class.asTypeName(),
-        "RRA" to RealRandomAccessible::class.asTypeName())
+        "RRA" to RealRandomAccessible::class.asTypeName(),
+        "II" to IterableInterval::class.asTypeName())
 
 val extensionTypes = arrayOf(
         "RandomAccessible",
         "RandomAccessibleInterval"
-//        "RealRandomAccessible",
+//        "RealRandomAccessible"
 //        "IterableInterval"
 )
 val extensionTypeToAbbreviationMapping = extensionTypes.associateBy({ it }, { it.filter { it.isUpperCase() } })

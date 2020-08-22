@@ -4,7 +4,6 @@ import kotlin.Unit
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
-import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.type.Type
 import net.imglib2.RandomAccessible as RA
 
@@ -29,6 +28,3 @@ inline fun <T, U, V : Type<V>> RA<T>.convert(
     V
   ) -> Unit
 ) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
-
-fun <T, U : Type<U>> RA<T>.convert(converter: SamplerConverter<T, U>) =
-    Converters.convert(this, converter)
