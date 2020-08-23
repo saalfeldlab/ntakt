@@ -12,8 +12,7 @@ plugins {
     `maven-publish`
 
     // code generation
-    `arithmetic-extensions`
-    `converter-extensions`
+    extensions
 
 
 }

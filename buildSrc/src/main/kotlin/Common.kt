@@ -46,8 +46,8 @@ val containers = mapOf(
 
 val extensionTypes = arrayOf(
         "RandomAccessible",
-        "RandomAccessibleInterval"
-//        "RealRandomAccessible"
+        "RandomAccessibleInterval",
+        "RealRandomAccessible"
 //        "IterableInterval"
 )
 val extensionTypeToAbbreviationMapping = extensionTypes.associateBy({ it }, { it.filter { it.isUpperCase() } })
