@@ -28,12 +28,6 @@ import kotlin.math.E
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
-fun <T> constant(constant: T, interval: Interval) = ConstantUtils.constantRandomAccessibleInterval(constant, interval)
-fun <T: NumericType<T>> zeros(interval: Interval, type: T) = type.also { it.setZero() }.let { constant(it, interval) }
-fun zeros(interval: Interval) = zeros(interval, DoubleType())
-fun <T: NumericType<T>> ones(interval: Interval, type: T) = type.also { it.setOne() }.let { constant(it, interval) }
-fun ones(interval: Interval) = ones(interval, DoubleType())
-
 fun <T> RAI<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
 fun <T> RAI<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
 fun <T> RAI<T>.translateInverse(vararg translation: Long) = Views.translateInverse(this, *translation)
@@ -49,17 +43,11 @@ val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 val <T> RAI<T>.iterable get() = Views.iterable(this)
 val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
 
-fun <T, U: Type<U>> RAI<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
-inline fun <T, U: Type<U>> RAI<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
-fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
-inline fun <T, U, V: Type<V>> RAI<T>.convert(that: RAI<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
-fun <T, U: Type<U>> RAI<T>.convert(converter: SamplerConverter<in T, U>) = Converters.convert(this, converter)
-inline fun <T, U: Type<U>> RAI<T>.convert(crossinline converter: (Sampler<out T>) -> U) = convert(SamplerConverter{ t: net.imglib2.Sampler<out T> -> converter(t) })
-
-fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
-fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
-val <C: ComplexType<C>> RAI<C>.real get() = real(DoubleType())
-val <C: ComplexType<C>> RAI<C>.imaginary get() = imaginary(DoubleType())
+// TODO need to fix variance in sampler converter extensions first
+//fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
+//fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
+//val <C: ComplexType<C>> RAI<C>.real get() = real(DoubleType())
+//val <C: ComplexType<C>> RAI<C>.imaginary get() = imaginary(DoubleType())
 
 fun <T: Type<T>> RAI<T>.extendValue(extension: T) = Views.extendValue(this, extension)
 fun <T: RealType<T>> RAI<T>.extendValue(extension: Float) = Views.extendValue(this, extension)
@@ -70,19 +58,6 @@ fun <T> RAI<T>.extendBorder() = Views.extendBorder(this)
 fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
 fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
 fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
-
-fun <T: RealType<T>, U: RealType<U>> RAI<T>.asType(u: U) = if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-fun <T: IntegerType<T>, U: IntegerType<U>> RAI<T>.asType(u: U) = if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
-val <T: RealType<T>> RAI<T>.asBytes get() = asType(ByteType())
-val <T: RealType<T>> RAI<T>.asShorts get() = asType(ShortType())
-val <T: RealType<T>> RAI<T>.asInts get() = asType(IntType())
-val <T: RealType<T>> RAI<T>.asLongs get() = asType(LongType())
-val <T: RealType<T>> RAI<T>.asUnsignedBytes get() = asType(UnsignedByteType())
-val <T: RealType<T>> RAI<T>.asUnsignedShorts get() = asType(UnsignedShortType())
-val <T: RealType<T>> RAI<T>.asUnsignedInts get() = asType(UnsignedIntType())
-val <T: RealType<T>> RAI<T>.asUnsignedLongs get() = asType(UnsignedLongType())
-val <T: RealType<T>> RAI<T>.asFloats get() = asType(FloatType())
-val <T: RealType<T>> RAI<T>.asDoubles get() = asType(DoubleType())
 
 operator fun <T: RealType<T>> RAI<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
 operator fun <T: RealType<T>> RAI<T>.unaryPlus() = this

@@ -30,12 +30,6 @@ operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
 operator fun <T> RA<T>.get(vararg position: Int): T = getAt(*position)
 operator fun <T> RA<T>.get(position: Localizable): T = getAt(position)
 
-fun <T> constant(constant: T, numDimensions: Int) = ConstantUtils.constantRandomAccessible(constant, numDimensions)
-fun <T: NumericType<T>> zeros(type: T, numDimensions: Int) = type.also { it.setZero() }.let { constant(it, numDimensions) }
-fun zeros(numDimensions: Int) = zeros(DoubleType(), numDimensions)
-fun <T: NumericType<T>> ones(type: T, numDimensions: Int) = type.also { it.setOne() }.let { constant(it, numDimensions) }
-fun ones(numDimensions: Int) = ones(DoubleType(), numDimensions)
-
 fun <T> RA<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
 fun <T> RA<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
 fun <T> RA<T>.translateInverse(vararg translation: Long) = Views.translateInverse(this, *translation)
@@ -47,106 +41,87 @@ operator fun <T> RA<T>.minus(translation: Localizable) = translateInverse(transl
 
 val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
 
-fun <T, U: Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) = Converters.convert(this, converter, u)
-inline fun <T, U: Type<U>> RA<T>.convert(u : U, crossinline converter: (T, U) -> Unit) = convert(u, Converter { a, b -> converter(a, b) })
-fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, converter: BiConverter<T, U, V>) = Converters.convert(this, that, converter, v)
-inline fun <T, U, V: Type<V>> RA<T>.convert(that: RA<U>, v: V, crossinline converter: (T, U, V) -> Unit) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
-fun <T, U: Type<U>> RA<T>.convert(converter: SamplerConverter<in T, U>) = Converters.convert(this, converter)
-inline fun <T, U: Type<U>> RA<T>.convert(crossinline converter: (Sampler<out T>) -> U) = convert(SamplerConverter{ t: Sampler<out T> -> converter(t) })
-
-fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
-fun <C: ComplexType<C>, R: RealType<R>> RA<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
-val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
-val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())
+// TODO need to fix variance in sampler converter extensions first
+//fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
+//fun <C: ComplexType<C>, R: RealType<R>> RA<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
+//val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
+//val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())
 
 fun <T> RA<T>.interval(min: LongArray, max: LongArray) = Views.interval(this, min, max)
 fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }, LongArray(dims.size) { dims[it] - 1L })
 fun <T> RA<T>.interval(interval: Interval) = Views.interval(this, interval)
 operator fun <T> RA<T>.get(interval: Interval) = interval(interval)
 
-fun <T: RealType<T>, U: RealType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-fun <T: IntegerType<T>, U: IntegerType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
-val <T: RealType<T>> RA<T>.asBytes get() = asType(ByteType())
-val <T: RealType<T>> RA<T>.asShorts get() = asType(ShortType())
-val <T: RealType<T>> RA<T>.asInts get() = asType(IntType())
-val <T: RealType<T>> RA<T>.asLongs get() = asType(LongType())
-val <T: RealType<T>> RA<T>.asUnsignedBytes get() = asType(UnsignedByteType())
-val <T: RealType<T>> RA<T>.asUnsignedShorts get() = asType(UnsignedShortType())
-val <T: RealType<T>> RA<T>.asUnsignedInts get() = asType(UnsignedIntType())
-val <T: RealType<T>> RA<T>.asUnsignedLongs get() = asType(UnsignedLongType())
-val <T: RealType<T>> RA<T>.asFloats get() = asType(FloatType())
-val <T: RealType<T>> RA<T>.asDoubles get() = asType(DoubleType())
-
-operator fun <T: RealType<T>> RA<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
-operator fun <T: RealType<T>> RA<T>.unaryPlus() = this
-
-operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
-operator fun <T: RealType<T>> RA<T>.plus(that: RAI<T>) = this[that] + that
-operator fun <T: RealType<T>> RA<T>.plus(value: T) = convert(type) { s, t -> t.set(s); t += value }
-operator fun <T: RealType<T>> RA<T>.plus(value: Byte) = this + type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.plus(value: Short) = this + type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.plus(value: Int) = this + type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.plus(value: Long) = this + type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.plus(value: Float) = this + type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.plus(value: Double) = this + type.also { it.setTo(value) }
-operator fun <T: RealType<T>> T.plus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Byte.plus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Short.plus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Int.plus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Long.plus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Float.plus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Double.plus(that: RA<T>) = that + this
-
-operator fun <T: RealType<T>> RA<T>.minus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v -= u }
-operator fun <T: RealType<T>> RA<T>.minus(that: RAI<T>) = this[that] - that
-operator fun <T: RealType<T>> RA<T>.minus(value: T) = convert(type) { s, t -> t.set(s); t -= value }
-operator fun <T: RealType<T>> RA<T>.minus(value: Byte) = this - type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.minus(value: Short) = this - type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.minus(value: Int) = this - type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.minus(value: Long) = this - type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.minus(value: Float) = this - type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.minus(value: Double) = this - type.also { it.setTo(value) }
-operator fun <T: RealType<T>> T.minus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Byte.minus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Short.minus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Int.minus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Long.minus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Float.minus(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Double.minus(that: RA<T>) = that + this
-
-operator fun <T: RealType<T>> RA<T>.times(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v *= u }
-operator fun <T: RealType<T>> RA<T>.times(that: RAI<T>) = this[that] * that
-operator fun <T: RealType<T>> RA<T>.times(value: T) = convert(type) { s, t -> t.set(s); t *= value }
-operator fun <T: RealType<T>> RA<T>.times(value: Byte) = this * type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.times(value: Short) = this * type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.times(value: Int) = this * type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.times(value: Long) = this * type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.times(value: Float) = this * type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.times(value: Double) = this * type.also { it.setTo(value) }
-operator fun <T: RealType<T>> T.times(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Byte.times(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Short.times(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Int.times(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Long.times(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Float.times(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Double.times(that: RA<T>) = that + this
-
-operator fun <T: RealType<T>> RA<T>.div(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v /= u }
-operator fun <T: RealType<T>> RA<T>.div(that: RAI<T>) = this[that] / that
-operator fun <T: RealType<T>> RA<T>.div(value: T) = convert(type) { s, t -> t.set(s); t /= value }
-operator fun <T: RealType<T>> RA<T>.div(value: Byte) = this / type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.div(value: Short) = this / type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.div(value: Int) = this / type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.div(value: Long) = this / type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.div(value: Float) = this / type.also { it.setTo(value) }
-operator fun <T: RealType<T>> RA<T>.div(value: Double) = this / type.also { it.setTo(value) }
-operator fun <T: RealType<T>> T.div(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Byte.div(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Short.div(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Int.div(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Long.div(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Float.div(that: RA<T>) = that + this
-operator fun <T: RealType<T>> Double.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> RA<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
+//operator fun <T: RealType<T>> RA<T>.unaryPlus() = this
+//
+//operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
+//operator fun <T: RealType<T>> RA<T>.plus(that: RAI<T>) = this[that] + that
+//operator fun <T: RealType<T>> RA<T>.plus(value: T) = convert(type) { s, t -> t.set(s); t += value }
+//operator fun <T: RealType<T>> RA<T>.plus(value: Byte) = this + type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.plus(value: Short) = this + type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.plus(value: Int) = this + type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.plus(value: Long) = this + type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.plus(value: Float) = this + type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.plus(value: Double) = this + type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> T.plus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Byte.plus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Short.plus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Int.plus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Long.plus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Float.plus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Double.plus(that: RA<T>) = that + this
+//
+//operator fun <T: RealType<T>> RA<T>.minus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v -= u }
+//operator fun <T: RealType<T>> RA<T>.minus(that: RAI<T>) = this[that] - that
+//operator fun <T: RealType<T>> RA<T>.minus(value: T) = convert(type) { s, t -> t.set(s); t -= value }
+//operator fun <T: RealType<T>> RA<T>.minus(value: Byte) = this - type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.minus(value: Short) = this - type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.minus(value: Int) = this - type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.minus(value: Long) = this - type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.minus(value: Float) = this - type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.minus(value: Double) = this - type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> T.minus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Byte.minus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Short.minus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Int.minus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Long.minus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Float.minus(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Double.minus(that: RA<T>) = that + this
+//
+//operator fun <T: RealType<T>> RA<T>.times(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v *= u }
+//operator fun <T: RealType<T>> RA<T>.times(that: RAI<T>) = this[that] * that
+//operator fun <T: RealType<T>> RA<T>.times(value: T) = convert(type) { s, t -> t.set(s); t *= value }
+//operator fun <T: RealType<T>> RA<T>.times(value: Byte) = this * type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.times(value: Short) = this * type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.times(value: Int) = this * type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.times(value: Long) = this * type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.times(value: Float) = this * type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.times(value: Double) = this * type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> T.times(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Byte.times(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Short.times(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Int.times(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Long.times(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Float.times(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Double.times(that: RA<T>) = that + this
+//
+//operator fun <T: RealType<T>> RA<T>.div(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v /= u }
+//operator fun <T: RealType<T>> RA<T>.div(that: RAI<T>) = this[that] / that
+//operator fun <T: RealType<T>> RA<T>.div(value: T) = convert(type) { s, t -> t.set(s); t /= value }
+//operator fun <T: RealType<T>> RA<T>.div(value: Byte) = this / type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.div(value: Short) = this / type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.div(value: Int) = this / type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.div(value: Long) = this / type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.div(value: Float) = this / type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> RA<T>.div(value: Double) = this / type.also { it.setTo(value) }
+//operator fun <T: RealType<T>> T.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Byte.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Short.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Int.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Long.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Float.div(that: RA<T>) = that + this
+//operator fun <T: RealType<T>> Double.div(that: RA<T>) = that + this
 
 infix fun <T: RealType<T>> RA<T>.`**`(exponent: RA<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
 infix fun <T: RealType<T>> RA<T>.`**`(exponent: Double) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
