@@ -99,6 +99,12 @@ fun <T : RealType<T>> RandomAccessibleInterval<T>.pow(exponent: T) = convert(typ
 
 infix fun <T : RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: T) = pow(exponent)
 
+fun <T : RealType<T>> RandomAccessibleInterval<T>.pow(exponent: RandomAccessibleInterval<T>) =
+    convert(exponent, type) { s, t, u -> t.set(s); t.pow(u) }
+
+infix fun <T : RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: RandomAccessibleInterval<T>)
+    = pow(exponent)
+
 fun <T : RealType<T>> RandomAccessibleInterval<T>.pow(exponent: Double) = convert(type) { s, t ->
     t.set(s); t.pow(exponent) }
 
@@ -111,6 +117,9 @@ infix fun <T : RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: Float) = 
 
 fun <T : RealType<T>> RandomAccessibleInterval<T>.exp(base: T) = convert(type) { s, t -> t.set(s);
     t.exp(base) }
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.exp(exponent: RandomAccessibleInterval<T>) =
+    convert(exponent, type) { s, t, u -> t.set(s); t.exp(u) }
 
 fun <T : RealType<T>> RandomAccessibleInterval<T>.exp(base: Double = E) = convert(type) { s, t ->
     t.set(s); t.exp(base) }

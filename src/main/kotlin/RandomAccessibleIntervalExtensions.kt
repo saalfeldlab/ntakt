@@ -47,10 +47,6 @@ fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
 fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
 fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
 
-// TODO move this to generator
-infix fun <T: RealType<T>> RAI<T>.`**`(exponent: RAI<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
-fun <T: RealType<T>> RAI<T>.exp(base: RAI<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
-
 val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(" ,", "[", "]")}"
 
 val <T> RAI<T>.isZeroMin get() = Views.isZeroMin(this)

@@ -43,9 +43,30 @@ private fun generateArithmeticScalarOperatorsPrimitiveType(name: String, operato
 private fun FileSpec.Builder.addPow(container: ClassName): FileSpec.Builder {
     addFunction(generatePow(container))
     addFunction(`generate**Infix`(container))
+    addFunction(generatePowContainer(container))
+    addFunction(`generate**InfixContainer`(container))
     return arrayOf(Double::class.asTypeName(), Float::class.asTypeName()).fold(this) { b, t ->
         b.addFunction(generatePow(container, t)).addFunction(`generate**Infix`(container, t))
     }
+}
+
+// TODO this should probably live in a different file
+private fun generatePowContainer(container: ClassName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("pow", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", container.parameterizedBy(genericT))
+            .addStatement("return convert(exponent, type) { s, t, u -> t.set(s); t.pow(u) }")
+            .build()
+}
+
+// TODO this should probably live in a different file
+private fun `generate**InfixContainer`(container: ClassName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("**", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", container.parameterizedBy(genericT))
+            .addModifiers(KModifier.INFIX)
+            .addStatement("return pow(exponent)")
+            .build()
 }
 
 private fun generatePow(container: ClassName): FunSpec {
@@ -85,6 +106,7 @@ private fun `generate**Infix`(container: ClassName, type: TypeName): FunSpec {
 private fun FileSpec.Builder.addExp(container: ClassName): FileSpec.Builder {
     addImport("kotlin.math", "E")
     addFunction(generateExp(container))
+    addFunction(generateExpContainer(container))
     addFunction(generateExp(container, Double::class.asTypeName(), "E"))
     addFunction(generateExp(container, Float::class.asTypeName()))
     return this
@@ -95,6 +117,15 @@ private fun generateExp(container: ClassName): FunSpec {
     return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
             .addParameter("base", genericT)
             .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
+            .build()
+}
+
+// TODO this should probably live in a different file
+private fun generateExpContainer(container: ClassName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", container.parameterizedBy(genericT))
+            .addStatement("return convert(exponent, type) { s, t, u -> t.set(s); t.exp(u) }")
             .build()
 }
 
