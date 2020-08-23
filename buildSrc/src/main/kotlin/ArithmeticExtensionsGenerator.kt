@@ -34,16 +34,6 @@ private val arithmeticTypeCombinations = mutableListOf<Triple<KClass<*>, KClass<
     }
 }
 
-private data class ON(val name: String, val operatorName: String, val type: KClass<*>)
-
-//private val names = arrayOf("plus" to "+", "minus" to "-", "times" to "*", "div" to "/")
-private val names = arrayOf(
-        ON("plus", "+", Add::class),
-        ON("minus", "-", Sub::class),
-        ON("times", "*", Mul::class),
-        ON("div", "/", Div::class))
-
- //, RandomAccessibleInterval::class, RealRandomAccessible::class)
 
 
 fun generateArithmeticExtensions(`as`: String, fileName: String): String {
@@ -51,7 +41,7 @@ fun generateArithmeticExtensions(`as`: String, fileName: String): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     kotlinFile.addAliasedImport(container, `as`)
     kotlinFile.addUnaryPlusMinus(container)
-    for ((name, operatorName, type) in names) {
+    for ((name, operatorName, type) in arithmetics.operatorNames) {
         var index = 0
         kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
 

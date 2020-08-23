@@ -14,6 +14,7 @@ class ExtensionsPlugin : Plugin<Project> {
         tasks["compileKotlin"].dependsOn(tasks[GenerateAllExtensions.name])
         tasks.registerExtension(GenerateConverterExtensionsTask.name, GenerateConverterExtensionsTask::class.java)
         tasks.registerExtension(GenerateArithmeticExtensionsTask.name, GenerateArithmeticExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticScalarExtensionsTask.name, GenerateArithmeticScalarExtensionsTask::class.java)
     }
 
     private fun <T: Task> TaskContainer.registerExtension(name: String, type: Class<T>) {

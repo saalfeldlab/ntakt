@@ -1,4 +1,5 @@
-import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import net.imglib2.IterableInterval
 import net.imglib2.RandomAccessible
 import net.imglib2.RandomAccessibleInterval
@@ -7,6 +8,10 @@ import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
+import net.imglib2.type.operators.Add
+import net.imglib2.type.operators.Div
+import net.imglib2.type.operators.Mul
+import net.imglib2.type.operators.Sub
 import org.gradle.api.tasks.OutputFile
 import java.io.File
 import kotlin.reflect.KClass
@@ -36,6 +41,15 @@ val arithmeticTypes = with (identifiers) {
     )
 }
 
+val primitiveTypes = arrayOf(
+        Byte::class,
+        Short::class,
+        Int::class,
+        Long::class,
+        Float::class,
+        Double::class
+)
+
 val outputDir = File("src/main/kotlin")
 
 val containers = mapOf(
@@ -56,3 +70,21 @@ val abbreviationToExtensionTypeMapping = extensionTypes.associateBy({ it.filter 
 fun getTypeFileMapping(extensionIdentifier: String) = abbreviationToExtensionTypeMapping
         .mapValues { "${it.value}${extensionIdentifier}Extensions" }
         .mapValues { (it.value to outputDir.resolve("${it.value}.kt")) }
+
+object arithmetics {
+    data class OperatorName(val name: String, val operatorName: String, val type: KClass<*>)
+
+    val operatorNames = arrayOf(
+            OperatorName("plus", "+", Add::class),
+            OperatorName("minus", "-", Sub::class),
+            OperatorName("times", "*", Mul::class),
+            OperatorName("div", "/", Div::class))
+}
+
+fun TypeVariableName.recursiveGeneric(vararg type: KClass<*>) = recursiveGeneric(*type.map { it.asTypeName() }.toTypedArray())
+fun TypeVariableName.recursiveGeneric(vararg type: ClassName) = TypeVariableName(name, type.map { it.parameterizedBy(this) })
+fun String.genericAndBounded(vararg type: KClass<*>) = genericAndBounded(*type.map { it.asTypeName() }.toTypedArray())
+fun String.genericAndBounded(vararg type: ClassName) = TypeVariableName(this).let { it to it.recursiveGeneric(*type) }
+
+fun typedFuncSpecBuilder(name: String, receiver: TypeName, vararg typeVariable: TypeVariableName)
+        = FunSpec.builder(name).receiver(receiver).addTypeVariables(typeVariable.map { it })

@@ -155,9 +155,6 @@ private fun generateGenericTypeConversionExtension(container: ClassName, typeT: 
             .build()
 }
 
-private fun typedFuncSpecBuilder(name: String, receiver: TypeName, vararg typeVariable: TypeVariableName)
-    = FunSpec.builder(name).receiver(receiver).addTypeVariables(typeVariable.map { it })
-
 private fun generatePlusConverting(
         name: String,
         operator: String,
