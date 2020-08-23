@@ -52,8 +52,6 @@ fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }
 fun <T> RA<T>.interval(interval: Interval) = Views.interval(this, interval)
 operator fun <T> RA<T>.get(interval: Interval) = interval(interval)
 
-//operator fun <T: RealType<T>> RA<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
-//operator fun <T: RealType<T>> RA<T>.unaryPlus() = this
 //
 //operator fun <T: RealType<T>> RA<T>.plus(that: RA<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
 //operator fun <T: RealType<T>> RA<T>.plus(that: RAI<T>) = this[that] + that

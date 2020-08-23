@@ -4,6 +4,7 @@ import net.imglib2.RandomAccessible
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.RealRandomAccessible
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
@@ -45,10 +46,11 @@ private val names = arrayOf(
  //, RandomAccessibleInterval::class, RealRandomAccessible::class)
 
 
-fun generateSource(`as`: String, fileName: String): String {
+fun generateArithmeticExtensions(`as`: String, fileName: String): String {
     val kotlinFile =  FileSpec.builder("net.imglib2.imklib", fileName)
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     kotlinFile.addAliasedImport(container, `as`)
+    kotlinFile.addUnaryPlusMinus(container)
     for ((name, operatorName, type) in names) {
         var index = 0
         kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
@@ -126,4 +128,28 @@ private fun generatePlusConverting(
             // Need · to add non-breaking space
             .addStatement("return this.asType(${o.simpleName}())·$operator·that.asType(${o.simpleName}())")
             .build()
+}
+
+private fun FileSpec.Builder.addUnaryPlusMinus(container: ClassName): FileSpec.Builder {
+    val genericT = TypeVariableName("T")
+    val typeOfT = NumericType::class.asTypeName().parameterizedBy(genericT)
+    val boundedT = TypeVariableName("T", typeOfT)
+    val parameterizedContainer = container.parameterizedBy(genericT)
+    val unaryPlus = FunSpec
+            .builder("unaryPlus")
+            .addModifiers(KModifier.OPERATOR)
+            .addTypeVariable(boundedT)
+            .receiver(parameterizedContainer)
+            .addStatement("return this")
+            .build()
+    val unaryMinus = FunSpec
+            .builder("unaryMinus")
+            .addModifiers(KModifier.OPERATOR)
+            .addTypeVariable(boundedT)
+            .receiver(parameterizedContainer)
+            .addStatement("return convert(type)·{·s,·t ->·t.set(s);·t.mul(-1.0) }")
+            .build()
+    return this
+            .addFunction(unaryPlus)
+            .addFunction(unaryMinus)
 }

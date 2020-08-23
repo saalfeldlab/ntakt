@@ -59,9 +59,6 @@ fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
 fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
 fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
 
-operator fun <T: RealType<T>> RAI<T>.unaryMinus() = convert(type) { s, t -> t.setReal(-s.realDouble) }
-operator fun <T: RealType<T>> RAI<T>.unaryPlus() = this
-
 operator fun <T: RealType<T>> RAI<T>.plus(that: RAI<T>) = convert(that, type) { t, u, v -> v.set(t); v += u }
 operator fun <T: RealType<T>> RAI<T>.plus(that: RA<T>) = this + that[this]
 operator fun <T: RealType<T>> RAI<T>.plus(value: T) = convert(type) { s, t -> t.set(s); t += value }

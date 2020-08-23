@@ -1,4 +1,3 @@
-import org.gradle.api.tasks.OutputFile
 import java.nio.file.Files
 
 open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
@@ -7,7 +6,7 @@ open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
     fun runTask() {
         for ((`as`, name) in typeFileMapping) {
             println("generating arithmetic extensions for $`as` ($name)")
-            Files.write(name.second.toPath(), generateSource(`as`, name.first).toByteArray())
+            Files.write(name.second.toPath(), generateArithmeticExtensions(`as`, name.first).toByteArray())
         }
     }
 

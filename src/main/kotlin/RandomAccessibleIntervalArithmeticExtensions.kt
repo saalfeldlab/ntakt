@@ -2,6 +2,7 @@ package net.imglib2.imklib
 
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.integer.IntType
 import net.imglib2.type.numeric.integer.LongType
@@ -17,6 +18,11 @@ import net.imglib2.type.operators.Div
 import net.imglib2.type.operators.Mul
 import net.imglib2.type.operators.Sub
 import net.imglib2.RandomAccessibleInterval as RAI
+
+operator fun <T : NumericType<T>> RAI<T>.unaryPlus() = this
+
+operator fun <T : NumericType<T>> RAI<T>.unaryMinus() =
+    convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
 @JvmName(name = "plus_1")
 operator fun <T> RAI<T>.plus(that: RAI<T>): RAI<T> where T : Type<T>, T : Add<T> = convert(that,
