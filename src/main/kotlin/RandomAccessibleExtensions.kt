@@ -52,14 +52,9 @@ fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }
 fun <T> RA<T>.interval(interval: Interval) = Views.interval(this, interval)
 operator fun <T> RA<T>.get(interval: Interval) = interval(interval)
 
+// TODO auto-generate these extensions
 infix fun <T: RealType<T>> RA<T>.`**`(exponent: RA<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
-infix fun <T: RealType<T>> RA<T>.`**`(exponent: Double) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
-infix fun <T: RealType<T>> RA<T>.`**`(exponent: Float) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
-infix fun <T: RealType<T>> RA<T>.`**`(exponent: RealType<*>) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
 fun <T: RealType<T>> RA<T>.exp(base: RA<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
-fun <T: RealType<T>> RA<T>.exp(base: Double = E) = convert(type) { s, t -> t.set(s); t.exp(base) }
-fun <T: RealType<T>> RA<T>.exp(base: Float) = exp(base.toDouble())
-fun <T: RealType<T>> RA<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
 
 fun <T> RA<T>.interpolate(factory: InterpolatorFactory<T, RA<T>>) = Views.interpolate(this, factory)
 val <T> RA<T>.interpolatedNearestNeigbor get() = interpolate(NearestNeighborInterpolatorFactory())

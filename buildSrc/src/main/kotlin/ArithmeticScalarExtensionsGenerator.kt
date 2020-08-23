@@ -1,6 +1,5 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import net.imglib2.type.Type
 import net.imglib2.type.numeric.RealType
 import kotlin.reflect.KClass
 
@@ -11,6 +10,8 @@ fun generateArithmeticScalarExtensions(`as`: String, fileName: String): String {
         kotlinFile.addFunction(generateArithmeticScalarOperatorSameType(name, operatorName, container, type))
         kotlinFile.addArithmeticScalarOperatorsPrimitiveTypes(name, operatorName, container)
     }
+    kotlinFile.addPow(container)
+    kotlinFile.addExp(container)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
@@ -38,3 +39,74 @@ private fun generateArithmeticScalarOperatorsPrimitiveType(name: String, operato
             .addStatement("return this·$operator·type.also·{·it.setTo(value) }")
             .build()
 }
+
+private fun FileSpec.Builder.addPow(container: ClassName): FileSpec.Builder {
+    addFunction(generatePow(container))
+    addFunction(`generate**Infix`(container))
+    return arrayOf(Double::class.asTypeName(), Float::class.asTypeName()).fold(this) { b, t ->
+        b.addFunction(generatePow(container, t)).addFunction(`generate**Infix`(container, t))
+    }
+}
+
+private fun generatePow(container: ClassName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("pow", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", genericT)
+            .addStatement("return convert(type) { s, t -> t.set(s); t.pow(exponent) }")
+            .build()
+}
+
+private fun `generate**Infix`(container: ClassName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("**", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", genericT)
+            .addModifiers(KModifier.INFIX)
+            .addStatement("return pow(exponent)")
+            .build()
+}
+
+private fun generatePow(container: ClassName, type: TypeName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("pow", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", type)
+            .addStatement("return convert(type) { s, t -> t.set(s); t.pow(exponent) }")
+            .build()
+}
+
+private fun `generate**Infix`(container: ClassName, type: TypeName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("**", container.parameterizedBy(genericT), boundedT)
+            .addParameter("exponent", type)
+            .addModifiers(KModifier.INFIX)
+            .addStatement("return pow(exponent)")
+            .build()
+}
+
+private fun FileSpec.Builder.addExp(container: ClassName): FileSpec.Builder {
+    addImport("kotlin.math", "E")
+    addFunction(generateExp(container))
+    addFunction(generateExp(container, Double::class.asTypeName(), "E"))
+    addFunction(generateExp(container, Float::class.asTypeName()))
+    return this
+}
+
+private fun generateExp(container: ClassName): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
+            .addParameter("base", genericT)
+            .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
+            .build()
+}
+
+private fun generateExp(container: ClassName, type: TypeName, defaultValue: Any? = null): FunSpec {
+    val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
+            .let { b -> defaultValue?.let { b.addParameter(ParameterSpec.builder("base", type).defaultValue("$defaultValue").build()) } ?: b.addParameter("base", type) }
+            .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
+            .build()
+}
+
+//infix fun <T: RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: RandomAccessibleInterval<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
+
+//fun <T: RealType<T>> RandomAccessibleInterval<T>.exp(base: RandomAccessibleInterval<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
+

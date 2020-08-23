@@ -1,31 +1,19 @@
 package net.imglib2.imklib
 
-import net.imglib2.Interval
 import net.imglib2.Localizable
-import net.imglib2.Sampler
 import net.imglib2.cache.LoaderCache
 import net.imglib2.cache.ref.SoftRefLoaderCache
-import net.imglib2.converter.BiConverter
-import net.imglib2.converter.Converter
-import net.imglib2.converter.Converters
-import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.img.ImgFactory
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess
 import net.imglib2.img.cell.Cell
 import net.imglib2.type.NativeType
 import net.imglib2.type.Type
-import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
-import net.imglib2.type.numeric.integer.*
-import net.imglib2.type.numeric.real.DoubleType
-import net.imglib2.type.numeric.real.FloatType
-import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
 import kotlin.math.E
-import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
 fun <T> RAI<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
@@ -59,14 +47,9 @@ fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
 fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
 fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
 
+// TODO move this to generator
 infix fun <T: RealType<T>> RAI<T>.`**`(exponent: RAI<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
-infix fun <T: RealType<T>> RAI<T>.`**`(exponent: Double) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
-infix fun <T: RealType<T>> RAI<T>.`**`(exponent: Float) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
-infix fun <T: RealType<T>> RAI<T>.`**`(exponent: RealType<*>) = convert(type) { s, t -> t.set(s); t.pow(exponent) }
 fun <T: RealType<T>> RAI<T>.exp(base: RAI<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
-fun <T: RealType<T>> RAI<T>.exp(base: Double = E) = convert(type) { s, t -> t.set(s); t.exp(base) }
-fun <T: RealType<T>> RAI<T>.exp(base: Float) = exp(base.toDouble())
-fun <T: RealType<T>> RAI<T>.exp(base: RealType<*>) = exp(base.getRealDouble())
 
 val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(" ,", "[", "]")}"
 

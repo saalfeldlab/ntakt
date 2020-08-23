@@ -6,6 +6,7 @@ import kotlin.Float
 import kotlin.Int
 import kotlin.Long
 import kotlin.Short
+import kotlin.math.E
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.type.numeric.RealType
 
@@ -92,3 +93,27 @@ operator fun <T : RealType<T>> RandomAccessibleInterval<T>.div(value: Float) =
 
 operator fun <T : RealType<T>> RandomAccessibleInterval<T>.div(value: Double) =
     this / type.also { it.setTo(value) }
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.pow(exponent: T) = convert(type) { s, t ->
+    t.set(s); t.pow(exponent) }
+
+infix fun <T : RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: T) = pow(exponent)
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.pow(exponent: Double) = convert(type) { s, t ->
+    t.set(s); t.pow(exponent) }
+
+infix fun <T : RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: Double) = pow(exponent)
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.pow(exponent: Float) = convert(type) { s, t ->
+    t.set(s); t.pow(exponent) }
+
+infix fun <T : RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: Float) = pow(exponent)
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.exp(base: T) = convert(type) { s, t -> t.set(s);
+    t.exp(base) }
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.exp(base: Double = E) = convert(type) { s, t ->
+    t.set(s); t.exp(base) }
+
+fun <T : RealType<T>> RandomAccessibleInterval<T>.exp(base: Float) = convert(type) { s, t ->
+    t.set(s); t.exp(base) }
