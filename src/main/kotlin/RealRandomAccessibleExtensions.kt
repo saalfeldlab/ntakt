@@ -1,8 +1,12 @@
 package net.imglib2.imklib
 
 import net.imglib2.realtransform.*
+import net.imglib2.type.Type
 import net.imglib2.view.Views
 import net.imglib2.RealRandomAccessible as RRA
+
+val <T> RRA<T>.type get() = realRandomAccess().get()
+val <T: Type<T>> RRA<T>.type get() = realRandomAccess().get().createVariable()
 
 val <T> RRA<T>.rastered get() = Views.raster(this)
 
