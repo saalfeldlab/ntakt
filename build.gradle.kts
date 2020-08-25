@@ -31,8 +31,12 @@ dependencies {
     api("net.imglib2:imglib2-realtransform:3.0.0")
     api("net.imglib2:imglib2-cache:1.0.0-beta-14")
 
+    // VolatileViews
+    api("sc.fiji:bigdataviewer-vistools:1.0.0-beta-21")
+
     // n5
     api("org.janelia.saalfeldlab:n5:2.2.1")
+    api("org.janelia.saalfeldlab:n5-hdf5:1.1.0")
     api("org.janelia.saalfeldlab:n5-imglib2:3.5.1")
 
     // code generation

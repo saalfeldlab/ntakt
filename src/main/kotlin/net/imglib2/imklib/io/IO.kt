@@ -10,6 +10,8 @@ object io {
     fun <T> open(source: String, type: T) where T: RealType<T>, T: NativeType<T> = ImgOpener(defaultScifio.context).openImgs(source, type)[0].img
     fun open(source: String): Img<out RealType<*>> = ImgOpener(defaultScifio.context).openImgs(source)[0].img as Img<out RealType<*>>
 
+    val n5 = net.imglib2.imklib.net.imglib2.imklib.io.n5.n5
+
     private lateinit var _defaultScifio: SCIFIO
     private val defaultScifio: SCIFIO
         get() {

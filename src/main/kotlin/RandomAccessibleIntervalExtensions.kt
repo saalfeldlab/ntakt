@@ -1,5 +1,6 @@
 package net.imglib2.imklib
 
+import bdv.util.volatiles.VolatileViews
 import net.imglib2.Localizable
 import net.imglib2.cache.LoaderCache
 import net.imglib2.cache.ref.SoftRefLoaderCache
@@ -64,3 +65,5 @@ fun <T: NativeType<T>> RAI<T>.materialize(factory: ImgFactory<T> = Util.getSuita
 fun <T: NativeType<T>> RAI<T>.cache(
         vararg blockSize: Int = IntArray(numDimensions()) { 32 },
         loaderCache: LoaderCache<Long, Cell<VolatileArrayDataAccess<*>>> = SoftRefLoaderCache()) = cacheRAI(this, blockSize, loaderCache)
+
+val RAI<*>.volatileView get() = VolatileViews.wrapAsVolatile(this) ?: error("Unable to create volatile view for $this")
