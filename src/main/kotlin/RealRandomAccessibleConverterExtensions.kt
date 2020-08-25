@@ -90,34 +90,34 @@ fun <T : RealType<T>> RRA<T>.asUnsignedShorts() = asType(UnsignedShortType())
 fun <T : RealType<T>> RRA<T>.asUnsignedBytes() = asType(UnsignedByteType())
 
 @JvmName(name = "asDoublesFromRealTypeWildcard")
-fun RRA<RealType<*>>.asDoubles() = asType(DoubleType())
+fun RRA<out RealType<*>>.asDoubles() = asType(DoubleType())
 
 @JvmName(name = "asFloatsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asFloats() = asType(FloatType())
+fun RRA<out RealType<*>>.asFloats() = asType(FloatType())
 
 @JvmName(name = "asLongsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asLongs() = asType(LongType())
+fun RRA<out RealType<*>>.asLongs() = asType(LongType())
 
 @JvmName(name = "asIntsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asInts() = asType(IntType())
+fun RRA<out RealType<*>>.asInts() = asType(IntType())
 
 @JvmName(name = "asShortsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asShorts() = asType(ShortType())
+fun RRA<out RealType<*>>.asShorts() = asType(ShortType())
 
 @JvmName(name = "asBytesFromRealTypeWildcard")
-fun RRA<RealType<*>>.asBytes() = asType(ByteType())
+fun RRA<out RealType<*>>.asBytes() = asType(ByteType())
 
 @JvmName(name = "asUnsignedLongsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asUnsignedLongs() = asType(UnsignedLongType())
+fun RRA<out RealType<*>>.asUnsignedLongs() = asType(UnsignedLongType())
 
 @JvmName(name = "asUnsignedIntsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asUnsignedInts() = asType(UnsignedIntType())
+fun RRA<out RealType<*>>.asUnsignedInts() = asType(UnsignedIntType())
 
 @JvmName(name = "asUnsignedShortsFromRealTypeWildcard")
-fun RRA<RealType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
+fun RRA<out RealType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
 
 @JvmName(name = "asUnsignedBytesFromRealTypeWildcard")
-fun RRA<RealType<*>>.asUnsignedBytes() = asType(UnsignedByteType())
+fun RRA<out RealType<*>>.asUnsignedBytes() = asType(UnsignedByteType())
 
 @JvmName(name = "asDoublesFromIntegerType")
 fun <T : IntegerType<T>> RRA<T>.asDoubles() = asType(DoubleType())
@@ -150,31 +150,31 @@ fun <T : IntegerType<T>> RRA<T>.asUnsignedShorts() = asType(UnsignedShortType())
 fun <T : IntegerType<T>> RRA<T>.asUnsignedBytes() = asType(UnsignedByteType())
 
 @JvmName(name = "asDoublesFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asDoubles() = asType(DoubleType())
+fun RRA<out IntegerType<*>>.asDoubles() = asType(DoubleType())
 
 @JvmName(name = "asFloatsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asFloats() = asType(FloatType())
+fun RRA<out IntegerType<*>>.asFloats() = asType(FloatType())
 
 @JvmName(name = "asLongsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asLongs() = asType(LongType())
+fun RRA<out IntegerType<*>>.asLongs() = asType(LongType())
 
 @JvmName(name = "asIntsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asInts() = asType(IntType())
+fun RRA<out IntegerType<*>>.asInts() = asType(IntType())
 
 @JvmName(name = "asShortsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asShorts() = asType(ShortType())
+fun RRA<out IntegerType<*>>.asShorts() = asType(ShortType())
 
 @JvmName(name = "asBytesFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asBytes() = asType(ByteType())
+fun RRA<out IntegerType<*>>.asBytes() = asType(ByteType())
 
 @JvmName(name = "asUnsignedLongsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asUnsignedLongs() = asType(UnsignedLongType())
+fun RRA<out IntegerType<*>>.asUnsignedLongs() = asType(UnsignedLongType())
 
 @JvmName(name = "asUnsignedIntsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asUnsignedInts() = asType(UnsignedIntType())
+fun RRA<out IntegerType<*>>.asUnsignedInts() = asType(UnsignedIntType())
 
 @JvmName(name = "asUnsignedShortsFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
+fun RRA<out IntegerType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
 
 @JvmName(name = "asUnsignedBytesFromIntegerTypeWildcard")
-fun RRA<IntegerType<*>>.asUnsignedBytes() = asType(UnsignedByteType())
+fun RRA<out IntegerType<*>>.asUnsignedBytes() = asType(UnsignedByteType())

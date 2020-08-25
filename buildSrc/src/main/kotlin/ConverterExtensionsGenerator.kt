@@ -163,7 +163,7 @@ private fun generateIntegerTypeWildcardToRealTypeConversionExtensions(container:
 
 private fun generateIntegerTypeWildcardToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
     val wc = IntegerType::class.asTypeName().parameterizedBy(TypeVariableName("*"))
-    return typedFuncSpecBuilder(name, container.parameterizedBy(wc))
+    return typedFuncSpecBuilder(name, container.parameterizedBy(WildcardTypeName.producerOf(wc)))
             .addStatement("return asType(%T())", to.asTypeName())
             .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}FromIntegerTypeWildcard").build())
             .build()
@@ -173,7 +173,7 @@ private fun generateRealTypeWildcardToRealTypeConversionExtensions(container: Cl
 
 private fun generateRealTypeWildcardToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
     val wc = RealType::class.asTypeName().parameterizedBy(TypeVariableName("*"))
-    return typedFuncSpecBuilder(name, container.parameterizedBy(wc))
+    return typedFuncSpecBuilder(name, container.parameterizedBy(WildcardTypeName.producerOf(wc)))
             .addStatement("return asType(%T())", to.asTypeName())
             .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}FromRealTypeWildcard").build())
             .build()
