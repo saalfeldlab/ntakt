@@ -31,8 +31,15 @@ dependencies {
     api("net.imglib2:imglib2-realtransform:3.0.0")
     api("net.imglib2:imglib2-cache:1.0.0-beta-14")
 
+    // n5
+    api("org.janelia.saalfeldlab:n5:2.2.1")
+    api("org.janelia.saalfeldlab:n5-imglib2:3.5.1")
+
     // code generation
     implementation("com.squareup:kotlinpoet:1.6.0")
+
+    // image io
+    implementation("io.scif:scifio:0.41.0")
 
     // tests
     testImplementation(kotlin("test"))

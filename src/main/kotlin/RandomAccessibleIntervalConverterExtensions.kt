@@ -45,9 +45,19 @@ inline fun <T, U, V : Type<V>> RAI<T>.convert(
 fun <T : RealType<T>, U : RealType<U>> RAI<T>.asType(u: U) =
     if (u::class == type::class) this as RAI<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
 
+@JvmName(name = "fromRealTypeWildcard")
+fun <T : RealType<T>> RAI<out RealType<*>>.asType(t: T) =
+    if (t::class == getType()::class) this as RAI<T>
+    else convert(t) { s, u -> u.setReal(s.getRealDouble()) }
+
 fun <T : IntegerType<T>, U : IntegerType<U>> RAI<T>.asType(u: U) =
     if (u::class == type::class) this as RAI<U>
     else convert(u) { s, t -> t.setInteger(s.integerLong) }
+
+@JvmName(name = "fromIntegerTypeWildcard")
+fun <T : IntegerType<T>> RAI<out IntegerType<*>>.asType(t: T) =
+    if (t::class == getType()::class) this as RAI<T>
+    else convert(t) { s, u -> u.setInteger(s.getIntegerLong()) }
 
 @JvmName(name = "asDoublesFromRealType")
 fun <T : RealType<T>> RAI<T>.asDoubles() = asType(DoubleType())
@@ -79,6 +89,36 @@ fun <T : RealType<T>> RAI<T>.asUnsignedShorts() = asType(UnsignedShortType())
 @JvmName(name = "asUnsignedBytesFromRealType")
 fun <T : RealType<T>> RAI<T>.asUnsignedBytes() = asType(UnsignedByteType())
 
+@JvmName(name = "asDoublesFromRealTypeWildcard")
+fun RAI<RealType<*>>.asDoubles() = asType(DoubleType())
+
+@JvmName(name = "asFloatsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asFloats() = asType(FloatType())
+
+@JvmName(name = "asLongsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asLongs() = asType(LongType())
+
+@JvmName(name = "asIntsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asInts() = asType(IntType())
+
+@JvmName(name = "asShortsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asShorts() = asType(ShortType())
+
+@JvmName(name = "asBytesFromRealTypeWildcard")
+fun RAI<RealType<*>>.asBytes() = asType(ByteType())
+
+@JvmName(name = "asUnsignedLongsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asUnsignedLongs() = asType(UnsignedLongType())
+
+@JvmName(name = "asUnsignedIntsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asUnsignedInts() = asType(UnsignedIntType())
+
+@JvmName(name = "asUnsignedShortsFromRealTypeWildcard")
+fun RAI<RealType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
+
+@JvmName(name = "asUnsignedBytesFromRealTypeWildcard")
+fun RAI<RealType<*>>.asUnsignedBytes() = asType(UnsignedByteType())
+
 @JvmName(name = "asDoublesFromIntegerType")
 fun <T : IntegerType<T>> RAI<T>.asDoubles() = asType(DoubleType())
 
@@ -108,3 +148,33 @@ fun <T : IntegerType<T>> RAI<T>.asUnsignedShorts() = asType(UnsignedShortType())
 
 @JvmName(name = "asUnsignedBytesFromIntegerType")
 fun <T : IntegerType<T>> RAI<T>.asUnsignedBytes() = asType(UnsignedByteType())
+
+@JvmName(name = "asDoublesFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asDoubles() = asType(DoubleType())
+
+@JvmName(name = "asFloatsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asFloats() = asType(FloatType())
+
+@JvmName(name = "asLongsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asLongs() = asType(LongType())
+
+@JvmName(name = "asIntsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asInts() = asType(IntType())
+
+@JvmName(name = "asShortsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asShorts() = asType(ShortType())
+
+@JvmName(name = "asBytesFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asBytes() = asType(ByteType())
+
+@JvmName(name = "asUnsignedLongsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asUnsignedLongs() = asType(UnsignedLongType())
+
+@JvmName(name = "asUnsignedIntsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asUnsignedInts() = asType(UnsignedIntType())
+
+@JvmName(name = "asUnsignedShortsFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
+
+@JvmName(name = "asUnsignedBytesFromIntegerTypeWildcard")
+fun RAI<IntegerType<*>>.asUnsignedBytes() = asType(UnsignedByteType())

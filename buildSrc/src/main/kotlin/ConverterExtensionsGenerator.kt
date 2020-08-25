@@ -111,9 +111,13 @@ private fun higherOrderFunctionParameter(
 private fun FileSpec.Builder.addTypeConversionExtensions(container: ClassName): FileSpec.Builder {
     return this
             .addFunction(generateRealTypeConversionExtensions(container))
+            .addFunction(generateRealTypeConversionExtensionsFromWildcard(container))
             .addFunction(generateIntegerTypeConversionExtensions(container))
+            .addFunction(generateIntegerTypeConversionExtensionsFromWildcard(container))
             .let { generateRealTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+            .let { generateRealTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
             .let { generateIntegerTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+            .let { generateIntegerTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
 }
 
 private fun generateIntegerTypeToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateIntegerTypeToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
@@ -155,45 +159,47 @@ private fun generateGenericTypeConversionExtension(container: ClassName, typeT: 
             .build()
 }
 
-private fun generatePlusConverting(
-        name: String,
-        operator: String,
-        container: ClassName,
-        t1: ClassName,
-        t2: ClassName,
-        o: ClassName,
-        jvmName: String): FunSpec {
-    //
-    //fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
-    //fun <C: ComplexType<C>, R: RealType<R>> RA<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
-    //val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
-    //val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())
-    //
-    //fun <T> RA<T>.interval(min: LongArray, max: LongArray) = Views.interval(this, min, max)
-    //fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }, LongArray(dims.size) { dims[it] - 1L })
-    //fun <T> RA<T>.interval(interval: Interval) = Views.interval(this, interval)
-    //operator fun <T> RA<T>.get(interval: Interval) = interval(interval)
-    //
-    //fun <T: RealType<T>, U: RealType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-    //fun <T: IntegerType<T>, U: IntegerType<U>> RA<T>.asType(u: U) = if (u::class == type::class) this as RA<U> else convert(u) { s, t -> t.setInteger(s.integerLong) }
-    //val <T: RealType<T>> RA<T>.asBytes get() = asType(ByteType())
-    //val <T: RealType<T>> RA<T>.asShorts get() = asType(ShortType())
-    //val <T: RealType<T>> RA<T>.asInts get() = asType(IntType())
-    //val <T: RealType<T>> RA<T>.asLongs get() = asType(LongType())
-    //val <T: RealType<T>> RA<T>.asUnsignedBytes get() = asType(UnsignedByteType())
-    //val <T: RealType<T>> RA<T>.asUnsignedShorts get() = asType(UnsignedShortType())
-    //val <T: RealType<T>> RA<T>.asUnsignedInts get() = asType(UnsignedIntType())
-    //val <T: RealType<T>> RA<T>.asUnsignedLongs get() = asType(UnsignedLongType())
-    //val <T: RealType<T>> RA<T>.asFloats get() = asType(FloatType())
-    //val <T: RealType<T>> RA<T>.asDoubles get() = asType(DoubleType())
-    return FunSpec
-            .builder(name)
-            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
-            .addModifiers(KModifier.OPERATOR)
-            .receiver(container.parameterizedBy(t1))
-            .addParameter("that", container.parameterizedBy(t2))
-            .returns(container.parameterizedBy(o))
-            // Need · to add non-breaking space
-            .addStatement("return this.asType(${o.simpleName}())·$operator·that.asType(${o.simpleName}())")
+private fun generateIntegerTypeWildcardToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateIntegerTypeWildcardToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
+
+private fun generateIntegerTypeWildcardToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
+    val wc = IntegerType::class.asTypeName().parameterizedBy(TypeVariableName("*"))
+    return typedFuncSpecBuilder(name, container.parameterizedBy(wc))
+            .addStatement("return asType(%T())", to.asTypeName())
+            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}FromIntegerTypeWildcard").build())
             .build()
 }
+
+private fun generateRealTypeWildcardToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateRealTypeWildcardToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
+
+private fun generateRealTypeWildcardToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
+    val wc = RealType::class.asTypeName().parameterizedBy(TypeVariableName("*"))
+    return typedFuncSpecBuilder(name, container.parameterizedBy(wc))
+            .addStatement("return asType(%T())", to.asTypeName())
+            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}FromRealTypeWildcard").build())
+            .build()
+}
+
+private fun generateRealTypeConversionExtensionsFromWildcard(container: ClassName)
+        = generateGenericTypeConversionExtensionFromWildcard(container, RealType::class.asTypeName(), "getRealDouble()", "setReal")
+
+private fun generateIntegerTypeConversionExtensionsFromWildcard(container: ClassName)
+        = generateGenericTypeConversionExtensionFromWildcard(container, IntegerType::class.asTypeName(), "getIntegerLong()", "setInteger")
+
+private fun generateGenericTypeConversionExtensionFromWildcard(container: ClassName, typeT: ClassName, getter: String, setter: String): FunSpec {
+    val t = TypeVariableName("T")
+    val r = TypeVariableName("*")
+    val typeOfT = typeT.parameterizedBy(t)
+    val typeOfR = typeT.parameterizedBy(r)
+    val tType = TypeVariableName("T", typeOfT)
+    return typedFuncSpecBuilder(asTypeName, container.parameterizedBy(WildcardTypeName.producerOf(typeOfR)), tType)
+            .addParameter("t", t)
+            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "from${typeT.simpleName}Wildcard").build())
+            .addStatement("return if·(t::class·==·getType()::class)·this·as·%T else·convert(t)·{·s,·u·->·u.$setter(s.$getter)·}", container.parameterizedBy(t))
+            .build()
+}
+
+// TOOD
+//fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
+//fun <C: ComplexType<C>, R: RealType<R>> RA<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
+//val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
+//val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())

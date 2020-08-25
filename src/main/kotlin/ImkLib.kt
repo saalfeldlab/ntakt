@@ -3,16 +3,12 @@ package net.imglib2.imklib
 import net.imglib2.Interval
 import net.imglib2.img.array.ArrayImg
 import net.imglib2.img.array.ArrayImgs
+import net.imglib2.imklib.net.imglib2.imklib.io.io as _io
 import net.imglib2.type.NativeType
-import net.imglib2.type.logic.BitType
-import net.imglib2.type.logic.NativeBoolType
-import net.imglib2.type.numeric.ARGBType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
-import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
-import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.util.ConstantUtils
 import java.math.BigInteger
 
@@ -89,5 +85,7 @@ object imklib {
     fun <T: NumericType<T>> ones(interval: Interval, type: T) = type.also { it.setOne() }.let { constant(it, interval) }
     fun ones(numDimensions: Int) = ones(DoubleType(), numDimensions)
     fun ones(interval: Interval) = ones(interval, DoubleType())
+
+    val io = _io
 
 }

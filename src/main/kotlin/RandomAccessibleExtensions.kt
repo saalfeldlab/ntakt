@@ -39,7 +39,11 @@ operator fun <T> RA<T>.plus(translation: Localizable) = translate(translation)
 operator fun <T> RA<T>.minus(translation: LongArray) = translateInverse(*translation)
 operator fun <T> RA<T>.minus(translation: Localizable) = translateInverse(translation)
 
+val <T> RA<T>.type get() = randomAccess().get()
 val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
+@JvmName("typeWildCard") fun RA<*>.getType() = randomAccess().get()
+@JvmName("typeWildCardType") fun RA<out Type<*>>.getType() = randomAccess().get().createVariable()
+@JvmName("typeWildCardRealType") fun RA<out RealType<*>>.getType() = randomAccess().get().createVariable()
 
 // TODO need to fix variance in sampler converter extensions first
 //fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))

@@ -27,9 +27,13 @@ operator fun <T> RAI<T>.minus(translation: Localizable) = translateInverse(trans
 
 val <T> RAI<T>.type get() = this[minAsPoint()]
 val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
+@JvmName("typeWildCard") fun RAI<*>.getType() = this[minAsPoint()]
+@JvmName("typeWildCardType") fun RAI<out Type<*>>.getType() = this[minAsPoint()].createVariable()
+@JvmName("typeWildCardRealType") fun RAI<out RealType<*>>.getType() = this[minAsPoint()].createVariable()
 
 val <T> RAI<T>.iterable get() = Views.iterable(this)
 val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
+
 
 // TODO need to fix variance in sampler converter extensions first
 //fun <C: ComplexType<C>, R: RealType<R>> RAI<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
