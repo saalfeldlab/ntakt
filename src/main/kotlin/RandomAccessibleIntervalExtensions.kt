@@ -9,9 +9,11 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess
 import net.imglib2.img.cell.Cell
 import net.imglib2.type.NativeType
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ARGBType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.integer.IntType
 import net.imglib2.util.Util
 import net.imglib2.view.Views
 import kotlin.math.E
@@ -67,3 +69,6 @@ fun <T: NativeType<T>> RAI<T>.cache(
         loaderCache: LoaderCache<Long, Cell<VolatileArrayDataAccess<*>>> = SoftRefLoaderCache()) = cacheRAI(this, blockSize, loaderCache)
 
 val RAI<*>.volatileView get() = VolatileViews.wrapAsVolatile(this) ?: error("Unable to create volatile view for $this")
+
+// TODO add to all containers
+fun RAI<IntType>.asARGBs(shiftRight: Int = 0) = convert(ARGBType()) { s, t -> t.set(s.get() shr shiftRight) }
