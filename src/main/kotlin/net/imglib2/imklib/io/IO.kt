@@ -1,15 +1,10 @@
 package net.imglib2.imklib.net.imglib2.imklib.io
 
-import io.scif.SCIFIO
-import io.scif.img.ImgOpener
 import loci.formats.FormatTools
 import loci.formats.ImageReader
 import net.imglib2.RandomAccessibleInterval
-import net.imglib2.img.Img
 import net.imglib2.img.array.ArrayImgs
-import net.imglib2.img.basictypeaccess.ByteAccess
 import net.imglib2.imklib.net.imglib2.imklib.access.*
-import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.view.Views
 import java.nio.ByteBuffer
@@ -45,16 +40,4 @@ object io {
             = ByteBuffer.wrap(reader.openBytes(index)).order(if (reader.isLittleEndian) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN)
 
     val n5 = net.imglib2.imklib.net.imglib2.imklib.io.n5.n5
-
-    private lateinit var _defaultScifio: SCIFIO
-    private val defaultScifio: SCIFIO
-        get() {
-            if (!this::_defaultScifio.isInitialized)
-                _defaultScifio = SCIFIO()
-            return _defaultScifio
-        }
-}
-
-fun main() {
-     io.open("/home/zottel/Pictures/Screenshot_20200822_102323.png").also { println(it) }
 }

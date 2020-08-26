@@ -43,7 +43,6 @@ dependencies {
     implementation("com.squareup:kotlinpoet:1.6.0")
 
     // image io
-    implementation("io.scif:scifio:0.41.0")
     implementation("ome:bio-formats_plugins:6.5.0")
 
     // tests
