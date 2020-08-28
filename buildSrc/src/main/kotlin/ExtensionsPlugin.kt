@@ -7,8 +7,19 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.kotlin.dsl.get
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class ExtensionsPlugin : Plugin<Project> {
+
+    private val licenseFilePath = Paths.get("LICENSE")
+    private var licenseString: String? = if (Files.exists(licenseFilePath)) Files.readAllLines(licenseFilePath).joinToString("\n") else null
+    private val licenseCommented = licenseString
+            ?.let { it.split("\n").map { if (it.isEmpty()) " *" else " * $it" }.joinToString("\n") }
+            ?.let { "/**\n$it\n */" }
+    private val headerString = listOf(licenseCommented, "// auto-generated, do not modify!\n\n").filterNotNull().joinToString("\n\n")
+
+
     override fun apply(project: Project): Unit = project.run {
         tasks.register(GenerateAllExtensions.name, GenerateAllExtensions::class.java)
         tasks["compileKotlin"].dependsOn(tasks[GenerateAllExtensions.name])
@@ -20,6 +31,7 @@ class ExtensionsPlugin : Plugin<Project> {
     private fun <T: Task> TaskContainer.registerExtension(name: String, type: Class<T>) {
         register(name, type)
         this[GenerateAllExtensions.name].dependsOn(this[name])
+        this[name].takeIf { it is ExtensionsTask }?.let { it as ExtensionsTask }?.let { it.header = headerString }
     }
 }
 
@@ -40,6 +52,9 @@ open class ExtensionsTask(extensionsIdentifier: String) : AbstractTask() {
         group = Companion.group
     }
 
+    @Input
+    var header: String? = null
+
     // Why do we need to annotate this? Build fails without this annotation:
     // * What went wrong:
     //Execution failed for task ':buildSrc:validatePlugins'.
@@ -55,6 +70,8 @@ open class ExtensionsTask(extensionsIdentifier: String) : AbstractTask() {
     fun getFileRA() = typeFileMapping["RA"]?.second
     @OutputFile
     fun getFileRAI() = typeFileMapping["RAI"]?.second
+
+    val String.withHeader get() = header?.let { "$it$this" } ?: this
 
 
     companion object {

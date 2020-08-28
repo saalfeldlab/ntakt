@@ -6,7 +6,7 @@ open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
     fun runTask() {
         for ((`as`, name) in typeFileMapping) {
             println("generating arithmetic extensions for $`as` ($name)")
-            Files.write(name.second.toPath(), generateArithmeticExtensions(`as`, name.first).toByteArray())
+            Files.write(name.second.toPath(), generateArithmeticExtensions(`as`, name.first).withHeader.toByteArray())
         }
     }
 
@@ -22,7 +22,7 @@ open class GenerateArithmeticScalarExtensionsTask : ExtensionsTask("ArithmeticSc
     fun runTask() {
         for ((`as`, name) in typeFileMapping) {
             println("generating arithmetic scalar extensions for $`as` ($name)")
-            Files.write(name.second.toPath(), generateArithmeticScalarExtensions(`as`, name.first).toByteArray())
+            Files.write(name.second.toPath(), generateArithmeticScalarExtensions(`as`, name.first).withHeader.toByteArray())
         }
     }
 

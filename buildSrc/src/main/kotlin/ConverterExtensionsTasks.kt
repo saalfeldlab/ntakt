@@ -7,7 +7,7 @@ open class GenerateConverterExtensionsTask : ExtensionsTask("Converter") {
     fun runTask() {
         for ((`as`, name) in typeFileMapping) {
             println("generating converter extensions for $`as` ($name)")
-            Files.write(name.second.toPath(), generateConverterExtensions(`as`, name.first).toByteArray())
+            Files.write(name.second.toPath(), generateConverterExtensions(`as`, name.first).withHeader.toByteArray())
         }
     }
 
