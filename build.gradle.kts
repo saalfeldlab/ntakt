@@ -1,7 +1,3 @@
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
-
 plugins {
     kotlin("jvm") version "1.3.72"
 
@@ -14,6 +10,8 @@ plugins {
     // code generation
     extensions
 
+    // gradle header plugin
+    id("com.github.hierynomus.license") version "0.15.0"
 
 }
 
