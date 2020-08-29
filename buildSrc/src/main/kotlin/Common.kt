@@ -53,15 +53,16 @@ val containers = mapOf(
         "RA" to RandomAccessible::class.asTypeName(),
         "RAI" to RandomAccessibleInterval::class.asTypeName(),
         "RRA" to RealRandomAccessible::class.asTypeName(),
-        "RRARI" to RealRandomAccessibleRealInterval::class.asTypeName(),
-        "II" to IterableInterval::class.asTypeName())
+        "RRARI" to RealRandomAccessibleRealInterval::class.asTypeName()
+//        "II" to IterableInterval::class.asTypeName())
+)
 
 val extensionTypes = arrayOf(
         "RandomAccessible",
         "RandomAccessibleInterval",
         "RealRandomAccessible",
-        "RealRandomAccessibleRealInterval",
-        "IterableInterval"
+        "RealRandomAccessibleRealInterval"
+//        "IterableInterval"
 )
 val extensionTypeToAbbreviationMapping = extensionTypes.associateBy({ it }, { it.filter { it.isUpperCase() } })
 val abbreviationToExtensionTypeMapping = extensionTypes.associateBy({ it.filter { it.isUpperCase() } }, { it })
