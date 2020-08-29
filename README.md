@@ -1,6 +1,6 @@
-# imklib
+# imklib (preliminary name)
 
-imklib combines the expressive power and flexibility of the Java image processing library [ImgLib2](https://github.com/imglib/imglib2) with the convenience and clarity that Kotlin operators provide. Internally, imklib uses Kotlin extension functions to add operator overloading and other convenience functions that would otherwise not be possible in Java. The result is a very concise and intuitive syntax that users are familiar with from other scientific computing libraries such as [NumPy](https://numpy.org) in the [Python](https://www.python.org) world. For example, this is the Java code to multiply two images in ImgLib2:
+imklib (preliminary name) combines the expressive power and flexibility of the Java image processing library [ImgLib2](https://github.com/imglib/imglib2) with the convenience and clarity that Kotlin operators provide. Internally, imklib uses Kotlin extension functions to add operator overloading and other convenience functions that would otherwise not be possible in Java. The result is a very concise and intuitive syntax that users are familiar with from other scientific computing libraries such as [NumPy](https://numpy.org) in the [Python](https://www.python.org) world. For example, this is the Java code to multiply two images in ImgLib2:
 
 ``` java
 // populate data
