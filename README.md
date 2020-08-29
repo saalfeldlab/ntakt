@@ -43,3 +43,38 @@ In both cases, the output is
 0.6000000000000001
 ```
 
+## Installation
+
+Installation requires Java 8. Currently, imklib is not available through remote Maven repositories (it is on the roadmap).
+To install into your local maven repository (typically `~/.m2/repository`), run from the root of the repository:
+```shell script
+./gradlew clean build publishToMavenLocal
+```
+To include imklib as a dependency:
+ - Maven (`pom.xml`):
+   ```xml
+   <dependency>
+     <groupId>net.imglib2</groupId>
+     <artifactId>imklib2</artifactId>
+     <version>0.1.0-SNAPSHOT</version>
+   </dependency>
+   ``` 
+ - Gradle
+   ```
+   "net.imglib2:imklib2:0.1.0-SNAPSHOT"
+   ```
+ - [`kotlin-jupyter`](https://github.com/Kotlin/kotlin-jupyter)
+   ```
+   @file:DependsOn("net.imglib2:imklib2:0.1.0-SNAPSHOT")
+   ```
+The [`kotlin-jupyter` kernel](https://github.com/Kotlin/kotlin-jupyter) is required to run the [notebooks](notebooks/examples).
+
+Installation has been tested on Manjaro Linux and the notebooks have been tested on Manjaro Linux and Windows 10.
+   
+## Usage
+
+To use imklib in your code, simply
+```kotlin
+import net.imglib2.imklib.*
+```
+to include all extensions and utility objects. The [notebooks](notebooks/examples) provide detailed usage examples but are currently still WIP, as is the API documentation. 
