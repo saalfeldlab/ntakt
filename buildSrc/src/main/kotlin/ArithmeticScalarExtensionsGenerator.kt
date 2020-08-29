@@ -28,11 +28,14 @@ private fun generateArithmeticScalarOperatorSameType(name: String, operator: Str
             .build()
 }
 
-private fun FileSpec.Builder.addArithmeticScalarOperatorsPrimitiveTypes(name: String, operator: String, container: ClassName)
-        = primitiveTypes.fold(this) { b, t -> b.addFunction(generateArithmeticScalarOperatorsPrimitiveType(name, operator, container, t)) }
+private fun FileSpec.Builder.addArithmeticScalarOperatorsPrimitiveTypes(name: String, operator: String, container: ClassName): FileSpec.Builder {
+    println("TODO: Arithmetic scalar operators do not consider range of primitive type yet; i.e. RAI<IntType> $operator Double -> RAI<IntType>")
+    return primitiveTypes.fold(this) { b, t -> b.addFunction(generateArithmeticScalarOperatorsPrimitiveType(name, operator, container, t)) }
+}
 
 private fun generateArithmeticScalarOperatorsPrimitiveType(name: String, operator: String, container: ClassName, primitiveType: KClass<*>): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
+    // TODO consider possible range of value based on primitiveType and choose return type accordingly
     return typedFuncSpecBuilder(name, container.parameterizedBy(genericT), boundedT)
             .addModifiers(KModifier.OPERATOR)
             .addParameter("value", primitiveType)
