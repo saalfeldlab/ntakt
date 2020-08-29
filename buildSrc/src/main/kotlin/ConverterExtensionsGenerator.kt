@@ -1,6 +1,7 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import net.imglib2.RealRandomAccessible
+import net.imglib2.RealRandomAccessibleRealInterval
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
@@ -212,8 +213,8 @@ private fun FileSpec.Builder.addComplexConverters(container: ClassName): FileSpe
 
 private fun FileSpec.Builder.addComplexReadWriteConverters(container: ClassName): FileSpec.Builder {
 
-    if (container == RealRandomAccessible::class.asTypeName()) {
-        println("Skipping read-write complpex real/imaginary converters: Converters.convert not defined for RealRandomAccessible and SamplerConverter")
+    if (container in arrayOf(RealRandomAccessible::class.asTypeName(), RealRandomAccessibleRealInterval::class.asTypeName())) {
+        println("Skipping read-write complex real/imaginary converters: Converters.convert not defined for $container and SamplerConverter")
         return this
     }
 
