@@ -26,15 +26,21 @@
 package net.imglib2.imklib
 
 import net.imglib2.Interval
+import net.imglib2.RealLocalizable
 import net.imglib2.img.array.ArrayImg
 import net.imglib2.img.array.ArrayImgs
+import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
+import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
+import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.util.ConstantUtils
 import java.math.BigInteger
+import java.util.function.BiConsumer
+import java.util.function.Supplier
 import net.imglib2.imklib.io.io as _io
 
 object imklib {
@@ -111,6 +117,30 @@ object imklib {
     fun ones(numDimensions: Int) = ones(DoubleType(), numDimensions)
     fun ones(interval: Interval) = ones(interval, DoubleType())
 
+    // state-less function
+    fun <T> function(n: Int, typeSupplier: Supplier<T>, f: BiConsumer<RealLocalizable, in T>) = FunctionRealRandomAccessible(n, f, typeSupplier)
+    inline fun <T> function(n: Int, typeSupplier: Supplier<T>, crossinline f: (RealLocalizable, T) -> Unit) = function(n, typeSupplier, BiConsumer { t, u -> f(t, u) })
+    inline fun <T> function(n: Int, crossinline  typeSupplier: () -> T, crossinline  f: (RealLocalizable, T) -> Unit) = function(n, Supplier { typeSupplier() }, f)
+
+    // stateful function
+    fun <T> function(n: Int, typeSupplier: Supplier<T>, f: Supplier<BiConsumer<RealLocalizable, in T>>) = FunctionRealRandomAccessible(n, f, typeSupplier)
+    @JvmName("functionBiconsumer") inline fun <T> function(n: Int, typeSupplier: Supplier<T>, crossinline f: () -> BiConsumer<RealLocalizable, in T>) = function(n, typeSupplier, Supplier { f() })
+    @JvmName("functionLambda")inline fun <T> function(n: Int, typeSupplier: Supplier<T>, crossinline f: () -> (RealLocalizable, T) -> Unit) = function(n, typeSupplier, { BiConsumer<RealLocalizable, T> { t, u -> f()(t, u) } } as () -> BiConsumer<RealLocalizable, in T>)
+    inline fun <T> function(n: Int, crossinline  typeSupplier: () -> T, crossinline  f: () -> (RealLocalizable, T) -> Unit) = function(n, Supplier { typeSupplier() }, f)
+
     val io = _io
+
+    object types {
+        val byte get() = ByteType()
+        val short get() = ShortType()
+        val int get() = IntType()
+        val long get() = LongType()
+        val unsignedByte get() = UnsignedByteType()
+        val unsignedShort get() = UnsignedShortType()
+        val unsignedInt get() = UnsignedIntType()
+        val unsignedLong get() = UnsignedLongType()
+        val float get() = FloatType()
+        val double get() = DoubleType()
+    }
 
 }
