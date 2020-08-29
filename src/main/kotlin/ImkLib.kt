@@ -35,7 +35,7 @@ import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.util.ConstantUtils
 import java.math.BigInteger
-import net.imglib2.imklib.net.imglib2.imklib.io.io as _io
+import net.imglib2.imklib.io.io as _io
 
 object imklib {
 

@@ -23,13 +23,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib.net.imglib2.imklib.io
+package net.imglib2.imklib.io
 
 import loci.formats.FormatTools
 import loci.formats.ImageReader
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.img.array.ArrayImgs
-import net.imglib2.imklib.net.imglib2.imklib.access.*
+import net.imglib2.imklib.access.*
 import net.imglib2.type.numeric.RealType
 import net.imglib2.view.Views
 import java.nio.ByteBuffer
@@ -64,5 +64,5 @@ object io {
     private fun ImageReader.readAsBuffer(index: Int)
             = ByteBuffer.wrap(reader.openBytes(index)).order(if (reader.isLittleEndian) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN)
 
-    val n5 = net.imglib2.imklib.net.imglib2.imklib.io.n5.n5
+    val n5 = net.imglib2.imklib.io.n5.n5
 }

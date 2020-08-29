@@ -35,7 +35,7 @@ import net.imglib2.converter.Converters
 import net.imglib2.img.ImgFactory
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess
 import net.imglib2.img.cell.Cell
-import net.imglib2.imklib.net.imglib2.imklib.converter.ComplexRealConverters
+import net.imglib2.imklib.converter.ComplexRealConverters
 import net.imglib2.type.NativeType
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.ARGBType
@@ -69,8 +69,6 @@ val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 val <T> RAI<T>.iterable get() = Views.iterable(this)
 val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
 
-
-// TODO need to fix variance in sampler converter extensions first
 @JvmName("complexDoubleReal") fun RAI<ComplexDoubleType>.real() = Converters.convert(this, ComplexRealConverters.realDouble)
 @JvmName("complexDoubleImaginary") fun RAI<ComplexDoubleType>.imaginary() = Converters.convert(this, ComplexRealConverters.imaginaryDouble)
 @JvmName("complexFloatReal") fun RAI<ComplexFloatType>.real() = Converters.convert(this, ComplexRealConverters.realFloat)

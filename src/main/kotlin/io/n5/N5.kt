@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib.net.imglib2.imklib.io.n5
+package net.imglib2.imklib.io.n5
 
 import net.imglib2.img.Img
 import net.imglib2.type.NativeType

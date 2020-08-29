@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib.net.imglib2.imklib.converter
+package net.imglib2.imklib.converter
 
 import net.imglib2.Sampler
 import net.imglib2.converter.readwrite.SamplerConverter
