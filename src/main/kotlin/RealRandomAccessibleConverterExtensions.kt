@@ -36,6 +36,8 @@ import net.imglib2.converter.Converters
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.complex.ComplexDoubleType
+import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.integer.IntType
 import net.imglib2.type.numeric.integer.LongType
@@ -206,3 +208,32 @@ fun RRA<out IntegerType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
 
 @JvmName(name = "asUnsignedBytesFromIntegerTypeWildcard")
 fun RRA<out IntegerType<*>>.asUnsignedBytes() = asType(UnsignedByteType())
+
+@JvmName(name = "complexDoubleRealReadOnly")
+fun RRA<ComplexDoubleType>.realReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.realDouble) }
+
+@JvmName(name = "complexDoubleImaginaryReadOnly")
+fun RRA<ComplexDoubleType>.imaginaryReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.imaginaryDouble) }
+
+@JvmName(name = "complexFloatRealReadOnly")
+fun RRA<ComplexFloatType>.realReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.realFloat) }
+
+@JvmName(name = "complexFloatImaginaryReadOnly")
+fun RRA<ComplexFloatType>.imaginaryReadOnly() =
+    convert(FloatType()) { s, t -> t.setReal(s.imaginaryFloat) }
+
+@JvmName(name = "complexDoublePhaseReadOnly")
+fun RRA<ComplexDoubleType>.phaseReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.phaseDouble) }
+
+@JvmName(name = "complexFloatPhaseReadOnly")
+fun RRA<ComplexFloatType>.phaseReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.phaseFloat) }
+
+@JvmName(name = "complexDoublePowerReadOnly")
+fun RRA<ComplexDoubleType>.powerReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.powerDouble) }
+
+@JvmName(name = "complexFloatPowerReadOnly")
+fun RRA<ComplexFloatType>.powerReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.powerFloat) }

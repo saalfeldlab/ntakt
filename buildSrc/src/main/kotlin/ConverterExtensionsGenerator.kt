@@ -1,5 +1,6 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import net.imglib2.RealRandomAccessible
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
@@ -7,6 +8,8 @@ import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.complex.ComplexDoubleType
+import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
@@ -35,6 +38,7 @@ fun generateConverterExtensions(`as`: String, fileName: String): String {
             .addAliasedImport(container, `as`)
             .addConverterExtensions(container)
             .addTypeConversionExtensions(container)
+            .addComplexConverters(container)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
@@ -198,8 +202,71 @@ private fun generateGenericTypeConversionExtensionFromWildcard(container: ClassN
             .build()
 }
 
-// TOOD
-//fun <C: ComplexType<C>, R: RealType<R>> RA<C>.real(type: R) = convert(ComplexPart.REAL.converter(type))
-//fun <C: ComplexType<C>, R: RealType<R>> RA<C>.imaginary(type: R) = convert(ComplexPart.IMAGINARY.converter(type))
-//val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
-//val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())
+private fun FileSpec.Builder.addComplexConverters(container: ClassName): FileSpec.Builder {
+
+    return this
+            .addComplexReadWriteConverters(container)
+            .addComplexReadOnlyConverters(container)
+            .addComplexPhasePowerConverters(container)
+}
+
+private fun FileSpec.Builder.addComplexReadWriteConverters(container: ClassName): FileSpec.Builder {
+
+    if (container == RealRandomAccessible::class.asTypeName()) {
+        println("Skipping read-write complpex real/imaginary converters: Converters.convert not defined for RealRandomAccessible and SamplerConverter")
+        return this
+    }
+
+    for ((ct, name) in arrayOf(ComplexDoubleType::class to "Double", ComplexFloatType::class to "Float")) {
+        for (part in arrayOf("real", "imaginary")) {
+            typedFuncSpecBuilder(part, container.parameterizedBy(ct.asTypeName()))
+                    .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "complex$name${part.capitalize()}").build())
+                    .addStatement("return %T.convert(this,·%T.$part$name)", Converters::class, ClassName("net.imglib2.imklib.converter", "ComplexRealConverters"))
+                    .build()
+                    .let { addFunction(it) }
+        }
+    }
+    return this
+}
+
+private fun FileSpec.Builder.addComplexReadOnlyConverters(container: ClassName): FileSpec.Builder {
+    for ((ct, type) in arrayOf(ComplexDoubleType::class to DoubleType::class, ComplexFloatType::class to FloatType::class)) {
+        val name = type.simpleName!!.replace("Type", "")
+        for (part in arrayOf("real", "imaginary")) {
+            typedFuncSpecBuilder("${part}ReadOnly", container.parameterizedBy(ct.asTypeName()))
+                    .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "complex$name${part.capitalize()}ReadOnly").build())
+                    .addStatement("return convert(%T())·{·s,·t·->·t.setReal(s.$part$name)·}", type)
+                    .build()
+                    .let { addFunction(it) }
+        }
+    }
+    return this
+}
+
+private fun FileSpec.Builder.addComplexPhasePowerConverters(container: ClassName): FileSpec.Builder {
+    for (part in arrayOf("phase", "power")) {
+        for ((ct, type) in arrayOf(ComplexDoubleType::class to DoubleType::class, ComplexFloatType::class to FloatType::class)) {
+            val name = type.simpleName!!.replace("Type", "")
+            typedFuncSpecBuilder("${part}ReadOnly", container.parameterizedBy(ct.asTypeName()))
+                    .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "complex${name.capitalize()}${part.capitalize()}ReadOnly").build())
+                    .addStatement("return convert(%T())·{·s,·t·->·t.setReal(s.$part$name)·}", type)
+                    .build()
+                    .let { addFunction(it) }
+        }
+    }
+    return this
+}
+
+
+// @JvmName("complexDoubleReal") fun RAI<ComplexDoubleType>.real() = Converters.convert(this, ComplexRealConverters.realDouble)
+// @JvmName("complexDoubleImaginary") fun RAI<ComplexDoubleType>.imaginary() = Converters.convert(this, ComplexRealConverters.imaginaryDouble)
+// @JvmName("complexFloatReal") fun RAI<ComplexFloatType>.real() = Converters.convert(this, ComplexRealConverters.realFloat)
+// @JvmName("complexFloatImaginary") fun RAI<ComplexFloatType>.imaginary() = Converters.convert(this, ComplexRealConverters.imaginaryFloat)
+// @JvmName("complexDoubleRealReadOnly") fun RAI<ComplexDoubleType>.realReadOnly() = convert(DoubleType()) { s, t -> t.setReal(s.realDouble)}
+// @JvmName("complexDoubleImaginaryReadOnly") fun RAI<ComplexDoubleType>.imaginaryReadOnly() = convert(DoubleType())  { s, t -> t.setReal(s.imaginaryDouble)}
+// @JvmName("complexFloatRealReadOnly") fun RAI<ComplexFloatType>.realReadOnly() = convert(FloatType(), ComplexRealFloatConverter())
+// @JvmName("complexFloatImaginaryReadOnly") fun RAI<ComplexFloatType>.imaginaryReadOnly() = convert(FloatType(), ComplexImaginaryFloatConverter())
+// @JvmName("complexDoublePhase") fun RAI<ComplexDoubleType>.phaseReadOnly() = convert(DoubleType()) { s, t -> t.setReal(s.phaseDouble) }
+// @JvmName("complexFloatPhase") fun RAI<ComplexFloatType>.phaseReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.phaseFloat) }
+// @JvmName("complexDoublePower") fun RAI<ComplexDoubleType>.powerReadOnly() = convert(DoubleType()) { s, t -> t.setReal(s.powerDouble) }
+// @JvmName("complexFloatPower") fun RAI<ComplexFloatType>.powerReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.powerFloat) }

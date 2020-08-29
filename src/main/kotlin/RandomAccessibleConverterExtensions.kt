@@ -33,9 +33,12 @@ import kotlin.jvm.JvmName
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
+import net.imglib2.imklib.converter.ComplexRealConverters
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.complex.ComplexDoubleType
+import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.integer.IntType
 import net.imglib2.type.numeric.integer.LongType
@@ -206,3 +209,45 @@ fun RA<out IntegerType<*>>.asUnsignedShorts() = asType(UnsignedShortType())
 
 @JvmName(name = "asUnsignedBytesFromIntegerTypeWildcard")
 fun RA<out IntegerType<*>>.asUnsignedBytes() = asType(UnsignedByteType())
+
+@JvmName(name = "complexDoubleReal")
+fun RA<ComplexDoubleType>.real() = Converters.convert(this, ComplexRealConverters.realDouble)
+
+@JvmName(name = "complexDoubleImaginary")
+fun RA<ComplexDoubleType>.imaginary() =
+    Converters.convert(this, ComplexRealConverters.imaginaryDouble)
+
+@JvmName(name = "complexFloatReal")
+fun RA<ComplexFloatType>.real() = Converters.convert(this, ComplexRealConverters.realFloat)
+
+@JvmName(name = "complexFloatImaginary")
+fun RA<ComplexFloatType>.imaginary() =
+    Converters.convert(this, ComplexRealConverters.imaginaryFloat)
+
+@JvmName(name = "complexDoubleRealReadOnly")
+fun RA<ComplexDoubleType>.realReadOnly() = convert(DoubleType()) { s, t -> t.setReal(s.realDouble) }
+
+@JvmName(name = "complexDoubleImaginaryReadOnly")
+fun RA<ComplexDoubleType>.imaginaryReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.imaginaryDouble) }
+
+@JvmName(name = "complexFloatRealReadOnly")
+fun RA<ComplexFloatType>.realReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.realFloat) }
+
+@JvmName(name = "complexFloatImaginaryReadOnly")
+fun RA<ComplexFloatType>.imaginaryReadOnly() =
+    convert(FloatType()) { s, t -> t.setReal(s.imaginaryFloat) }
+
+@JvmName(name = "complexDoublePhaseReadOnly")
+fun RA<ComplexDoubleType>.phaseReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.phaseDouble) }
+
+@JvmName(name = "complexFloatPhaseReadOnly")
+fun RA<ComplexFloatType>.phaseReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.phaseFloat) }
+
+@JvmName(name = "complexDoublePowerReadOnly")
+fun RA<ComplexDoubleType>.powerReadOnly() =
+    convert(DoubleType()) { s, t -> t.setReal(s.powerDouble) }
+
+@JvmName(name = "complexFloatPowerReadOnly")
+fun RA<ComplexFloatType>.powerReadOnly() = convert(FloatType()) { s, t -> t.setReal(s.powerFloat) }
