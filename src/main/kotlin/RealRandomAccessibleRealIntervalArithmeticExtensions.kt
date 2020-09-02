@@ -31,6 +31,7 @@ package net.imglib2.imklib
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.NumericType
+import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.integer.IntType
 import net.imglib2.type.numeric.integer.LongType
@@ -416,6 +417,16 @@ operator fun RRARI<UnsignedShortType>.plus(that: RRARI<UnsignedByteType>): RRARI
 operator fun RRARI<UnsignedByteType>.plus(that: RRARI<UnsignedShortType>): RRARI<UnsignedShortType>
     = this.asType(UnsignedShortType()) + that.asType(UnsignedShortType())
 
+@JvmName(name = "plus_92")
+operator fun RRARI<RealType<*>>.plus(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
+    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).plus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).plus(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).plus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).plus(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    else -> error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
+}
+
+
 @JvmName(name = "minus_1")
 operator fun <T> RRARI<T>.minus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Sub<T> =
     convert(that, type) { t, u, v -> v.set(t); v -= u }
@@ -779,6 +790,16 @@ operator fun RRARI<UnsignedShortType>.minus(that: RRARI<UnsignedByteType>): RRAR
 @JvmName(name = "minus_91")
 operator fun RRARI<UnsignedByteType>.minus(that: RRARI<UnsignedShortType>): RRARI<UnsignedShortType>
     = this.asType(UnsignedShortType()) - that.asType(UnsignedShortType())
+
+@JvmName(name = "minus_92")
+operator fun RRARI<RealType<*>>.minus(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
+    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).minus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).minus(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).minus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).minus(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    else -> error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
+}
+
 
 @JvmName(name = "times_1")
 operator fun <T> RRARI<T>.times(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Mul<T> =
@@ -1144,6 +1165,16 @@ operator fun RRARI<UnsignedShortType>.times(that: RRARI<UnsignedByteType>): RRAR
 operator fun RRARI<UnsignedByteType>.times(that: RRARI<UnsignedShortType>): RRARI<UnsignedShortType>
     = this.asType(UnsignedShortType()) * that.asType(UnsignedShortType())
 
+@JvmName(name = "times_92")
+operator fun RRARI<RealType<*>>.times(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
+    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).times(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).times(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).times(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).times(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    else -> error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
+}
+
+
 @JvmName(name = "div_1")
 operator fun <T> RRARI<T>.div(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Div<T> =
     convert(that, type) { t, u, v -> v.set(t); v /= u }
@@ -1507,3 +1538,13 @@ operator fun RRARI<UnsignedShortType>.div(that: RRARI<UnsignedByteType>): RRARI<
 @JvmName(name = "div_91")
 operator fun RRARI<UnsignedByteType>.div(that: RRARI<UnsignedShortType>): RRARI<UnsignedShortType> =
     this.asType(UnsignedShortType()) / that.asType(UnsignedShortType())
+
+@JvmName(name = "div_92")
+operator fun RRARI<RealType<*>>.div(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
+    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).div(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).div(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).div(that as RRARI<DoubleType>) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).div(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    else -> error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
+}
+

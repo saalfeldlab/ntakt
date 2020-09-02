@@ -32,6 +32,7 @@ import net.imglib2.img.array.ArrayImgs
 import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.NumericType
+import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.*
@@ -141,6 +142,8 @@ object imklib {
         val unsignedLong get() = UnsignedLongType()
         val float get() = FloatType()
         val double get() = DoubleType()
+
+        val realTypes get() = arrayOf<RealType<*>>(byte, short, int, long, unsignedByte, unsignedShort, unsignedInt, unsignedLong, float, double)
     }
 
 }
