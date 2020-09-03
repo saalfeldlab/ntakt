@@ -419,10 +419,10 @@ operator fun RRARI<UnsignedByteType>.plus(that: RRARI<UnsignedShortType>): RRARI
 
 @JvmName(name = "plus_92")
 operator fun RRARI<RealType<*>>.plus(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).plus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).plus(that as RRARI<FloatType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).plus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).plus(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).plus(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).plus(that.asType(FloatType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).plus(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).plus(that.asType(FloatType())) as RRARI<RealType<*>>
     else -> error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
@@ -793,10 +793,10 @@ operator fun RRARI<UnsignedByteType>.minus(that: RRARI<UnsignedShortType>): RRAR
 
 @JvmName(name = "minus_92")
 operator fun RRARI<RealType<*>>.minus(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).minus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).minus(that as RRARI<FloatType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).minus(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).minus(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).minus(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).minus(that.asType(FloatType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).minus(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).minus(that.asType(FloatType())) as RRARI<RealType<*>>
     else -> error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
@@ -1167,10 +1167,10 @@ operator fun RRARI<UnsignedByteType>.times(that: RRARI<UnsignedShortType>): RRAR
 
 @JvmName(name = "times_92")
 operator fun RRARI<RealType<*>>.times(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).times(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).times(that as RRARI<FloatType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).times(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).times(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).times(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).times(that.asType(FloatType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).times(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).times(that.asType(FloatType())) as RRARI<RealType<*>>
     else -> error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
@@ -1541,10 +1541,10 @@ operator fun RRARI<UnsignedByteType>.div(that: RRARI<UnsignedShortType>): RRARI<
 
 @JvmName(name = "div_92")
 operator fun RRARI<RealType<*>>.div(that: RRARI<RealType<*>>): RRARI<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RRARI<DoubleType>).div(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RRARI<DoubleType>).div(that as RRARI<FloatType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RRARI<FloatType>).div(that as RRARI<DoubleType>) as RRARI<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RRARI<FloatType>).div(that as RRARI<FloatType>) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).div(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).div(that.asType(FloatType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).div(that.asType(DoubleType())) as RRARI<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).div(that.asType(FloatType())) as RRARI<RealType<*>>
     else -> error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 

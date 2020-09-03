@@ -120,7 +120,7 @@ private fun generateArithmeticOperatorStarProjection(name: String, operator: Str
             .also {
                 for (t1 in arithmeticTypes.map { it.first }.subList(0, 2))
                     for (t2 in arithmeticTypes.map { it.first }.subList(0, 2))
-                        it.add("····this.type·is·%T·&&·that.type·is·%T·->·(this·as·%T).$name(that·as·%T)·as·%T\n", t1, t2, container.parameterizedBy(t1.asTypeName()), container.parameterizedBy(t2.asTypeName()), crt)
+                        it.add("····this.type·is·%T·&&·that.type·is·%T·->·this.asType(%T()).$name(that.asType(%T()))·as·%T\n", t1, t2, t1.asTypeName(), t2.asTypeName(), crt)
             }
             .add("····else·->·error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{this.type::class}·and·${'$'}{that.type::class}.·Use·any·pairwise·combination·of·${'$'}{imklib.types.realTypes.map·{·it::class·}}.\")\n")
             .add("}\n\n")

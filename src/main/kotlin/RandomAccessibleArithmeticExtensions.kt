@@ -419,10 +419,10 @@ operator fun RA<UnsignedByteType>.plus(that: RA<UnsignedShortType>): RA<Unsigned
 
 @JvmName(name = "plus_92")
 operator fun RA<RealType<*>>.plus(that: RA<RealType<*>>): RA<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RA<DoubleType>).plus(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RA<DoubleType>).plus(that as RA<FloatType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RA<FloatType>).plus(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RA<FloatType>).plus(that as RA<FloatType>) as RA<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).plus(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).plus(that.asType(FloatType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).plus(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).plus(that.asType(FloatType())) as RA<RealType<*>>
     else -> error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
@@ -793,10 +793,10 @@ operator fun RA<UnsignedByteType>.minus(that: RA<UnsignedShortType>): RA<Unsigne
 
 @JvmName(name = "minus_92")
 operator fun RA<RealType<*>>.minus(that: RA<RealType<*>>): RA<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RA<DoubleType>).minus(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RA<DoubleType>).minus(that as RA<FloatType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RA<FloatType>).minus(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RA<FloatType>).minus(that as RA<FloatType>) as RA<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).minus(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).minus(that.asType(FloatType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).minus(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).minus(that.asType(FloatType())) as RA<RealType<*>>
     else -> error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
@@ -1167,10 +1167,10 @@ operator fun RA<UnsignedByteType>.times(that: RA<UnsignedShortType>): RA<Unsigne
 
 @JvmName(name = "times_92")
 operator fun RA<RealType<*>>.times(that: RA<RealType<*>>): RA<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RA<DoubleType>).times(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RA<DoubleType>).times(that as RA<FloatType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RA<FloatType>).times(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RA<FloatType>).times(that as RA<FloatType>) as RA<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).times(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).times(that.asType(FloatType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).times(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).times(that.asType(FloatType())) as RA<RealType<*>>
     else -> error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
@@ -1541,10 +1541,10 @@ operator fun RA<UnsignedByteType>.div(that: RA<UnsignedShortType>): RA<UnsignedS
 
 @JvmName(name = "div_92")
 operator fun RA<RealType<*>>.div(that: RA<RealType<*>>): RA<RealType<*>> = when {
-    this.type is DoubleType && that.type is DoubleType -> (this as RA<DoubleType>).div(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is DoubleType && that.type is FloatType -> (this as RA<DoubleType>).div(that as RA<FloatType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is DoubleType -> (this as RA<FloatType>).div(that as RA<DoubleType>) as RA<RealType<*>>
-    this.type is FloatType && that.type is FloatType -> (this as RA<FloatType>).div(that as RA<FloatType>) as RA<RealType<*>>
+    this.type is DoubleType && that.type is DoubleType -> this.asType(DoubleType()).div(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is DoubleType && that.type is FloatType -> this.asType(DoubleType()).div(that.asType(FloatType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is DoubleType -> this.asType(FloatType()).div(that.asType(DoubleType())) as RA<RealType<*>>
+    this.type is FloatType && that.type is FloatType -> this.asType(FloatType()).div(that.asType(FloatType())) as RA<RealType<*>>
     else -> error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
 }
 
