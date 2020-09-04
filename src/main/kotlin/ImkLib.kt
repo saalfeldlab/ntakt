@@ -38,6 +38,8 @@ import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
+import net.imglib2.type.operators.SetOne
+import net.imglib2.type.operators.SetZero
 import net.imglib2.util.ConstantUtils
 import java.math.BigInteger
 import java.util.function.BiConsumer
@@ -108,15 +110,17 @@ object imklib {
     fun <T> constant(constant: T, numDimensions: Int) = ConstantUtils.constantRandomAccessible(constant, numDimensions)
     fun <T> constant(constant: T, interval: Interval) = ConstantUtils.constantRandomAccessibleInterval(constant, interval)
 
-    fun <T: NumericType<T>> zeros(type: T, numDimensions: Int) = type.also { it.setZero() }.let { constant(it, numDimensions) }
-    fun <T: NumericType<T>> zeros(interval: Interval, type: T) = type.also { it.setZero() }.let { constant(it, interval) }
+    fun <T: SetZero> zeros(type: T, numDimensions: Int) = type.also { it.setZero() }.let { constant(it, numDimensions) }
+    fun <T: SetZero> zeros(type: T, interval: Interval) = type.also { it.setZero() }.let { constant(it, interval) }
+    fun <T: SetZero> zeros(type: T, vararg dimensions: Long) = zeros(type, dimensions.interval)
     fun zeros(numDimensions: Int) = zeros(DoubleType(), numDimensions)
-    fun zeros(interval: Interval) = zeros(interval, DoubleType())
+    fun zeros(interval: Interval) = zeros(DoubleType(), interval)
 
-    fun <T: NumericType<T>> ones(type: T, numDimensions: Int) = type.also { it.setOne() }.let { constant(it, numDimensions) }
-    fun <T: NumericType<T>> ones(interval: Interval, type: T) = type.also { it.setOne() }.let { constant(it, interval) }
+    fun <T: SetOne> ones(type: T, numDimensions: Int) = type.also { it.setOne() }.let { constant(it, numDimensions) }
+    fun <T: SetOne> ones(type: T, interval: Interval) = type.also { it.setOne() }.let { constant(it, interval) }
+    fun <T: SetOne> ones(type: T, vararg dimensions: Long) = ones(type, dimensions.interval)
     fun ones(numDimensions: Int) = ones(DoubleType(), numDimensions)
-    fun ones(interval: Interval) = ones(interval, DoubleType())
+    fun ones(interval: Interval) = ones(DoubleType(), interval)
 
     // state-less function
     fun <T> function(n: Int, typeSupplier: Supplier<T>, f: BiConsumer<RealLocalizable, in T>) = FunctionRealRandomAccessible(n, f, typeSupplier)
