@@ -1,17 +1,8 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import net.imglib2.RandomAccessible
-import net.imglib2.RandomAccessibleInterval
-import net.imglib2.RealRandomAccessible
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.NumericType
-import net.imglib2.type.numeric.integer.*
-import net.imglib2.type.numeric.real.DoubleType
-import net.imglib2.type.numeric.real.FloatType
-import net.imglib2.type.operators.Add
-import net.imglib2.type.operators.Div
-import net.imglib2.type.operators.Mul
-import net.imglib2.type.operators.Sub
+import net.imglib2.type.numeric.RealType
 import java.lang.Integer.max
 import kotlin.reflect.KClass
 
@@ -44,11 +35,11 @@ fun generateArithmeticExtensions(`as`: String, fileName: String): String {
     for ((name, operatorName, type) in arithmetics.operatorNames) {
         var index = 0
         kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
-
         for ((t1, t2, o) in arithmeticTypeCombinations) {
             kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t1, t2, o, jvmName = "${name}_${++index}"))
             kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t2, t1, o, jvmName = "${name}_${++index}"))
         }
+        kotlinFile.addFunction(generateArithmeticOperatorStarProjection(name, operatorName, container, jvmName = "${name}_${++index}"))
     }
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
@@ -117,6 +108,30 @@ private fun generatePlusConverting(
             .returns(container.parameterizedBy(o))
             // Need · to add non-breaking space
             .addStatement("return this.asType(${o.simpleName}())·$operator·that.asType(${o.simpleName}())")
+            .build()
+}
+
+private fun generateArithmeticOperatorStarProjection(name: String, operator: String, container: ClassName, jvmName: String): FunSpec {
+    val rt = RealType::class.asTypeName().parameterizedBy(STAR)
+    val crt = container.parameterizedBy(rt)
+    val cb = CodeBlock
+            .builder()
+            .add("return when {\n")
+            .also { cb ->
+                for (t1 in arithmeticTypes.map { it.first })
+                    for (t2 in arithmeticTypes.map { it.first })
+                        cb.add("····this.type·is·%T·&&·that.type·is·%T·->·(this.asType(%T())·$operator·that.asType(%T()))·as·%T\n", t1, t2, t1.asTypeName(), t2.asTypeName(), crt)
+            }
+            .add("····else·->·error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{this.type::class}·and·${'$'}{that.type::class}.·Use·any·pairwise·combination·of·${'$'}{imklib.types.realTypes.map·{·it::class·}}.\")\n")
+            .add("}\n\n")
+            .build()
+
+    return typedFuncSpecBuilder(name, crt)
+            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
+            .addModifiers(KModifier.OPERATOR)
+            .addParameter("that", container.parameterizedBy(rt))
+            .returns(crt)
+            .addCode(cb)
             .build()
 }
 
