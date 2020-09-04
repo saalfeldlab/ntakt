@@ -100,13 +100,50 @@ val rai4 = rai3 / 3.14
 ```
 imklib adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/examples) provide more detailed examples. 
 
-#### Convenience Extension Functions
-*TBD*
+#### Extension Functions
+imklib adds convenience to ImgLib2 data structures with extensions functions.
+The following sections will cover extension functions that shared among the following data structures (package names omitted):
+ - `RandomAccessible`
+ - `RandomAccessibleInterval`
+ - `RealRandomAccessible`
+ - `RealRandomAccessiblerealInterval`
+
+There are a few [extension functions](#data-structure-specific-extensions) that are specific to some of the data structures.
+
+##### Conversion
+Converters are probably the most fundamental and important extension.
+This extension exposes the static convenience methods of the ImgLib2 [`Converters`](https://github.com/imglib/imglib2/blob/master/src/main/java/net/imglib2/converter/Converters.java)
+class as extensions that can be called directly on class instances.
+Converters are very powerful because they transform the values of a data structure (or of a pair of data structures)
+into arbitrary values as defined by the caller without allocating any memory.
+The value at each pixel/voxel is computed on demand when accessed.
+Other names for this evaluation pattern are *lazy* or *view*:
+```kotlin
+val rai = imklib.doubles(1L, 2L, 3L) { Random.nextDouble(0.0, 1.0) }
+val scaledAndQuantizedRai = rai.convert(imklib.types.unsignedByte) { s, t -> t.setInteger(round(255.0 * s.realDouble).toInt()) }
+
+val rra1 = imklib.function(2, { imklib.types.float }) { p, t -> t.setReal(abs(p.getDoublePosition(0)) + abs(p.getDoublePosition(1))) }
+val rra2 = imklib.function(2, { imklib.types.double }) { p, t -> t.setReal(sqrt(p.getDoublePosition(0).pow(2.0) + p.getDoublePosition(1).pow(2.0))) }
+val meanRra = rra1.convert(rra2, imklib.types.double) { s, t, u -> u.setReal(s.realDouble); u.add(t); u.mul(0.5) }
+```
+
+Note that for expensive operations, it may be beneficial to persist/materialize views to avoid repeated execution of the expensive operation.
+Many of the other convenience functions are implemented as converters, e.g. the [arithmetic operators](#arithmetic-operators). 
 
 #### Other Convenience Functions
 *TBD*
 
-#### Arithmetic Operators
+##### Arithmetic Operators
+Operator overloading is possible for arithmetic operations (`+-*/`) on 
+ 1. ImgLib2 data structures and primitive types and generic types with the same bounds as the data structure
+ 2. Pairs of ImgLib2 data structures if
+    1. Both data structures have the exact same generic bounds `T`. The return type is `T`.
+    2. The generic type is any of `imklib.types.realTypes` for each of the data structures. The return type is defined in the table below.
+    3. As (ii) but the types are specified with star projection (`RealType<*>`) or as mixed generic bounds. The return type is `RealType<*>`.
+       Will throw an `error` if the type for either data structure is `RealType<*>` that does not fulfil these criteria.
+
+The following table specifies the output types for (2.ii) and (2.iii) for all arithmetic operations (`+-*/`).
+
 |                 T/U |            ByteType |           ShortType |             IntType |            LongType |    UnsignedByteType |   UnsignedShortType |     UnsignedIntType |    UnsignedLongType |           FloatType |          DoubleType |
 | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- |
 |            ByteType |            ByteType |           ShortType |             IntType |            LongType |           ShortType |             IntType |            LongType |            LongType |           FloatType |          DoubleType |
@@ -121,16 +158,17 @@ imklib adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/exam
 |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |
 
 
+#### Data Structure Specific Extensions
 *TBD*
-*TBD* show all combinations of input and output types
 
-#### Indexed Access Operators
+##### Indexed Access Operators
 *TBD*
 
 
 ### Caveats
  - Kotlin extension functions are just syntactic sugar for static Java methods. Interface methods take precedence, if they exist. As a result, imklib code may fail to compile or, even worse, change behavior silently when interface methods are added upstream.
- - Some of the added convenience functions are inefficient, which is not obvious without understanding the ImgLib2 design. 
+ - Some of the added convenience functions are inefficient, which is not obvious without understanding the ImgLib2 design.
+ - It is not always obvious (and not currently documented) which (extension) functions genearate views and which allocate data
 
 ## Installation
 
