@@ -107,7 +107,7 @@ imklib adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/exam
 *TBD*
 
 #### Arithmetic Operators
-|           ``T`/`U`` |          `ByteType` |         `ShortType` |           `IntType` |          `LongType` |  `UnsignedByteType` | `UnsignedShortType` |   `UnsignedIntType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
+|             `T`/`U` |          `ByteType` |         `ShortType` |           `IntType` |          `LongType` |  `UnsignedByteType` | `UnsignedShortType` |   `UnsignedIntType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
 | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- |
 |          `ByteType` |          `ByteType` |         `ShortType` |           `IntType` |          `LongType` |         `ShortType` |           `IntType` |          `LongType` |          `LongType` |         `FloatType` |        `DoubleType` |
 |         `ShortType` |         `ShortType` |         `ShortType` |           `IntType` |          `LongType` |         `ShortType` |           `IntType` |          `LongType` |          `LongType` |         `FloatType` |        `DoubleType` |
