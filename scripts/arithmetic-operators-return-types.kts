@@ -5,7 +5,7 @@
 
 import net.imglib2.imklib.*
 
-val bt = "`"
+val bt = ""
 
 val names = imklib.types.realTypes.map { it::class.simpleName!! }
 val maxLength = names.map { it.length }.max()!! + 2

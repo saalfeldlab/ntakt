@@ -107,18 +107,19 @@ imklib adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/exam
 *TBD*
 
 #### Arithmetic Operators
-|             `T`/`U` |          `ByteType` |         `ShortType` |           `IntType` |          `LongType` |  `UnsignedByteType` | `UnsignedShortType` |   `UnsignedIntType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
+|                 T/U |            ByteType |           ShortType |             IntType |            LongType |    UnsignedByteType |   UnsignedShortType |     UnsignedIntType |    UnsignedLongType |           FloatType |          DoubleType |
 | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- |
-|          `ByteType` |          `ByteType` |         `ShortType` |           `IntType` |          `LongType` |         `ShortType` |           `IntType` |          `LongType` |          `LongType` |         `FloatType` |        `DoubleType` |
-|         `ShortType` |         `ShortType` |         `ShortType` |           `IntType` |          `LongType` |         `ShortType` |           `IntType` |          `LongType` |          `LongType` |         `FloatType` |        `DoubleType` |
-|           `IntType` |           `IntType` |           `IntType` |           `IntType` |          `LongType` |           `IntType` |           `IntType` |          `LongType` |          `LongType` |         `FloatType` |        `DoubleType` |
-|          `LongType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |         `FloatType` |        `DoubleType` |
-|  `UnsignedByteType` |         `ShortType` |         `ShortType` |           `IntType` |          `LongType` |  `UnsignedByteType` | `UnsignedShortType` |   `UnsignedIntType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
-| `UnsignedShortType` |           `IntType` |           `IntType` |           `IntType` |          `LongType` | `UnsignedShortType` | `UnsignedShortType` |   `UnsignedIntType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
-|   `UnsignedIntType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |   `UnsignedIntType` |   `UnsignedIntType` |   `UnsignedIntType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
-|  `UnsignedLongType` |          `LongType` |          `LongType` |          `LongType` |          `LongType` |  `UnsignedLongType` |  `UnsignedLongType` |  `UnsignedLongType` |  `UnsignedLongType` |         `FloatType` |        `DoubleType` |
-|         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |         `FloatType` |        `DoubleType` |
-|        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |        `DoubleType` |
+|            ByteType |            ByteType |           ShortType |             IntType |            LongType |           ShortType |             IntType |            LongType |            LongType |           FloatType |          DoubleType |
+|           ShortType |           ShortType |           ShortType |             IntType |            LongType |           ShortType |             IntType |            LongType |            LongType |           FloatType |          DoubleType |
+|             IntType |             IntType |             IntType |             IntType |            LongType |             IntType |             IntType |            LongType |            LongType |           FloatType |          DoubleType |
+|            LongType |            LongType |            LongType |            LongType |            LongType |            LongType |            LongType |            LongType |            LongType |           FloatType |          DoubleType |
+|    UnsignedByteType |           ShortType |           ShortType |             IntType |            LongType |    UnsignedByteType |   UnsignedShortType |     UnsignedIntType |    UnsignedLongType |           FloatType |          DoubleType |
+|   UnsignedShortType |             IntType |             IntType |             IntType |            LongType |   UnsignedShortType |   UnsignedShortType |     UnsignedIntType |    UnsignedLongType |           FloatType |          DoubleType |
+|     UnsignedIntType |            LongType |            LongType |            LongType |            LongType |     UnsignedIntType |     UnsignedIntType |     UnsignedIntType |    UnsignedLongType |           FloatType |          DoubleType |
+|    UnsignedLongType |            LongType |            LongType |            LongType |            LongType |    UnsignedLongType |    UnsignedLongType |    UnsignedLongType |    UnsignedLongType |           FloatType |          DoubleType |
+|           FloatType |           FloatType |           FloatType |           FloatType |           FloatType |           FloatType |           FloatType |           FloatType |           FloatType |           FloatType |          DoubleType |
+|          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |          DoubleType |
+
 
 *TBD*
 *TBD* show all combinations of input and output types
