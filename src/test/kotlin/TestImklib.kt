@@ -27,13 +27,14 @@ package net.imglib2.imklib
 
 import net.imglib2.*
 import net.imglib2.img.array.ArrayImgs
+import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.numeric.integer.IntType
 import org.junit.Assert
 import org.junit.jupiter.api.TestInstance
 import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ImkLibTest {
+class TestImklib {
 
     val reference: RandomAccessibleInterval<IntType> = ArrayImgs
         .ints(IntArray(6) { it + 1 }, 2, 3)

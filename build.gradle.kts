@@ -13,6 +13,9 @@ plugins {
     // gradle header plugin
     id("com.github.hierynomus.license") version "0.15.0"
 
+    // code coverage
+    jacoco
+
 }
 
 repositories {
@@ -75,8 +78,25 @@ tasks.register("publishToFiji", Copy::class) {
     }
 }
 
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+    reports {
+        xml.isEnabled = true
+        csv.isEnabled = true
+        xml.destination = file("${buildDir}/jacoco.xml")
+        csv.destination = file("${buildDir}/jacoco.csv")
+        html.destination = file("${buildDir}/jacocoHtml")
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") { from(components["kotlin"]) }
     }
 }
+
+
