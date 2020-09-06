@@ -25,11 +25,18 @@
  */
 package net.imglib2.imklib
 
+import net.imglib2.RealLocalizable
 import net.imglib2.realtransform.*
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.RealType
 import net.imglib2.view.Views
 import net.imglib2.RealRandomAccessible as RRA
+
+operator fun <T> RRA<T>.get(vararg position: Double) = getAt(*position)
+operator fun <T> RRA<T>.get(vararg position: Float) = getAt(*position)
+operator fun <T> RRA<T>.get(vararg position: Long) = getAt(*DoubleArray(position.size) { position[it].toDouble() })
+operator fun <T> RRA<T>.get(vararg position: Int) = getAt(*DoubleArray(position.size) { position[it].toDouble() })
+operator fun <T> RRA<T>.get(position: RealLocalizable) = getAt(position)
 
 val <T> RRA<T>.type get() = realRandomAccess().get()
 val <T: Type<T>> RRA<T>.type get() = realRandomAccess().get().createVariable()

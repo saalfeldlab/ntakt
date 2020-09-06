@@ -69,4 +69,17 @@ class TestImklib {
         longArrayOf(1, 2) in i1
         FinalRealInterval.createMinMax(1.0, 2.0, 5.0, 4.0) union i1
     }
+
+    @Test
+    fun `test function`() {
+        val f = imklib.function(3, { DoubleArray(3) }) { l, p -> l.localize(p) }
+        Assert.assertArrayEquals(doubleArrayOf(1.0, 2.0, 3.0), f[1, 2, 3], 0.0)
+
+        // stateful
+        var accessCount = 0
+        val counter = imklib.function(1, { IntType() }) { -> { _, p -> p.setInteger(++accessCount) } }
+        Assert.assertEquals(1, counter[0].integer)
+        Assert.assertEquals(2, counter[0].integer)
+        Assert.assertEquals(3, counter[1].integer)
+    }
 }
