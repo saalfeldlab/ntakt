@@ -95,7 +95,38 @@ tasks.jacocoTestReport {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") { from(components["kotlin"]) }
+        create<MavenPublication>("maven") {
+            from(components["kotlin"])
+            pom {
+                name.set("imklib")
+                url.set("https://github.com/saalfeldlab/imklib2")
+                inceptionYear.set("2020")
+                licenses {
+                    license {
+                        name.set("Simplified BSD License")
+                        distribution.set("repo")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/saalfeldlab/imklib2")
+                    developerConnection.set("scm:git:git@github.com:saalfeldlab/imklib2")
+                    tag.set("HEAD")
+                    url.set("https://github.com/saalfeldlab/imklib2")
+                }
+                repositories {
+                    add(maven("https://maven.scijava.org/content/groups/public"))
+                }
+                withXml {
+                    asNode()
+                            .appendNode("repositories")
+                            .appendNode("repository").also {
+                                it.appendNode("id", "scijava.public")
+                                it.appendNode("url", "https://maven.scijava.org/content/groups/public")
+                            }
+//                            .appendNode("scijava.public", "https://maven.scijava.org/content/groups/public")
+                }
+            }
+        }
     }
 }
 
