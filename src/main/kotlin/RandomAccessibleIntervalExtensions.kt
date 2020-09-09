@@ -26,6 +26,7 @@
 package net.imglib2.imklib
 
 import bdv.util.volatiles.VolatileViews
+import net.imglib2.Interval
 import net.imglib2.Localizable
 import net.imglib2.cache.LoaderCache
 import net.imglib2.cache.ref.SoftRefLoaderCache
@@ -39,8 +40,13 @@ import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.IntType
+import net.imglib2.type.operators.Add
+import net.imglib2.type.operators.Div
+import net.imglib2.type.operators.Mul
+import net.imglib2.type.operators.Sub
 import net.imglib2.util.Util
 import net.imglib2.view.Views
+import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
 fun <T> RAI<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
@@ -89,3 +95,49 @@ val RAI<*>.volatileView get() = VolatileViews.wrapAsVolatile(this) ?: error("Una
 
 // TODO add to all containers
 fun RAI<IntType>.asARGBs(shiftRight: Int = 0) = convert(ARGBType()) { s, t -> t.set(s.get() shr shiftRight) }
+
+
+// asign operations:
+// TODO how can we make sure that it only is applied to RAIs that can be written into?
+operator fun <T: Add<T>> RAI<T>.plusAssign(value: T) = iterable.forEach { it += value }
+operator fun <T: Sub<T>> RAI<T>.minusAssign(value: T) = iterable.forEach { it -= value }
+operator fun <T: Mul<T>> RAI<T>.timesAssign(value: T) = iterable.forEach { it *= value }
+operator fun <T: Div<T>> RAI<T>.divAssign(value: T) = iterable.forEach { it /= value }
+
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Byte) = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Short) = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Int) = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Long) = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Float) = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Double) = this.plusAssign(type.createWithValue(value))
+
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Byte) = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Short) = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Int) = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Long) = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Float) = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Double) = this.minusAssign(type.createWithValue(value))
+
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Byte) = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Short) = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Int) = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Long) = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Float) = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Double) = this.timesAssign(type.createWithValue(value))
+
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Byte) = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Short) = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Int) = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Long) = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Float) = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Double) = this.divAssign(type.createWithValue(value))
+
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, value: T) = this[interval].forEach { it.set(value) }
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterator: Iterator<T>) = this[interval].flatIterable.forEach { it.set(iterator.next()) }
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterable: Iterable<T>) = set(interval, iterable.iterator())
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, rai: RAI<T>) = set(interval, rai.flatIterable)
+
+operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> + other[this]).asType(type))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> - other[this]).asType(type))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> * other[this]).asType(type))
+operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> / other[this]).asType(type))
