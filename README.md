@@ -161,8 +161,28 @@ The following table specifies the output types for (2.ii) and (2.iii) for all ar
 #### Data Structure Specific Extensions
 *TBD*
 
-##### Indexed Access Operators
-*TBD*
+#### Indexed Access Operators
+
+##### Voxel Access 
+Individual voxels of `RandomAccessible` (and by extension `RandomAccessibleInterval`) instances can be accessed via the
+`[]` operator that is overloaded for `vararg Int`, `vararg Long`, and `Localizable`:
+```kotlin
+val ra: RandomAccessible<T> = ...
+val t1: T = ra[1, 2, 3]
+val t2: T = ra[1L, 2L, 3L]
+val t3: T = ra[Point(1, 2, 3)]
+```
+Similarly, voxels of `RealRandomAccessible` (and by extension `RealRandomAccessibleRealInterval`) instances can be accessed via the
+`[]` operator that is overloaded for `varargf Float`, `vararg Double`, and `RealLocalizable`:
+```kotlin
+val rra: RealRandomAccessible<T> = ...
+val t1: T = ra[1.0, 2.0, 3.0]
+val t2: T = ra[1.0f, 2.0f, 3.0f]
+val t3:T = ra[RealPoint(1.0, 2.0, 3.0)]
+```
+
+**Note**: This access pattern is designed for convenience but is not very efficient. Use in tight loop is discouraged.
+For efficient access of (large numbers of) individual voxels, use ImgLib2 `Cursor`, `RandomAccess`, or `LoopBuilder`.
 
 
 ### Caveats
