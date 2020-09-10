@@ -25,12 +25,15 @@
  */
 package net.imglib2.imklib
 
+import net.imglib2.FinalRealInterval
+import net.imglib2.RealInterval
 import net.imglib2.RealLocalizable
+import net.imglib2.RealRandomAccessible as RRA
+import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 import net.imglib2.realtransform.*
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.RealType
 import net.imglib2.view.Views
-import net.imglib2.RealRandomAccessible as RRA
 
 operator fun <T> RRA<T>.get(vararg position: Double) = getAt(*position)
 operator fun <T> RRA<T>.get(vararg position: Float) = getAt(*position)
@@ -56,3 +59,21 @@ fun <T> RRA<T>.scale(vararg scale: Double) = affine(Scale(*scale))
 fun <T> RRA<T>.scaleReal(vararg scale: Double) = affineReal(Scale(*scale))
 fun <T> RRA<T>.scaleAndTranslate(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }) = affine(ScaleAndTranslation(scale, translation))
 fun <T> RRA<T>.scaleAndTranslateReal(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }) = affineReal(ScaleAndTranslation(scale, translation))
+
+fun <T> RRA<T>.realInterval(realInterval: RealInterval): RRARI<T> = RealIntervalView(this, realInterval)
+fun <T> RRA<T>.realInterval(min: DoubleArray, max: DoubleArray): RRARI<T> = RealIntervalView(this, min, max)
+fun <T> RRA<T>.realInterval(min: FloatArray, max: FloatArray): RRARI<T> = RealIntervalView(this, min, max)
+fun <T> RRA<T>.realInterval(min: RealLocalizable, max: RealLocalizable): RRARI<T> = RealIntervalView(this, min, max)
+fun <T> RRA<T>.realInterval(vararg minMax: Double): RRARI<T> = RealIntervalView(this,*minMax)
+fun <T> RRA<T>.realInterval(vararg minMax: Float): RRARI<T> = RealIntervalView(this, *minMax)
+operator fun <T> RRA<T>.get(realInterval: RealInterval) = realInterval(realInterval)
+
+
+private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInterval) : RRARI<T>, RRA<T> by source, RealInterval by realInterval {
+    constructor(source: RRA<T>, min: DoubleArray, max: DoubleArray) : this(source, FinalRealInterval(min, max))
+    constructor(source: RRA<T>, min: FloatArray, max: FloatArray) : this(source, min.doubles, max.doubles)
+    constructor(source: RRA<T>, min: RealLocalizable, max: RealLocalizable) : this(source, FinalRealInterval(min, max))
+    constructor(source: RRA<T>, vararg minMax: Double) : this(source, minMax.minMaxReal)
+    constructor(source: RRA<T>, vararg minMax: Float) : this(source, minMax.minMaxReal)
+    override fun numDimensions() = source.numDimensions()
+}

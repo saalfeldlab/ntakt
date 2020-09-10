@@ -38,6 +38,9 @@ val RealInterval.minAsRealPoint: RealPoint get() = minAsRealPoint()
 // TODO wait for imglib/imglib2#292 before reverting back to maxAsRealPoint()
 val RealInterval.maxAsRealPoint: RealPoint get() = RealPoint(numDimensions()).also { realMax(it) }
 
+val DoubleArray.minMaxReal get() = Intervals.createMinMaxReal(*this)
+val FloatArray.minMaxReal get() = Intervals.createMinMaxReal(*doubles)
+
 infix fun RealInterval.intersect(that: RealInterval) = Intervals.intersect(this, that)
 infix fun RealInterval.union(that: RealInterval) = Intervals.union(this, that)
 operator fun RealInterval.contains(that: RealInterval) = Intervals.contains(this, that)

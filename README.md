@@ -179,16 +179,41 @@ val rra: RealRandomAccessible<T> = ...
 val t1: T = ra[1.0, 2.0, 3.0]
 val t2: T = ra[1.0f, 2.0f, 3.0f]
 val t3:T = ra[RealPoint(1.0, 2.0, 3.0)]
+
 ```
 
 **Note**: This access pattern is designed for convenience but is not very efficient. Use in tight loop is discouraged.
 For efficient access of (large numbers of) individual voxels, use ImgLib2 `Cursor`, `RandomAccess`, or `LoopBuilder`.
+
+##### Intervals
+It is common practice to restrict unbounded `RandomAccessible` instances to certain intervals, e.g. when cropping a block out of a function defined on infinite domain. 
+imklib exposes the `Views.interval` functions as extensions to the `RandomAccessible` interface (and by extension `RandomAccessibleInterval`).
+The `[]` operator is overloaded for `Interval`:
+```kotlin
+val i1 = ra.interval(1L, 2L)
+val i2 = ra.interval(3, 4)
+val i3 = ra.interval(longArrayOf(1, 2), longArrayOf(3, 4))
+val i4 = ra.interval(intArrayOf(5, 6), intArrayOf(7, 8))
+val i5 = ra.interval(i1)
+val i6 = ra[i3]
+```
+
+Similarly, imklib adds extension to `RealRandomAccessible` (and by extension `RealRandomAccessibleRealInterval`):
+```kotlin
+val ri1: RealRandomAccessibleRealInterval<T> = rra.realInterval(1F, 2F)
+val ri2: RealRandomAccessibleRealInterval<T> = rra.realInterval(3.0, 4.0)
+val ri3: RealRandomAccessibleRealInterval<T> = rra.realInterval(doubleArrayOf(1.0, 2.0), doubleArrayOf(3.0, 4.0))
+val ri4: RealRandomAccessibleRealInterval<T> = rra.realInterval(floatArrayOf(5F, 6F), floatArrayOf(7F, 4F))
+val ri5: RealRandomAccessibleRealInterval<T> = rra.realInterval(ri1)
+val ri6: RealRandomAccessibleRealInterval<T> = rra[ri3]
+```
 
 
 ### Caveats
  - Kotlin extension functions are just syntactic sugar for static Java methods. Interface methods take precedence, if they exist. As a result, imklib code may fail to compile or, even worse, change behavior silently when interface methods are added upstream.
  - Some of the added convenience functions are inefficient, which is not obvious without understanding the ImgLib2 design.
  - It is not always obvious (and not currently documented) which (extension) functions genearate views and which allocate data
+ - It is not always obvious (and not currently documented) which (extension) functinos generate read-only views and which generate read-write views
 
 ## Installation
 
