@@ -5,7 +5,7 @@ image:
 stack: jdk 8
 
 install:
-  - ./gradlew clean build --info
+  - ./gradlew clean build --info --stacktrace
 
 test_script:
   - ./gradlew test
