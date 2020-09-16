@@ -113,6 +113,10 @@ publishing {
                     tag.set("HEAD")
                     url.set("https://github.com/saalfeldlab/imklib2")
                 }
+                ciManagement {
+                    system.set("Travis CI")
+                    url.set("https://travis-ci.com/saalfeldlab/imklib2")
+                }
                 repositories {
                     add(maven("https://maven.scijava.org/content/groups/public"))
                 }
