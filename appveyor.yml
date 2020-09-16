@@ -5,7 +5,10 @@ image:
 stack: jdk 8
 
 install:
-  - ./gradlew clean build --info --stacktrace
+  - ./gradlew clean
+  - ./gradlew generateAllExtensions
+  - ls src/main/kotlin
+  - ./gradlew build --info --stacktrace
 
 test_script:
   - ./gradlew test
