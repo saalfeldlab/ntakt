@@ -5,15 +5,9 @@ image:
 stack: jdk 8
 
 install:
-  - ls -halF
-  - ls src
-  - ls src/main
-  - ls src/main/kotlin
-  - dir src\main\kotlin\RandomAccessibleArithmeticExtensions.kt
   - ./gradlew clean
-  - ./gradlew generateAllExtensions --info --stacktrace
-  - ls src/main/kotlin
-  - ./gradlew build --debug --stacktrace
+  - ./gradlew generateAllExtensions
+  - ./gradlew build
 
 test_script:
   - ./gradlew test
