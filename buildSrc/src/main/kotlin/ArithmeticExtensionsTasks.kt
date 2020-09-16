@@ -7,7 +7,7 @@ open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
         for ((`as`, name) in typeFileMapping) {
             println("generating arithmetic extensions for $`as` ($name)")
             Files.createDirectories(name.second.parentFile.toPath())
-            Files.deleteIfExists(name.second.toPath())
+            // Files.deleteIfExists(name.second.toPath())
             Files.write(name.second.toPath(), generateArithmeticExtensions(`as`, name.first).withHeader.toByteArray())
         }
     }
