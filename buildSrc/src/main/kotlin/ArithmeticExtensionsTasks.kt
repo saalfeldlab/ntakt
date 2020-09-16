@@ -6,12 +6,9 @@ open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
     fun runTask() {
         for ((`as`, name) in typeFileMapping) {
             println("generating arithmetic extensions for $`as` ($name)")
-            println("${name.second.exists()} ${name.second.toPath()}")
             Files.createDirectories(name.second.parentFile.toPath())
             Files.deleteIfExists(name.second.toPath())
-            println("${name.second.exists()} ${name.second.toPath()}")
             Files.write(name.second.toPath(), generateArithmeticExtensions(`as`, name.first).withHeader.toByteArray())
-            println("successfully generated arithmetic extensions for $`as` ($name)")
         }
     }
 
