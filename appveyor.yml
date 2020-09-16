@@ -5,6 +5,10 @@ image:
 stack: jdk 8
 
 install:
+  - ls -halF
+  - ls src
+  - ls src/main
+  - ls src/main/kotlin
   - ./gradlew clean
   - ./gradlew generateAllExtensions
   - ls src/main/kotlin
