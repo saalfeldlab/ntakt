@@ -9,6 +9,7 @@ install:
   - ls src
   - ls src/main
   - ls src/main/kotlin
+  - dir src\main\kotlin\RandomAccessibleArithmeticExtensions.kt
   - ./gradlew clean
   - ./gradlew generateAllExtensions --info --stacktrace
   - ls src/main/kotlin
