@@ -12,7 +12,7 @@ install:
   - ./gradlew clean
   - ./gradlew generateAllExtensions
   - ls src/main/kotlin
-  - ./gradlew build --info --stacktrace
+  - ./gradlew build --debug --stacktrace
 
 test_script:
   - ./gradlew test
