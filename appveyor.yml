@@ -10,7 +10,7 @@ install:
   - ls src/main
   - ls src/main/kotlin
   - ./gradlew clean
-  - ./gradlew generateAllExtensions
+  - ./gradlew generateAllExtensions --info --stacktrace
   - ls src/main/kotlin
   - ./gradlew build --debug --stacktrace
 
