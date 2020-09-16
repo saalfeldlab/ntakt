@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.com/saalfeldlab/imklib2.svg?branch=master)](https://travis-ci.com/saalfeldlab/imklib2)
+[![Build Status](https://travis-ci.com/saalfeldlab/imklib2.svg?branch=master)](https://travis-ci.com/saalfeldlab/imklib2) [![Build status](https://ci.appveyor.com/api/projects/status/cvi9r5hqyiiyenlu?svg=true)](https://ci.appveyor.com/project/hanslovsky/imklib2)
+
 
 # imklib (preliminary name)
 
