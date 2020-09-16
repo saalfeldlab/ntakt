@@ -8,6 +8,7 @@ open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
             println("generating arithmetic extensions for $`as` ($name)")
             Files.write(name.second.toPath(), generateArithmeticExtensions(`as`, name.first).withHeader.toByteArray())
             println("successfully generated arithmetic extensions for $`as` ($name)")
+            println("${name.second.exists()} ${name.second.toPath()}")
         }
     }
 
