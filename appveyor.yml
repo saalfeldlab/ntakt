@@ -1,0 +1,15 @@
+image:
+  - Ubuntu2004
+  - macos
+  - Visual Studio 2019
+stack: jdk 8
+
+install:
+  - ./gradlew clean
+  - ./gradlew generateAllExtensions
+  - ./gradlew build
+
+test_script:
+  - ./gradlew test
+
+build: off
