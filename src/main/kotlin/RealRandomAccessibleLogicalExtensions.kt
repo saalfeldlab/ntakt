@@ -28,71 +28,155 @@
 
 package net.imglib2.imklib
 
+import kotlin.Any
 import kotlin.Comparable
+import kotlin.jvm.JvmName
 import net.imglib2.RealRandomAccessible
 import net.imglib2.type.logic.BoolType
+import net.imglib2.type.numeric.IntegerType
+import net.imglib2.type.numeric.RealType
 
-infix fun <T : Comparable<T>> RealRandomAccessible<T>.eq(that: RealRandomAccessible<T>):
+infix fun RealRandomAccessible<*>.eq(that: RealRandomAccessible<*>):
     RealRandomAccessible<BoolType> {
-  return this.convert(that, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  val t1 = this.type
+  val t2 = that.type
+  val jc1 = t1::class.java
+  val jc2 = t2::class.java
+  if (this.type is Comparable<*> && that.type is Comparable<*>) {
+  if (jc1.isAssignableFrom(jc2))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (jc2.isAssignableFrom(jc1))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 == s1) }
+  }
+  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
+      return (this as RealRandomAccessible<IntegerType<*>>).convert(that as RealRandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() == s2.getIntegerLong()) }
+  if (t1 is RealType<*> && t2 is RealType<*>)
+      return (this as RealRandomAccessible<RealType<*>>).convert(that as RealRandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() == s2.getRealDouble()) }
+  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
-infix fun <T : Comparable<T>> RealRandomAccessible<T>.ge(that: RealRandomAccessible<T>):
+infix fun RealRandomAccessible<*>.ge(that: RealRandomAccessible<*>):
     RealRandomAccessible<BoolType> {
-  return this.convert(that, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  val t1 = this.type
+  val t2 = that.type
+  val jc1 = t1::class.java
+  val jc2 = t2::class.java
+  if (this.type is Comparable<*> && that.type is Comparable<*>) {
+  if (jc1.isAssignableFrom(jc2))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (jc2.isAssignableFrom(jc1))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 <= s1) }
+  }
+  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
+      return (this as RealRandomAccessible<IntegerType<*>>).convert(that as RealRandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() >= s2.getIntegerLong()) }
+  if (t1 is RealType<*> && t2 is RealType<*>)
+      return (this as RealRandomAccessible<RealType<*>>).convert(that as RealRandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() >= s2.getRealDouble()) }
+  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
-infix fun <T : Comparable<T>> RealRandomAccessible<T>.le(that: RealRandomAccessible<T>):
+infix fun RealRandomAccessible<*>.le(that: RealRandomAccessible<*>):
     RealRandomAccessible<BoolType> {
-  return this.convert(that, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  val t1 = this.type
+  val t2 = that.type
+  val jc1 = t1::class.java
+  val jc2 = t2::class.java
+  if (this.type is Comparable<*> && that.type is Comparable<*>) {
+  if (jc1.isAssignableFrom(jc2))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (jc2.isAssignableFrom(jc1))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 >= s1) }
+  }
+  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
+      return (this as RealRandomAccessible<IntegerType<*>>).convert(that as RealRandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() <= s2.getIntegerLong()) }
+  if (t1 is RealType<*> && t2 is RealType<*>)
+      return (this as RealRandomAccessible<RealType<*>>).convert(that as RealRandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() <= s2.getRealDouble()) }
+  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
-infix fun <T : Comparable<T>> RealRandomAccessible<T>.gt(that: RealRandomAccessible<T>):
+infix fun RealRandomAccessible<*>.gt(that: RealRandomAccessible<*>):
     RealRandomAccessible<BoolType> {
-  return this.convert(that, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  val t1 = this.type
+  val t2 = that.type
+  val jc1 = t1::class.java
+  val jc2 = t2::class.java
+  if (this.type is Comparable<*> && that.type is Comparable<*>) {
+  if (jc1.isAssignableFrom(jc2))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (jc2.isAssignableFrom(jc1))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 < s1) }
+  }
+  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
+      return (this as RealRandomAccessible<IntegerType<*>>).convert(that as RealRandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() > s2.getIntegerLong()) }
+  if (t1 is RealType<*> && t2 is RealType<*>)
+      return (this as RealRandomAccessible<RealType<*>>).convert(that as RealRandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() > s2.getRealDouble()) }
+  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
-infix fun <T : Comparable<T>> RealRandomAccessible<T>.lt(that: RealRandomAccessible<T>):
+infix fun RealRandomAccessible<*>.lt(that: RealRandomAccessible<*>):
     RealRandomAccessible<BoolType> {
-  return this.convert(that, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  val t1 = this.type
+  val t2 = that.type
+  val jc1 = t1::class.java
+  val jc2 = t2::class.java
+  if (this.type is Comparable<*> && that.type is Comparable<*>) {
+  if (jc1.isAssignableFrom(jc2))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (jc2.isAssignableFrom(jc1))
+      return (this as RealRandomAccessible<Comparable<Any>>).convert(that as RealRandomAccessible<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 > s1) }
+  }
+  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
+      return (this as RealRandomAccessible<IntegerType<*>>).convert(that as RealRandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() < s2.getIntegerLong()) }
+  if (t1 is RealType<*> && t2 is RealType<*>)
+      return (this as RealRandomAccessible<RealType<*>>).convert(that as RealRandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() < s2.getRealDouble()) }
+  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
+@JvmName("comparisonOperator_eq_1")
 infix fun <T : Comparable<T>> RealRandomAccessible<T>.eq(that: T): RealRandomAccessible<BoolType> {
   return this.convert(BoolType()) { s, t -> t.set(s == that) }
 }
 
+@JvmName("comparisonOperator_eq_1")
 infix fun <T : Comparable<T>> T.eq(that: RealRandomAccessible<T>): RealRandomAccessible<BoolType> {
   return that eq this
 }
 
+@JvmName("comparisonOperator_ge_1")
 infix fun <T : Comparable<T>> RealRandomAccessible<T>.ge(that: T): RealRandomAccessible<BoolType> {
   return this.convert(BoolType()) { s, t -> t.set(s >= that) }
 }
 
+@JvmName("comparisonOperator_ge_1")
 infix fun <T : Comparable<T>> T.ge(that: RealRandomAccessible<T>): RealRandomAccessible<BoolType> {
   return that ge this
 }
 
+@JvmName("comparisonOperator_le_1")
 infix fun <T : Comparable<T>> RealRandomAccessible<T>.le(that: T): RealRandomAccessible<BoolType> {
   return this.convert(BoolType()) { s, t -> t.set(s <= that) }
 }
 
+@JvmName("comparisonOperator_le_1")
 infix fun <T : Comparable<T>> T.le(that: RealRandomAccessible<T>): RealRandomAccessible<BoolType> {
   return that le this
 }
 
+@JvmName("comparisonOperator_gt_1")
 infix fun <T : Comparable<T>> RealRandomAccessible<T>.gt(that: T): RealRandomAccessible<BoolType> {
   return this.convert(BoolType()) { s, t -> t.set(s > that) }
 }
 
+@JvmName("comparisonOperator_gt_1")
 infix fun <T : Comparable<T>> T.gt(that: RealRandomAccessible<T>): RealRandomAccessible<BoolType> {
   return that gt this
 }
 
+@JvmName("comparisonOperator_lt_1")
 infix fun <T : Comparable<T>> RealRandomAccessible<T>.lt(that: T): RealRandomAccessible<BoolType> {
   return this.convert(BoolType()) { s, t -> t.set(s < that) }
 }
 
+@JvmName("comparisonOperator_lt_1")
 infix fun <T : Comparable<T>> T.lt(that: RealRandomAccessible<T>): RealRandomAccessible<BoolType> {
   return that lt this
 }
