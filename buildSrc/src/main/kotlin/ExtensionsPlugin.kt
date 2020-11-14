@@ -26,6 +26,7 @@ class ExtensionsPlugin : Plugin<Project> {
         tasks.registerExtension(GenerateConverterExtensionsTask.name, GenerateConverterExtensionsTask::class.java)
         tasks.registerExtension(GenerateArithmeticExtensionsTask.name, GenerateArithmeticExtensionsTask::class.java)
         tasks.registerExtension(GenerateArithmeticScalarExtensionsTask.name, GenerateArithmeticScalarExtensionsTask::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTask.name, GenerateLogicalExtensionsTask::class.java)
     }
 
     private fun <T: Task> TaskContainer.registerExtension(name: String, type: Class<T>) {
