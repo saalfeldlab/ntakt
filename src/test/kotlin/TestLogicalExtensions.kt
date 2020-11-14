@@ -30,6 +30,7 @@ import kotlin.test.Test
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 import net.imglib2.RealRandomAccessible as RRA
+import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 import net.imglib2.type.numeric.real.DoubleType
 import org.junit.Assert
 import org.junit.jupiter.api.TestInstance
@@ -63,6 +64,14 @@ class TestLogicalExtensions {
     val rraLe = arrayOf(-1e6 to true, 0.9 to true, 1.0 to true, 1.1 to false, 1e6 to false)
     val rraGt = arrayOf(-1e6 to false, 0.9 to false, 1.0 to false, 1.1 to true, 1e6 to true)
     val rraLt = arrayOf(-1e6 to true, 0.9 to true, 1.0 to false, 1.1 to false, 1e6 to false)
+
+    val rrari1 = rra1.realInterval(-1e7, 1e7)
+    val rrari2 = rra2.realInterval(-1e7, 1e7)
+    val rrariEq = rraEq
+    val rrariGe = rraGe
+    val rrariLe = rraLe
+    val rrariGt = rraGt
+    val rrariLt = rraLt
 
     // RAI
     @Test fun `test rai eq rai`() = assertRai(raiEq, rai1 eq rai2)
@@ -142,6 +151,32 @@ class TestLogicalExtensions {
     @Test fun `test scalar lt rra`() = assertRra(oneDouble.asType() lt rra1, *rraLt)
 
     private fun assertRra(actual: RRA<BoolType>, vararg expected: Pair<Double, Boolean>) {
+        for ((idx, e) in expected.withIndex())
+            Assert.assertEquals("Mismatch at index $idx", e.second, actual[e.first].get())
+    }
+
+    // RRA
+    @Test fun `test rrari eq rrari`() = assertRrari(rrari1 eq rrari2, *rrariEq)
+    @Test fun `test rrari eq scalar`() = assertRrari(rrari1 eq oneDouble.asType(), *rrariEq)
+    @Test fun `test scalar eq rrari`() = assertRrari(oneDouble.asType() eq rrari1, *rrariEq)
+
+    @Test fun `test rrari ge rrari`() = assertRrari(rrari1 ge rrari2, *rrariGe)
+    @Test fun `test rrari ge scalar`() = assertRrari(rrari1 ge oneDouble.asType(), *rrariGe)
+    @Test fun `test scalar ge rrari`() = assertRrari(oneDouble.asType() ge rrari1, *rrariGe)
+
+    @Test fun `test rrari le rrari`() = assertRrari(rrari1 le rrari2, *rrariLe)
+    @Test fun `test rrari le scalar`() = assertRrari(rrari1 le oneDouble.asType(), *rrariLe)
+    @Test fun `test scalar le rrari`() = assertRrari(oneDouble.asType() le rrari1, *rrariLe)
+
+    @Test fun `test rrari gt rrari`() = assertRrari(rrari1 gt rrari2, *rrariGt)
+    @Test fun `test rrari gt scalar`() = assertRrari(rrari1 gt oneDouble.asType(), *rrariGt)
+    @Test fun `test scalar gt rrari`() = assertRrari(oneDouble.asType() gt rrari1, *rrariGt)
+
+    @Test fun `test rrari lt rrari`() = assertRrari(rrari1 lt rrari2, *rrariLt)
+    @Test fun `test rrari lt scalar`() = assertRrari(rrari1 lt oneDouble.asType(), *rrariLt)
+    @Test fun `test scalar lt rrari`() = assertRrari(oneDouble.asType() lt rrari1, *rrariLt)
+
+    private fun assertRrari(actual: RRARI<BoolType>, vararg expected: Pair<Double, Boolean>) {
         for ((idx, e) in expected.withIndex())
             Assert.assertEquals("Mismatch at index $idx", e.second, actual[e.first].get())
     }
