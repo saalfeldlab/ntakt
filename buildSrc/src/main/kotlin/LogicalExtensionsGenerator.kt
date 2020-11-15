@@ -150,6 +150,12 @@ private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, compa
                     realType,
                     containerComparableRealType,
                     boolTypeClass)
+            .addStatement("if (t2 is %T) return·this·${comparison.infixName}·t2.asType()", Byte::class)
+            .addStatement("if (t2 is %T) return·this·${comparison.infixName}·t2.asType()", Short::class)
+            .addStatement("if (t2 is %T) return·this·${comparison.infixName}·t2.asType()", Int::class)
+            .addStatement("if (t2 is %T) return·this·${comparison.infixName}·t2.asType()", Long::class)
+            .addStatement("if (t2 is %T) return·this·${comparison.infixName}·t2.asType()", Float::class)
+            .addStatement("if (t2 is %T) return·this·${comparison.infixName}·t2.asType()", Double::class)
             .addStatement("throw Exception(\"Comparison operators not suported for combination of voxel types: (\$t1, \$t2)\")")
             .build()
 

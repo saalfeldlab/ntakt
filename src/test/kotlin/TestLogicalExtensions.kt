@@ -93,6 +93,8 @@ class TestLogicalExtensions {
     @Test fun `test rai eq rai doubles`() = assertRai(raiEq, rai1 eq rai2.asDoubles())
     @Test fun `test rai eq scalar`() = assertRai(raiEq, rai1 eq oneInt.asType())
     @Test fun `test scalar eq rai`() = assertRai(raiEq, oneInt.asType() eq rai1)
+    @Test fun `test rai eq primitive scalar`() = assertRai(raiEq, rai1 eq oneDouble)
+    @Test fun `test primitive scalar eq rai`() = assertRai(raiEq, oneInt eq rai1)
 
     @Test fun `test rai ge rai`() = assertRai(raiGe, rai1 ge rai2)
     @Test fun `test rai ge scalar`() = assertRai(raiGe, rai1 ge oneInt.asType())

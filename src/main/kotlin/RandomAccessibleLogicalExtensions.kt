@@ -29,7 +29,13 @@
 package net.imglib2.imklib
 
 import kotlin.Any
+import kotlin.Byte
 import kotlin.Comparable
+import kotlin.Double
+import kotlin.Float
+import kotlin.Int
+import kotlin.Long
+import kotlin.Short
 import net.imglib2.RandomAccessible
 import net.imglib2.type.logic.BoolType
 import net.imglib2.type.numeric.IntegerType
@@ -141,6 +147,12 @@ infix fun RandomAccessible<*>.eq(that: Any): RandomAccessible<BoolType> {
       return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() == t2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() == t2.getRealDouble()) }
+  if (t2 is Byte) return this eq t2.asType()
+  if (t2 is Short) return this eq t2.asType()
+  if (t2 is Int) return this eq t2.asType()
+  if (t2 is Long) return this eq t2.asType()
+  if (t2 is Float) return this eq t2.asType()
+  if (t2 is Double) return this eq t2.asType()
   throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
@@ -162,6 +174,12 @@ infix fun RandomAccessible<*>.ge(that: Any): RandomAccessible<BoolType> {
       return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() >= t2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() >= t2.getRealDouble()) }
+  if (t2 is Byte) return this ge t2.asType()
+  if (t2 is Short) return this ge t2.asType()
+  if (t2 is Int) return this ge t2.asType()
+  if (t2 is Long) return this ge t2.asType()
+  if (t2 is Float) return this ge t2.asType()
+  if (t2 is Double) return this ge t2.asType()
   throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
@@ -183,6 +201,12 @@ infix fun RandomAccessible<*>.le(that: Any): RandomAccessible<BoolType> {
       return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() <= t2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() <= t2.getRealDouble()) }
+  if (t2 is Byte) return this le t2.asType()
+  if (t2 is Short) return this le t2.asType()
+  if (t2 is Int) return this le t2.asType()
+  if (t2 is Long) return this le t2.asType()
+  if (t2 is Float) return this le t2.asType()
+  if (t2 is Double) return this le t2.asType()
   throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
@@ -204,6 +228,12 @@ infix fun RandomAccessible<*>.gt(that: Any): RandomAccessible<BoolType> {
       return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() > t2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() > t2.getRealDouble()) }
+  if (t2 is Byte) return this gt t2.asType()
+  if (t2 is Short) return this gt t2.asType()
+  if (t2 is Int) return this gt t2.asType()
+  if (t2 is Long) return this gt t2.asType()
+  if (t2 is Float) return this gt t2.asType()
+  if (t2 is Double) return this gt t2.asType()
   throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
@@ -225,6 +255,12 @@ infix fun RandomAccessible<*>.lt(that: Any): RandomAccessible<BoolType> {
       return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() < t2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() < t2.getRealDouble()) }
+  if (t2 is Byte) return this lt t2.asType()
+  if (t2 is Short) return this lt t2.asType()
+  if (t2 is Int) return this lt t2.asType()
+  if (t2 is Long) return this lt t2.asType()
+  if (t2 is Float) return this lt t2.asType()
+  if (t2 is Double) return this lt t2.asType()
   throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
 }
 
