@@ -31,13 +31,23 @@ private val arithmeticTypeCombinations = mutableListOf<Triple<KClass<*>, KClass<
     }
 }
 
-private val comparisons = arrayOf(
-        arrayOf("eq", "==", "=="),
-        arrayOf("ge", ">=", "<="),
-        arrayOf("le", "<=", ">="),
-        arrayOf("gt", ">", "<"),
-        arrayOf("lt", "<", ">")
-)
+private enum class Comparison(val infixName: String, val operatorName: String, private val reverseId: String? = null) {
+
+    EQ("eq", "=="),
+    GE("ge", ">=", "LE"),
+    LE("le", "<=", "GE"),
+    GT("gt", ">", "LT"),
+    LT("lt", "<", "GT");
+
+    private lateinit var _reverse: Comparison
+
+    val reverse: Comparison
+        get() {
+            if (!this::_reverse.isInitialized)
+                _reverse = reverseId?.let { valueOf(it) } ?: this
+            return _reverse
+        }
+}
 
 
 
@@ -51,9 +61,9 @@ fun generateLogicalExtensions(`as`: String, fileName: String): String {
 }
 
 private fun FileSpec.Builder.addComparisonsWithContainer(container: ClassName) =
-        comparisons.fold(this) { b, c -> b.addComparisonWithContainer(container, c[0], c[1], c[2]) }
+        Comparison.values().fold(this) { b, c -> b.addComparisonWithContainer(container, c) }
 
-private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, infixName: String, operatorName: String, reverseOperatorName: String): FileSpec.Builder {
+private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, comparison: Comparison): FileSpec.Builder {
 
     val containerComparableAny = container.parameterizedBy(Comparable::class.asTypeName().parameterizedBy(Any::class.asTypeName()))
     val containerComparableIntegerType = container.parameterizedBy(IntegerType::class.asTypeName().parameterizedBy(STAR))
@@ -64,32 +74,32 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, in
             .addStatement("val t2 = that.type")
             .addStatement("val jc1 = t1::class.java")
             .addStatement("val jc2 = t2::class.java")
-            .addStatement("if (this.type is Comparable<*> && that.type is Comparable<*>) {")
+            .addStatement("if (t1 is Comparable<*> && t1 is Comparable<*>) {")
             .addStatement(
-                    "if (jc1.isAssignableFrom(jc2)) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1·$operatorName·s2)·}",
+                    "if (jc1.isAssignableFrom(jc2)) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1·${comparison.operatorName}·s2)·}",
                     containerComparableAny,
                     containerComparableAny,
                     boolTypeClass)
             .addStatement(
-                    "if (jc2.isAssignableFrom(jc1)) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s2·$reverseOperatorName·s1)·}",
+                    "if (jc2.isAssignableFrom(jc1)) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s2·${comparison.reverse.operatorName}·s1)·}",
                     containerComparableAny,
                     containerComparableAny,
                     boolTypeClass)
             .addStatement("}")
             .addStatement(
-                    "if (t1 is IntegerType<*> && t2 is IntegerType<*>) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.getIntegerLong()·$operatorName·s2.getIntegerLong())·}",
+                    "if (t1 is IntegerType<*> && t2 is IntegerType<*>) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.getIntegerLong()·${comparison.operatorName}·s2.getIntegerLong())·}",
                     containerComparableIntegerType,
                     containerComparableIntegerType,
                     boolTypeClass)
             .addStatement(
-                    "if (t1 is RealType<*> && t2 is RealType<*>) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.getRealDouble()·$operatorName·s2.getRealDouble())·}",
+                    "if (t1 is RealType<*> && t2 is RealType<*>) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.getRealDouble()·${comparison.operatorName}·s2.getRealDouble())·}",
                     containerComparableRealType,
                     containerComparableRealType,
                     boolTypeClass)
             .addStatement("throw Exception(\"Comparison operators not suported for combination of voxel types: (\$t1, \$t2)\")")
             .build()
     val infixFunc = FunSpec
-            .builder(infixName)
+            .builder(comparison.infixName)
             .addModifiers(KModifier.INFIX)
             .receiver(container.parameterizedBy(STAR))
             .returns(container.parameterizedBy(boolTypeClass.asTypeName()))
@@ -101,55 +111,56 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, in
 }
 
 private fun FileSpec.Builder.addComparisonsWithScalar(container: ClassName) =
-        comparisons.fold(this) { b, c -> b.addComparisonWithScalar(container, c[0], c[1]) }
+        Comparison.values().fold(this) { b, c -> b.addComparisonWithScalar(container, c) }
 
-private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, infixName: String, operatorName: String): FileSpec.Builder {
+private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, comparison: Comparison): FileSpec.Builder {
+    val comparableAny = Comparable::class.asTypeName().parameterizedBy(Any::class.asTypeName())
+    val integerType = IntegerType::class.asTypeName().parameterizedBy(STAR)
+    val realType = RealType::class.asTypeName().parameterizedBy(STAR)
+    val containerComparableAny = container.parameterizedBy(comparableAny)
+    val containerComparableIntegerType = container.parameterizedBy(integerType)
+    val containerComparableRealType = container.parameterizedBy(realType)
+    val containerStar = container.parameterizedBy(STAR)
+    val any = Any::class.asTypeName()
+    val codeBlock = CodeBlock
+            .builder()
+            .addStatement("val t1 = this.type")
+            .addStatement("val t2 = that")
+            .addStatement("val jc1 = t1::class.java")
+            .addStatement("val jc2 = t2::class.java")
+            .addStatement("if (t1 is Comparable<*> && t2 is Comparable<*>) {")
+            .addStatement("val t2Comparable = t2 as %T", comparableAny)
+            .addStatement(
+                    "if (jc1.isAssignableFrom(jc2)) return·(this·as·%T).convert(%T())·{·s1,·t·->·t.set(s1·${comparison.operatorName}·t2Comparable)·}",
+                    containerComparableAny,
+                    boolTypeClass)
+            .addStatement(
+                    "if (jc2.isAssignableFrom(jc1)) return·(this·as·%T).convert(%T())·{·s1,·t·->·t.set(t2Comparable·${comparison.reverse.operatorName}·s1)·}",
+                    containerComparableAny,
+                    boolTypeClass)
+            .addStatement("}")
+            .addStatement(
+                    "if (t1 is %T && t2 is %T) return·(this·as·%T).convert(%T())·{·s1,·t·->·t.set(s1.getIntegerLong()·${comparison.operatorName}·t2.getIntegerLong())·}",
+                    integerType,
+                    integerType,
+                    containerComparableIntegerType,
+                    boolTypeClass)
+            .addStatement("if (t1 is %T && t2 is %T) return·(this·as·%T).convert(%T())·{·s1,·t·->·t.set(s1.getRealDouble()·${comparison.operatorName}·t2.getRealDouble())·}",
+                    realType,
+                    realType,
+                    containerComparableRealType,
+                    boolTypeClass)
+            .addStatement("throw Exception(\"Comparison operators not suported for combination of voxel types: (\$t1, \$t2)\")")
+            .build()
 
-    fun FileSpec.Builder.addComparisonWithScalar(
-            jvmName: String,
-            t1: TypeName,
-            t2: TypeName = t1,
-            typeVariableName: TypeVariableName? = null,
-            s1get: String = "",
-            s2get: String = s1get
-    ): FileSpec.Builder {
-        val infixFuncContainerScalar = FunSpec
-                .builder(infixName)
-                .addModifiers(KModifier.INFIX)
-                .let { b -> typeVariableName?.let { b.addTypeVariable(it) } ?: b }
-                .receiver(container.parameterizedBy(t1))
-                .returns(container.parameterizedBy(boolTypeClass.asTypeName()))
-                .addParameter("that", t2)
-                .addStatement("return·this.convert(%T())·{·s,·t·->·t.set(s$s1get·$operatorName·that$s2get)·}", boolTypeClass)
-                .jvmName(jvmName)
-                .build()
-        val infixFuncScalarContainer = FunSpec
-                .builder(infixName)
-                .addModifiers(KModifier.INFIX)
-                .let { b -> typeVariableName?.let { b.addTypeVariable(it) } ?: b }
-                .receiver(t2)
-                .returns(container.parameterizedBy(boolTypeClass.asTypeName()))
-                .addParameter("that", container.parameterizedBy(t1))
-                .addStatement("return·that·$infixName·this")
-                .jvmName(jvmName)
-                .build()
-        return this
-                .addFunction(infixFuncContainerScalar)
-                .addFunction(infixFuncScalarContainer)
-    }
-
-    val genericT = TypeVariableName("T")
-    val typeOfT = Comparable::class.asTypeName().parameterizedBy(genericT)
-    val boundedT = TypeVariableName("T", typeOfT)
+    fun infixFuncBuilder(receiver: TypeName, parameter: TypeName) = FunSpec
+            .builder(comparison.infixName)
+            .addModifiers(KModifier.INFIX)
+            .returns(container.parameterizedBy(boolTypeClass.asTypeName()))
+            .receiver(receiver)
+            .addParameter("that", parameter)
 
     return this
-            .addComparisonWithScalar(jvmName = "comparisonOperator_${infixName}_1", t1 = genericT, typeVariableName = boundedT)
-//            .addComparisonWithScalar(jvmName = "comparisonOperator_${infixName}_2", t1 = RealType::class.asTypeName().parameterizedBy(STAR), s1get = ".getRealDouble()")
-//            .addComparisonWithScalar(jvmName = "comparisonOperator_${infixName}_3", t1 = IntegerType::class.asTypeName().parameterizedBy(STAR), s1get = ".getIntegerLong()")
-}
-
-fun main() {
-val a: Comparable<*> = 1
-val b: Comparable<*> = 2
-    println((a as Comparable<Any>).compareTo(b as Comparable<Any>))
+            .addFunction(infixFuncBuilder(containerStar, any).addCode(codeBlock).build())
+            .addFunction(infixFuncBuilder(any, containerStar).addStatement("return that ${comparison.reverse.infixName} this").build())
 }

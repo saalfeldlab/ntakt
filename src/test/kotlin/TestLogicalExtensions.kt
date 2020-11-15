@@ -38,6 +38,19 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestLogicalExtensions {
 
+    open class Comp1(val v1: Int) : Comparable<Comp1> {
+        override fun compareTo(other: Comp1): Int {
+            println("Comparing $this to $other")
+            val comp = v1.compareTo(other.v1)
+            println("Comparison is $comp")
+            return comp
+        }
+
+        override fun toString(): String = "${this::class.simpleName}: v1=$v1"
+    }
+
+    class Comp2(v1: Int) : Comp1(v1)
+
     val oneInt = 1
     val oneDouble = 1.0
 
@@ -82,19 +95,19 @@ class TestLogicalExtensions {
 
     @Test fun `test rai ge rai`() = assertRai(raiGe, rai1 ge rai2)
     @Test fun `test rai ge scalar`() = assertRai(raiGe, rai1 ge oneInt.asType())
-    @Test fun `test scalar ge rai`() = assertRai(raiGe, oneInt.asType() ge rai1)
+    @Test fun `test scalar le rai`() = assertRai(raiGe, oneInt.asType() le rai1)
 
     @Test fun `test rai le rai`() = assertRai(raiLe, rai1 le rai2)
     @Test fun `test rai le scalar`() = assertRai(raiLe, rai1 le oneInt.asType())
-    @Test fun `test scalar le rai`() = assertRai(raiLe, oneInt.asType() le rai1)
+    @Test fun `test scalar ge rai`() = assertRai(raiLe, oneInt.asType() ge rai1)
 
     @Test fun `test rai gt rai`() = assertRai(raiGt, rai1 gt rai2)
     @Test fun `test rai gt scalar`() = assertRai(raiGt, rai1 gt oneInt.asType())
-    @Test fun `test scalar gt rai`() = assertRai(raiGt, oneInt.asType() gt rai1)
+    @Test fun `test scalar lt rai`() = assertRai(raiGt, oneInt.asType() lt rai1)
 
     @Test fun `test rai lt rai`() = assertRai(raiLt, rai1 lt rai2)
     @Test fun `test rai lt scalar`() = assertRai(raiLt, rai1 lt oneInt.asType())
-    @Test fun `test scalar lt rai`() = assertRai(raiLt, oneInt.asType() lt rai1)
+    @Test fun `test scalar gt rai`() = assertRai(raiLt, oneInt.asType() gt rai1)
 
     private fun assertRai(expected: BooleanArray, actual: RAI<BoolType>) {
         Assert.assertTrue(rai1.contains(actual))
@@ -112,19 +125,19 @@ class TestLogicalExtensions {
 
     @Test fun `test ra ge ra`() = assertRa(ra1 ge ra2, *raGe)
     @Test fun `test ra ge scalar`() = assertRa(ra1 ge oneInt.asType(), *raGe)
-    @Test fun `test scalar ge ra`() = assertRa(oneInt.asType() ge ra1, *raGe)
+    @Test fun `test scalar le ra`() = assertRa(oneInt.asType() le ra1, *raGe)
 
     @Test fun `test ra le ra`() = assertRa(ra1 le ra2, *raLe)
     @Test fun `test ra le scalar`() = assertRa(ra1 le oneInt.asType(), *raLe)
-    @Test fun `test scalar le ra`() = assertRa(oneInt.asType() le ra1, *raLe)
+    @Test fun `test scalar ge ra`() = assertRa(oneInt.asType() ge ra1, *raLe)
 
     @Test fun `test ra gt ra`() = assertRa(ra1 gt ra2, *raGt)
     @Test fun `test ra gt scalar`() = assertRa(ra1 gt oneInt.asType(), *raGt)
-    @Test fun `test scalar gt ra`() = assertRa(oneInt.asType() gt ra1, *raGt)
+    @Test fun `test scalar lt ra`() = assertRa(oneInt.asType() lt ra1, *raGt)
 
     @Test fun `test ra lt ra`() = assertRa(ra1 lt ra2, *raLt)
     @Test fun `test ra lt scalar`() = assertRa(ra1 lt oneInt.asType(), *raLt)
-    @Test fun `test scalar lt ra`() = assertRa(oneInt.asType() lt ra1, *raLt)
+    @Test fun `test scalar gt ra`() = assertRa(oneInt.asType() gt ra1, *raLt)
 
     private fun assertRa(actual: RA<BoolType>, vararg expected: Pair<Int, Boolean>) {
         for ((idx, e) in expected.withIndex())
@@ -138,19 +151,19 @@ class TestLogicalExtensions {
 
     @Test fun `test rra ge rra`() = assertRra(rra1 ge rra2, *rraGe)
     @Test fun `test rra ge scalar`() = assertRra(rra1 ge oneDouble.asType(), *rraGe)
-    @Test fun `test scalar ge rra`() = assertRra(oneDouble.asType() ge rra1, *rraGe)
+    @Test fun `test scalar le rra`() = assertRra(oneDouble.asType() le rra1, *rraGe)
 
     @Test fun `test rra le rra`() = assertRra(rra1 le rra2, *rraLe)
     @Test fun `test rra le scalar`() = assertRra(rra1 le oneDouble.asType(), *rraLe)
-    @Test fun `test scalar le rra`() = assertRra(oneDouble.asType() le rra1, *rraLe)
+    @Test fun `test scalar ge rra`() = assertRra(oneDouble.asType() ge rra1, *rraLe)
 
     @Test fun `test rra gt rra`() = assertRra(rra1 gt rra2, *rraGt)
     @Test fun `test rra gt scalar`() = assertRra(rra1 gt oneDouble.asType(), *rraGt)
-    @Test fun `test scalar gt rra`() = assertRra(oneDouble.asType() gt rra1, *rraGt)
+    @Test fun `test scalar lt rra`() = assertRra(oneDouble.asType() lt rra1, *rraGt)
 
     @Test fun `test rra lt rra`() = assertRra(rra1 lt rra2, *rraLt)
     @Test fun `test rra lt scalar`() = assertRra(rra1 lt oneDouble.asType(), *rraLt)
-    @Test fun `test scalar lt rra`() = assertRra(oneDouble.asType() lt rra1, *rraLt)
+    @Test fun `test scalar gt rra`() = assertRra(oneDouble.asType() gt rra1, *rraLt)
 
     private fun assertRra(actual: RRA<BoolType>, vararg expected: Pair<Double, Boolean>) {
         for ((idx, e) in expected.withIndex())
@@ -164,23 +177,26 @@ class TestLogicalExtensions {
 
     @Test fun `test rrari ge rrari`() = assertRrari(rrari1 ge rrari2, *rrariGe)
     @Test fun `test rrari ge scalar`() = assertRrari(rrari1 ge oneDouble.asType(), *rrariGe)
-    @Test fun `test scalar ge rrari`() = assertRrari(oneDouble.asType() ge rrari1, *rrariGe)
+    @Test fun `test scalar le rrari`() = assertRrari(oneDouble.asType() le rrari1, *rrariGe)
 
     @Test fun `test rrari le rrari`() = assertRrari(rrari1 le rrari2, *rrariLe)
     @Test fun `test rrari le scalar`() = assertRrari(rrari1 le oneDouble.asType(), *rrariLe)
-    @Test fun `test scalar le rrari`() = assertRrari(oneDouble.asType() le rrari1, *rrariLe)
+    @Test fun `test scalar ge rrari`() = assertRrari(oneDouble.asType() ge rrari1, *rrariLe)
 
     @Test fun `test rrari gt rrari`() = assertRrari(rrari1 gt rrari2, *rrariGt)
     @Test fun `test rrari gt scalar`() = assertRrari(rrari1 gt oneDouble.asType(), *rrariGt)
-    @Test fun `test scalar gt rrari`() = assertRrari(oneDouble.asType() gt rrari1, *rrariGt)
+    @Test fun `test scalar lt rrari`() = assertRrari(oneDouble.asType() lt rrari1, *rrariGt)
 
     @Test fun `test rrari lt rrari`() = assertRrari(rrari1 lt rrari2, *rrariLt)
     @Test fun `test rrari lt scalar`() = assertRrari(rrari1 lt oneDouble.asType(), *rrariLt)
-    @Test fun `test scalar lt rrari`() = assertRrari(oneDouble.asType() lt rrari1, *rrariLt)
+    @Test fun `test scalar gt rrari`() = assertRrari(oneDouble.asType() gt rrari1, *rrariLt)
 
     private fun assertRrari(actual: RRARI<BoolType>, vararg expected: Pair<Double, Boolean>) {
         for ((idx, e) in expected.withIndex())
             Assert.assertEquals("Mismatch at index $idx", e.second, actual[e.first].get())
     }
 
+//    @Test fun `test assignable comparable`() = Assert.assertTrue((imklib.constant(Comp1(1), 1) eq imklib.constant(Comp2(1), 1)).randomAccess().get().get())
+
 }
+
