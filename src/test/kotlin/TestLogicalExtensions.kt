@@ -25,6 +25,7 @@
  */
 package net.imglib2.imklib
 
+import net.imglib2.Point
 import net.imglib2.type.logic.BoolType
 import kotlin.test.Test
 import net.imglib2.RandomAccessible as RA
@@ -196,7 +197,18 @@ class TestLogicalExtensions {
             Assert.assertEquals("Mismatch at index $idx", e.second, actual[e.first].get())
     }
 
-//    @Test fun `test assignable comparable`() = Assert.assertTrue((imklib.constant(Comp1(1), 1) eq imklib.constant(Comp2(1), 1)).randomAccess().get().get())
+    // where
+    @Test fun `test where`() {
+        val data = imklib.booleans(3, 2) { it % 2 == 0 }
+        val expectedPoints = listOf(
+                Point(0, 0),
+                Point(2, 0),
+                Point(1, 1)
+        ).sortedWith(compareBy({ it.getLongPosition(0) }, { it.getLongPosition(1) }))
+        val where = data.where().sortedWith(compareBy({ it.getLongPosition(0) }, { it.getLongPosition(1) }))
+
+        Assert.assertEquals(expectedPoints, where)
+    }
 
 }
 

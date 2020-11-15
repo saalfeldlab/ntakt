@@ -28,11 +28,13 @@ package net.imglib2.imklib
 import bdv.util.volatiles.VolatileViews
 import net.imglib2.Interval
 import net.imglib2.Localizable
+import net.imglib2.Point
 import net.imglib2.cache.LoaderCache
 import net.imglib2.cache.ref.SoftRefLoaderCache
 import net.imglib2.img.ImgFactory
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess
 import net.imglib2.img.cell.Cell
+import net.imglib2.type.BooleanType
 import net.imglib2.type.NativeType
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.ARGBType
@@ -141,3 +143,12 @@ operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>) = set(th
 operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> - other[this]).asType(type))
 operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> * other[this]).asType(type))
 operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> / other[this]).asType(type))
+
+fun <T: BooleanType<T>> RAI<T>.where(): List<Localizable> {
+    val cursor = this.iterable.cursor()
+    val where = mutableListOf<Localizable>()
+    while (cursor.hasNext())
+        if (cursor.next().get())
+            where += Point(cursor)
+    return where
+}
