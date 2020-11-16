@@ -81,49 +81,47 @@ private fun FileSpec.Builder.addComparisonsWithContainer(container: ClassName) =
 
 private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, comparison: Comparison): FileSpec.Builder {
 
-    val containerComparableAny = container.parameterizedBy(Comparable::class.asTypeName().parameterizedBy(Any::class.asTypeName()))
-    val containerComparableIntegerType = container.parameterizedBy(IntegerType::class.asTypeName().parameterizedBy(STAR))
-    val containerComparableRealType = container.parameterizedBy(RealType::class.asTypeName().parameterizedBy(STAR))
-    val codeBlock = CodeBlock
-            .builder()
-            .addStatement("val t1 = this.type")
-            .addStatement("val t2 = that.type")
-            .addStatement("val jc1 = t1::class.java")
-            .addStatement("val jc2 = t2::class.java")
-            .addStatement("if (t1 is Comparable<*> && t1 is Comparable<*>) {")
-            .addStatement(
-                    "if (jc1.isAssignableFrom(jc2)) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1·${comparison.operatorName}·s2)·}",
-                    containerComparableAny,
-                    containerComparableAny,
-                    boolTypeClass)
-            .addStatement(
-                    "if (jc2.isAssignableFrom(jc1)) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s2·${comparison.reverse.operatorName}·s1)·}",
-                    containerComparableAny,
-                    containerComparableAny,
-                    boolTypeClass)
-            .addStatement("}")
-            .addStatement(
-                    "if (t1 is IntegerType<*> && t2 is IntegerType<*>) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.getIntegerLong()·${comparison.operatorName}·s2.getIntegerLong())·}",
-                    containerComparableIntegerType,
-                    containerComparableIntegerType,
-                    boolTypeClass)
-            .addStatement(
-                    "if (t1 is RealType<*> && t2 is RealType<*>) return·(this·as·%T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.getRealDouble()·${comparison.operatorName}·s2.getRealDouble())·}",
-                    containerComparableRealType,
-                    containerComparableRealType,
-                    boolTypeClass)
-            .addStatement("throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\$t1,·\$t2)\")")
-            .build()
-    val infixFunc = FunSpec
+    fun typeCombinations(): CodeBlock {
+        val codeBlockBuilder = CodeBlock.builder()
+        for ((t1, id1) in arithmeticTypes) {
+            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
+            for ((t2, id2) in arithmeticTypes) {
+                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
+                val converterBody = if (t1 == t2) {
+                    "s1·${comparison.operatorName}·s2"
+                } else {
+                    if (t1IsIntegerType && t2IsIntegerType)
+                        "s1.integerLong·${comparison.operatorName}·s2.integerLong"
+                    else
+                        "s1.realDouble·${comparison.operatorName}·s2.realDouble"
+                }
+                codeBlockBuilder.addStatement(
+                        "if (this.type is %T && that.type is %T) return·(this·as·%T).convert(that as %T, %T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
+                        t1,
+                        t2,
+                        container.parameterizedBy(t1.asTypeName()),
+                        container.parameterizedBy(t2.asTypeName()),
+                        boolTypeClass)
+            }
+        }
+        codeBlockBuilder.addStatement("throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
+        return codeBlockBuilder.build()
+    }
+
+    val realTypeStar = RealType::class.asTypeName().parameterizedBy(STAR)
+    val producerOfRealTypeStar = WildcardTypeName.producerOf(realTypeStar)
+
+    val funSpec = FunSpec
             .builder(comparison.infixName)
             .addModifiers(KModifier.INFIX)
-            .receiver(container.parameterizedBy(STAR))
+            .receiver(container.parameterizedBy(producerOfRealTypeStar))
             .returns(container.parameterizedBy(boolTypeClass.asTypeName()))
-            .addParameter("that", container.parameterizedBy(STAR))
-            .addCode(codeBlock)
+            .addParameter("that", container.parameterizedBy(producerOfRealTypeStar))
+            .addCode(typeCombinations())
             .build()
 
-    return this.addFunction(infixFunc)
+    return this
+            .addFunction(funSpec)
 }
 
 private fun FileSpec.Builder.addComparisonsWithScalar(container: ClassName) =

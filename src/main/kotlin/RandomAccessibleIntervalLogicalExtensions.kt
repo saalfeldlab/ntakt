@@ -28,12 +28,9 @@
 
 package net.imglib2.imklib
 
-import kotlin.Any
-import kotlin.Comparable
 import kotlin.Number
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.type.logic.BoolType
-import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.integer.IntType
@@ -46,99 +43,1979 @@ import net.imglib2.type.numeric.integer.UnsignedShortType
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 
-infix fun RandomAccessibleInterval<*>.eq(that: RandomAccessibleInterval<*>):
-    RandomAccessibleInterval<BoolType> {
-  val t1 = this.type
-  val t2 = that.type
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t1 is Comparable<*>) {
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 == s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessibleInterval<IntegerType<*>>).convert(that as RandomAccessibleInterval<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() == s2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessibleInterval<RealType<*>>).convert(that as RandomAccessibleInterval<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() == s2.getRealDouble()) }
-  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessibleInterval<out RealType<*>>.eq(that: RandomAccessibleInterval<out
+    RealType<*>>): RandomAccessibleInterval<BoolType> {
+  if (this.type is DoubleType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<DoubleType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is DoubleType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is LongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is IntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<FloatType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is FloatType && that.type is LongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is IntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is LongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is LongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is LongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<LongType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is LongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is LongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is LongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is IntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is IntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<IntType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is IntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is ShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is ShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is ShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is ByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is ByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is ByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is UnsignedLongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is UnsignedIntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  if (this.type is UnsignedShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble == s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong == s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>, BoolType()) { s1, s2, t -> t.set(s1 == s2) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, ${that.type})")
 }
 
-infix fun RandomAccessibleInterval<*>.ge(that: RandomAccessibleInterval<*>):
-    RandomAccessibleInterval<BoolType> {
-  val t1 = this.type
-  val t2 = that.type
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t1 is Comparable<*>) {
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 <= s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessibleInterval<IntegerType<*>>).convert(that as RandomAccessibleInterval<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() >= s2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessibleInterval<RealType<*>>).convert(that as RandomAccessibleInterval<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() >= s2.getRealDouble()) }
-  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessibleInterval<out RealType<*>>.ge(that: RandomAccessibleInterval<out
+    RealType<*>>): RandomAccessibleInterval<BoolType> {
+  if (this.type is DoubleType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<DoubleType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is DoubleType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is LongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is IntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<FloatType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is FloatType && that.type is LongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is IntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is LongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is LongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is LongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<LongType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is LongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is LongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is LongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is IntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is IntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<IntType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is IntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is ShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is ShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is ShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is ByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is ByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is ByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is UnsignedLongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is UnsignedIntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  if (this.type is UnsignedShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble >= s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong >= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>, BoolType()) { s1, s2, t -> t.set(s1 >= s2) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, ${that.type})")
 }
 
-infix fun RandomAccessibleInterval<*>.le(that: RandomAccessibleInterval<*>):
-    RandomAccessibleInterval<BoolType> {
-  val t1 = this.type
-  val t2 = that.type
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t1 is Comparable<*>) {
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 >= s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessibleInterval<IntegerType<*>>).convert(that as RandomAccessibleInterval<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() <= s2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessibleInterval<RealType<*>>).convert(that as RandomAccessibleInterval<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() <= s2.getRealDouble()) }
-  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessibleInterval<out RealType<*>>.le(that: RandomAccessibleInterval<out
+    RealType<*>>): RandomAccessibleInterval<BoolType> {
+  if (this.type is DoubleType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<DoubleType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is DoubleType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is LongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is IntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<FloatType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is FloatType && that.type is LongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is IntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is LongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is LongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is LongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<LongType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is LongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is LongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is LongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is IntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is IntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<IntType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is IntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is ShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is ShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is ShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is ByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is ByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is ByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is UnsignedLongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is UnsignedIntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  if (this.type is UnsignedShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble <= s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong <= s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>, BoolType()) { s1, s2, t -> t.set(s1 <= s2) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, ${that.type})")
 }
 
-infix fun RandomAccessibleInterval<*>.gt(that: RandomAccessibleInterval<*>):
-    RandomAccessibleInterval<BoolType> {
-  val t1 = this.type
-  val t2 = that.type
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t1 is Comparable<*>) {
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 < s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessibleInterval<IntegerType<*>>).convert(that as RandomAccessibleInterval<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() > s2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessibleInterval<RealType<*>>).convert(that as RandomAccessibleInterval<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() > s2.getRealDouble()) }
-  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessibleInterval<out RealType<*>>.gt(that: RandomAccessibleInterval<out
+    RealType<*>>): RandomAccessibleInterval<BoolType> {
+  if (this.type is DoubleType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<DoubleType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is DoubleType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is LongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is IntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<FloatType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is FloatType && that.type is LongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is IntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is LongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is LongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is LongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<LongType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is LongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is LongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is LongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is IntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is IntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<IntType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is IntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is ShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is ShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is ShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is ByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is ByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is ByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is UnsignedLongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is UnsignedIntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  if (this.type is UnsignedShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>, BoolType()) { s1, s2, t -> t.set(s1 > s2) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, ${that.type})")
 }
 
-infix fun RandomAccessibleInterval<*>.lt(that: RandomAccessibleInterval<*>):
-    RandomAccessibleInterval<BoolType> {
-  val t1 = this.type
-  val t2 = that.type
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t1 is Comparable<*>) {
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessibleInterval<Comparable<Any>>).convert(that as RandomAccessibleInterval<Comparable<Any>>, BoolType()) { s1, s2, t -> t.set(s2 > s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessibleInterval<IntegerType<*>>).convert(that as RandomAccessibleInterval<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() < s2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessibleInterval<RealType<*>>).convert(that as RandomAccessibleInterval<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() < s2.getRealDouble()) }
-  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessibleInterval<out RealType<*>>.lt(that: RandomAccessibleInterval<out
+    RealType<*>>): RandomAccessibleInterval<BoolType> {
+  if (this.type is DoubleType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<DoubleType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is DoubleType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is LongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is IntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is DoubleType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<DoubleType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<FloatType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is FloatType && that.type is LongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is IntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is FloatType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<FloatType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is LongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is LongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is LongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<LongType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is LongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is LongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is LongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is LongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<LongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is IntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is IntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<IntType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is IntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is IntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<IntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is ShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is ShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is ShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is ByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is ByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is ByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is ByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<ByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedLongType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is UnsignedLongType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedLongType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedLongType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedIntType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is UnsignedIntType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedIntType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedIntType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedShortType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedShortType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  if (this.type is UnsignedShortType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedShortType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is DoubleType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<DoubleType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is FloatType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<FloatType>,
+      BoolType()) { s1, s2, t -> t.set(s1.realDouble < s2.realDouble) }
+  if (this.type is UnsignedByteType && that.type is LongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<LongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is IntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<IntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is ByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<ByteType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedLongType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedLongType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedIntType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedIntType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedShortType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedShortType>,
+      BoolType()) { s1, s2, t -> t.set(s1.integerLong < s2.integerLong) }
+  if (this.type is UnsignedByteType && that.type is UnsignedByteType)
+      return (this as RandomAccessibleInterval<UnsignedByteType>).convert(that as
+      RandomAccessibleInterval<UnsignedByteType>, BoolType()) { s1, s2, t -> t.set(s1 < s2) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, ${that.type})")
 }
 
 infix fun RandomAccessibleInterval<out RealType<*>>.eq(that: RealType<*>):
