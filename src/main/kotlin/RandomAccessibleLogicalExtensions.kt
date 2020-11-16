@@ -29,17 +29,22 @@
 package net.imglib2.imklib
 
 import kotlin.Any
-import kotlin.Byte
 import kotlin.Comparable
-import kotlin.Double
-import kotlin.Float
-import kotlin.Int
-import kotlin.Long
-import kotlin.Short
+import kotlin.Number
 import net.imglib2.RandomAccessible
 import net.imglib2.type.logic.BoolType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.integer.ByteType
+import net.imglib2.type.numeric.integer.IntType
+import net.imglib2.type.numeric.integer.LongType
+import net.imglib2.type.numeric.integer.ShortType
+import net.imglib2.type.numeric.integer.UnsignedByteType
+import net.imglib2.type.numeric.integer.UnsignedIntType
+import net.imglib2.type.numeric.integer.UnsignedLongType
+import net.imglib2.type.numeric.integer.UnsignedShortType
+import net.imglib2.type.numeric.real.DoubleType
+import net.imglib2.type.numeric.real.FloatType
 
 infix fun RandomAccessible<*>.eq(that: RandomAccessible<*>): RandomAccessible<BoolType> {
   val t1 = this.type
@@ -56,7 +61,7 @@ infix fun RandomAccessible<*>.eq(that: RandomAccessible<*>): RandomAccessible<Bo
       return (this as RandomAccessible<IntegerType<*>>).convert(that as RandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() == s2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(that as RandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() == s2.getRealDouble()) }
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
 }
 
 infix fun RandomAccessible<*>.ge(that: RandomAccessible<*>): RandomAccessible<BoolType> {
@@ -74,7 +79,7 @@ infix fun RandomAccessible<*>.ge(that: RandomAccessible<*>): RandomAccessible<Bo
       return (this as RandomAccessible<IntegerType<*>>).convert(that as RandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() >= s2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(that as RandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() >= s2.getRealDouble()) }
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
 }
 
 infix fun RandomAccessible<*>.le(that: RandomAccessible<*>): RandomAccessible<BoolType> {
@@ -92,7 +97,7 @@ infix fun RandomAccessible<*>.le(that: RandomAccessible<*>): RandomAccessible<Bo
       return (this as RandomAccessible<IntegerType<*>>).convert(that as RandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() <= s2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(that as RandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() <= s2.getRealDouble()) }
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
 }
 
 infix fun RandomAccessible<*>.gt(that: RandomAccessible<*>): RandomAccessible<BoolType> {
@@ -110,7 +115,7 @@ infix fun RandomAccessible<*>.gt(that: RandomAccessible<*>): RandomAccessible<Bo
       return (this as RandomAccessible<IntegerType<*>>).convert(that as RandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() > s2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(that as RandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() > s2.getRealDouble()) }
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
 }
 
 infix fun RandomAccessible<*>.lt(that: RandomAccessible<*>): RandomAccessible<BoolType> {
@@ -128,140 +133,1085 @@ infix fun RandomAccessible<*>.lt(that: RandomAccessible<*>): RandomAccessible<Bo
       return (this as RandomAccessible<IntegerType<*>>).convert(that as RandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getIntegerLong() < s2.getIntegerLong()) }
   if (t1 is RealType<*> && t2 is RealType<*>)
       return (this as RandomAccessible<RealType<*>>).convert(that as RandomAccessible<RealType<*>>, BoolType()) { s1, s2, t -> t.set(s1.getRealDouble() < s2.getRealDouble()) }
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+  throw Exception("Comparison operators not supported for combination of voxel types: ($t1, $t2)")
 }
 
-infix fun RandomAccessible<*>.eq(that: Any): RandomAccessible<BoolType> {
-  val t1 = this.type
-  val t2 = that
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t2 is Comparable<*>) {
-  val t2Comparable = t2 as Comparable<Any>
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(s1 == t2Comparable) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(t2Comparable == s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() == t2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() == t2.getRealDouble()) }
-  if (t2 is Byte) return this eq t2.asType()
-  if (t2 is Short) return this eq t2.asType()
-  if (t2 is Int) return this eq t2.asType()
-  if (t2 is Long) return this eq t2.asType()
-  if (t2 is Float) return this eq t2.asType()
-  if (t2 is Double) return this eq t2.asType()
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessible<out RealType<*>>.eq(that: RealType<*>): RandomAccessible<BoolType> {
+  if (this.type is DoubleType && that is DoubleType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is DoubleType && that is FloatType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is LongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is IntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is ShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is ByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedLongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedIntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is DoubleType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is FloatType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is FloatType && that is LongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is IntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is ShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is ByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is UnsignedLongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is UnsignedIntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is UnsignedShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is FloatType && that is UnsignedByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is LongType && that is DoubleType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is LongType && that is FloatType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is LongType && that is LongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is LongType && that is IntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is LongType && that is ShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is LongType && that is ByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is LongType && that is UnsignedLongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is LongType && that is UnsignedIntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is LongType && that is UnsignedShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is LongType && that is UnsignedByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is DoubleType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is IntType && that is FloatType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is IntType && that is LongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is IntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is IntType && that is ShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is ByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is UnsignedLongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is UnsignedIntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is UnsignedShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is IntType && that is UnsignedByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is DoubleType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is ShortType && that is FloatType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is ShortType && that is LongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is IntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is ShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is ShortType && that is ByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is DoubleType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is ByteType && that is FloatType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is ByteType && that is LongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is IntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is ShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is ByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is ByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is ByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedLongType && that is FloatType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedLongType && that is LongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is IntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is ShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is ByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is UnsignedLongType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedIntType && that is FloatType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedIntType && that is LongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is IntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is ShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is ByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is UnsignedIntType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedShortType && that is FloatType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedShortType && that is LongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is IntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is ShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is ByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  if (this.type is UnsignedShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedByteType && that is FloatType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble == that.realDouble) }
+  if (this.type is UnsignedByteType && that is LongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is IntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is ShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is ByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong == that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s == that) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, $that)")
 }
 
-infix fun Any.eq(that: RandomAccessible<*>): RandomAccessible<BoolType> = that eq this
-
-infix fun RandomAccessible<*>.ge(that: Any): RandomAccessible<BoolType> {
-  val t1 = this.type
-  val t2 = that
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t2 is Comparable<*>) {
-  val t2Comparable = t2 as Comparable<Any>
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(s1 >= t2Comparable) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(t2Comparable <= s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() >= t2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() >= t2.getRealDouble()) }
-  if (t2 is Byte) return this ge t2.asType()
-  if (t2 is Short) return this ge t2.asType()
-  if (t2 is Int) return this ge t2.asType()
-  if (t2 is Long) return this ge t2.asType()
-  if (t2 is Float) return this ge t2.asType()
-  if (t2 is Double) return this ge t2.asType()
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+infix fun RealType<*>.eq(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that eq this
 }
 
-infix fun Any.ge(that: RandomAccessible<*>): RandomAccessible<BoolType> = that le this
-
-infix fun RandomAccessible<*>.le(that: Any): RandomAccessible<BoolType> {
-  val t1 = this.type
-  val t2 = that
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t2 is Comparable<*>) {
-  val t2Comparable = t2 as Comparable<Any>
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(s1 <= t2Comparable) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(t2Comparable >= s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() <= t2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() <= t2.getRealDouble()) }
-  if (t2 is Byte) return this le t2.asType()
-  if (t2 is Short) return this le t2.asType()
-  if (t2 is Int) return this le t2.asType()
-  if (t2 is Long) return this le t2.asType()
-  if (t2 is Float) return this le t2.asType()
-  if (t2 is Double) return this le t2.asType()
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessible<out RealType<*>>.eq(that: Number): RandomAccessible<BoolType> {
+  return this eq that.asType()
 }
 
-infix fun Any.le(that: RandomAccessible<*>): RandomAccessible<BoolType> = that ge this
-
-infix fun RandomAccessible<*>.gt(that: Any): RandomAccessible<BoolType> {
-  val t1 = this.type
-  val t2 = that
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t2 is Comparable<*>) {
-  val t2Comparable = t2 as Comparable<Any>
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(s1 > t2Comparable) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(t2Comparable < s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() > t2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() > t2.getRealDouble()) }
-  if (t2 is Byte) return this gt t2.asType()
-  if (t2 is Short) return this gt t2.asType()
-  if (t2 is Int) return this gt t2.asType()
-  if (t2 is Long) return this gt t2.asType()
-  if (t2 is Float) return this gt t2.asType()
-  if (t2 is Double) return this gt t2.asType()
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+infix fun Number.eq(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that eq this
 }
 
-infix fun Any.gt(that: RandomAccessible<*>): RandomAccessible<BoolType> = that lt this
-
-infix fun RandomAccessible<*>.lt(that: Any): RandomAccessible<BoolType> {
-  val t1 = this.type
-  val t2 = that
-  val jc1 = t1::class.java
-  val jc2 = t2::class.java
-  if (t1 is Comparable<*> && t2 is Comparable<*>) {
-  val t2Comparable = t2 as Comparable<Any>
-  if (jc1.isAssignableFrom(jc2))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(s1 < t2Comparable) }
-  if (jc2.isAssignableFrom(jc1))
-      return (this as RandomAccessible<Comparable<Any>>).convert(BoolType()) { s1, t -> t.set(t2Comparable > s1) }
-  }
-  if (t1 is IntegerType<*> && t2 is IntegerType<*>)
-      return (this as RandomAccessible<IntegerType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getIntegerLong() < t2.getIntegerLong()) }
-  if (t1 is RealType<*> && t2 is RealType<*>)
-      return (this as RandomAccessible<RealType<*>>).convert(BoolType()) { s1, t -> t.set(s1.getRealDouble() < t2.getRealDouble()) }
-  if (t2 is Byte) return this lt t2.asType()
-  if (t2 is Short) return this lt t2.asType()
-  if (t2 is Int) return this lt t2.asType()
-  if (t2 is Long) return this lt t2.asType()
-  if (t2 is Float) return this lt t2.asType()
-  if (t2 is Double) return this lt t2.asType()
-  throw Exception("Comparison operators not suported for combination of voxel types: ($t1, $t2)")
+infix fun RandomAccessible<out RealType<*>>.ge(that: RealType<*>): RandomAccessible<BoolType> {
+  if (this.type is DoubleType && that is DoubleType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is DoubleType && that is FloatType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is LongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is IntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is ShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is ByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedLongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedIntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is DoubleType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is FloatType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is FloatType && that is LongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is IntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is ShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is ByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedLongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedIntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is LongType && that is DoubleType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is LongType && that is FloatType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is LongType && that is LongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is LongType && that is IntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is LongType && that is ShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is LongType && that is ByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is LongType && that is UnsignedLongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is LongType && that is UnsignedIntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is LongType && that is UnsignedShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is LongType && that is UnsignedByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is DoubleType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is IntType && that is FloatType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is IntType && that is LongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is IntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is IntType && that is ShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is ByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is UnsignedLongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is UnsignedIntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is UnsignedShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is IntType && that is UnsignedByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is DoubleType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is ShortType && that is FloatType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is ShortType && that is LongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is IntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is ShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is ShortType && that is ByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is DoubleType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is ByteType && that is FloatType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is ByteType && that is LongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is IntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is ShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is ByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is ByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is ByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedLongType && that is FloatType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedLongType && that is LongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is IntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is ShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is ByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is UnsignedLongType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedIntType && that is FloatType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedIntType && that is LongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is IntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is ShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is ByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is UnsignedIntType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedShortType && that is FloatType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedShortType && that is LongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is IntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is ShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is ByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  if (this.type is UnsignedShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedByteType && that is FloatType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble >= that.realDouble) }
+  if (this.type is UnsignedByteType && that is LongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is IntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is ShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is ByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong >= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s >= that) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, $that)")
 }
 
-infix fun Any.lt(that: RandomAccessible<*>): RandomAccessible<BoolType> = that gt this
+infix fun RealType<*>.ge(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that le this
+}
+
+infix fun RandomAccessible<out RealType<*>>.ge(that: Number): RandomAccessible<BoolType> {
+  return this ge that.asType()
+}
+
+infix fun Number.ge(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that le this
+}
+
+infix fun RandomAccessible<out RealType<*>>.le(that: RealType<*>): RandomAccessible<BoolType> {
+  if (this.type is DoubleType && that is DoubleType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is DoubleType && that is FloatType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is LongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is IntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is ShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is ByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedLongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedIntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is DoubleType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is FloatType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is FloatType && that is LongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is IntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is ShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is ByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedLongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedIntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is FloatType && that is UnsignedByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is LongType && that is DoubleType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is LongType && that is FloatType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is LongType && that is LongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is LongType && that is IntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is LongType && that is ShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is LongType && that is ByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is LongType && that is UnsignedLongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is LongType && that is UnsignedIntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is LongType && that is UnsignedShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is LongType && that is UnsignedByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is DoubleType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is IntType && that is FloatType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is IntType && that is LongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is IntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is IntType && that is ShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is ByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is UnsignedLongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is UnsignedIntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is UnsignedShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is IntType && that is UnsignedByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is DoubleType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is ShortType && that is FloatType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is ShortType && that is LongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is IntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is ShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is ShortType && that is ByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is DoubleType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is ByteType && that is FloatType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is ByteType && that is LongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is IntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is ShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is ByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is ByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is ByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedLongType && that is FloatType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedLongType && that is LongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is IntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is ShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is ByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is UnsignedLongType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedIntType && that is FloatType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedIntType && that is LongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is IntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is ShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is ByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is UnsignedIntType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedShortType && that is FloatType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedShortType && that is LongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is IntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is ShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is ByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  if (this.type is UnsignedShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedByteType && that is FloatType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble <= that.realDouble) }
+  if (this.type is UnsignedByteType && that is LongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is IntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is ShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is ByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong <= that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s <= that) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, $that)")
+}
+
+infix fun RealType<*>.le(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that ge this
+}
+
+infix fun RandomAccessible<out RealType<*>>.le(that: Number): RandomAccessible<BoolType> {
+  return this le that.asType()
+}
+
+infix fun Number.le(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that ge this
+}
+
+infix fun RandomAccessible<out RealType<*>>.gt(that: RealType<*>): RandomAccessible<BoolType> {
+  if (this.type is DoubleType && that is DoubleType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is DoubleType && that is FloatType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is LongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is IntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is ShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is ByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedLongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedIntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is DoubleType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is FloatType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is FloatType && that is LongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is IntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is ShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is ByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is UnsignedLongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is UnsignedIntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is UnsignedShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is FloatType && that is UnsignedByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is LongType && that is DoubleType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is LongType && that is FloatType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is LongType && that is LongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is LongType && that is IntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is LongType && that is ShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is LongType && that is ByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is LongType && that is UnsignedLongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is LongType && that is UnsignedIntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is LongType && that is UnsignedShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is LongType && that is UnsignedByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is DoubleType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is IntType && that is FloatType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is IntType && that is LongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is IntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is IntType && that is ShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is ByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is UnsignedLongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is UnsignedIntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is UnsignedShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is IntType && that is UnsignedByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is DoubleType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is ShortType && that is FloatType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is ShortType && that is LongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is IntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is ShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is ShortType && that is ByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is DoubleType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is ByteType && that is FloatType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is ByteType && that is LongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is IntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is ShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is ByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is ByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is ByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedLongType && that is FloatType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedLongType && that is LongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is IntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is ShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is ByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is UnsignedLongType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedIntType && that is FloatType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedIntType && that is LongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is IntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is ShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is ByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is UnsignedIntType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedShortType && that is FloatType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedShortType && that is LongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is IntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is ShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is ByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  if (this.type is UnsignedShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedByteType && that is FloatType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble > that.realDouble) }
+  if (this.type is UnsignedByteType && that is LongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is IntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is ShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is ByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong > that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s > that) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, $that)")
+}
+
+infix fun RealType<*>.gt(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that lt this
+}
+
+infix fun RandomAccessible<out RealType<*>>.gt(that: Number): RandomAccessible<BoolType> {
+  return this gt that.asType()
+}
+
+infix fun Number.gt(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that lt this
+}
+
+infix fun RandomAccessible<out RealType<*>>.lt(that: RealType<*>): RandomAccessible<BoolType> {
+  if (this.type is DoubleType && that is DoubleType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is DoubleType && that is FloatType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is LongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is IntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is ShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is ByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedLongType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedIntType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedShortType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is DoubleType && that is UnsignedByteType)
+      return (this as RandomAccessible<DoubleType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is DoubleType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is FloatType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is FloatType && that is LongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is IntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is ShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is ByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is UnsignedLongType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is UnsignedIntType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is UnsignedShortType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is FloatType && that is UnsignedByteType)
+      return (this as RandomAccessible<FloatType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is LongType && that is DoubleType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is LongType && that is FloatType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is LongType && that is LongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is LongType && that is IntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is LongType && that is ShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is LongType && that is ByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is LongType && that is UnsignedLongType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is LongType && that is UnsignedIntType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is LongType && that is UnsignedShortType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is LongType && that is UnsignedByteType)
+      return (this as RandomAccessible<LongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is DoubleType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is IntType && that is FloatType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is IntType && that is LongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is IntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is IntType && that is ShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is ByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is UnsignedLongType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is UnsignedIntType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is UnsignedShortType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is IntType && that is UnsignedByteType)
+      return (this as RandomAccessible<IntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is DoubleType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is ShortType && that is FloatType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is ShortType && that is LongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is IntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is ShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is ShortType && that is ByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<ShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is DoubleType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is ByteType && that is FloatType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is ByteType && that is LongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is IntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is ShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is ByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is ByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is ByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<ByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedLongType && that is FloatType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedLongType && that is LongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is IntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is ShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is ByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is UnsignedLongType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedLongType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedLongType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedIntType && that is FloatType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedIntType && that is LongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is IntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is ShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is ByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is UnsignedIntType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedIntType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedIntType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedShortType && that is FloatType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedShortType && that is LongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is IntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is ShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is ByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedShortType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  if (this.type is UnsignedShortType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedShortType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is DoubleType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedByteType && that is FloatType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.realDouble < that.realDouble) }
+  if (this.type is UnsignedByteType && that is LongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is IntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is ShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is ByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedLongType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedIntType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedShortType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s.integerLong < that.integerLong) }
+  if (this.type is UnsignedByteType && that is UnsignedByteType)
+      return (this as RandomAccessible<UnsignedByteType>).convert(BoolType()) { s, t -> t.set(s < that) }
+  throw Exception("Comparison operators not supported for combination of voxel types: (${this.type}, $that)")
+}
+
+infix fun RealType<*>.lt(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that gt this
+}
+
+infix fun RandomAccessible<out RealType<*>>.lt(that: Number): RandomAccessible<BoolType> {
+  return this lt that.asType()
+}
+
+infix fun Number.lt(that: RandomAccessible<out RealType<*>>): RandomAccessible<BoolType> {
+  return that gt this
+}
