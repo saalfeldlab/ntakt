@@ -30,6 +30,9 @@ package net.imglib2.imklib
 
 import kotlin.Number
 import net.imglib2.RealRandomAccessible
+import net.imglib2.imklib.converter.TriConverter
+import net.imglib2.type.BooleanType
+import net.imglib2.type.Type
 import net.imglib2.type.logic.BoolType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.ByteType
@@ -3086,4 +3089,16 @@ infix fun RealRandomAccessible<out RealType<*>>.lt(that: Number): RealRandomAcce
 
 infix fun Number.lt(that: RealRandomAccessible<out RealType<*>>): RealRandomAccessible<BoolType> {
   return that gt this
+}
+
+fun <T : Type<T>> RealRandomAccessible<out
+    BooleanType<*>>.choose(chooseOnTrue: RealRandomAccessible<T>,
+    chooseOnFalse: RealRandomAccessible<T>): RealRandomAccessible<T> {
+  return TriConverter.convert(this, chooseOnTrue, chooseOnFalse, { chooseOnTrue.type.createVariable() }) { a: BooleanType<*>, b: T, c: T, t: T ->
+      t.set(if (a.get()) b else c) } 
+}
+
+fun <T : Type<T>> RealRandomAccessible<out BooleanType<*>>.choose(chooseOnTrue: T,
+    chooseOnFalse: T): RealRandomAccessible<T> {
+  return this.choose(this.constant(chooseOnTrue), this.constant(chooseOnFalse))
 }

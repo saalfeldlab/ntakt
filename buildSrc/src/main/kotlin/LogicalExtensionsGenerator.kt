@@ -1,51 +1,13 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.jvm.jvmName
+import net.imglib2.type.BooleanType
+import net.imglib2.type.Type
 import net.imglib2.type.logic.BoolType
-import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
-import java.lang.Integer.max
-import kotlin.reflect.KClass
 
-private val signedIntegers = arithmeticTypes.filter { it.second == identifiers.signedInteger }.map { it.first }
-private val unsignedIntegers = arithmeticTypes.filter { it.second == identifiers.unsignedInteger }.map { it.first }
 private val boolTypeClass = BoolType::class
-
-private val arithmeticTypeCombinations = mutableListOf<Triple<KClass<*>, KClass<*>, KClass<*>>>().also {
-    for (i in arithmeticTypes.indices) {
-        val (kc1, c1) = arithmeticTypes[i]
-        for (k in i + 1 until arithmeticTypes.size) {
-            val (kc2, c2) = arithmeticTypes[k]
-            val o = if (c1 == identifiers.signedInteger && c2 == identifiers.unsignedInteger) {
-                val idx1 = signedIntegers.indexOf(kc1)
-                val idx2 = unsignedIntegers.indexOf(kc2)
-                if (idx1 < idx2) signedIntegers[idx1] else signedIntegers[max(idx2 - 1, 0)]
-            } else
-                kc1
-            it += Triple(kc1, kc2, o)
-        }
-    }
-}
-
-private fun typeCombinationsFor(comparison: Comparison) = mutableListOf<Triple<KClass<*>, KClass<*>, String>>().also {
-    val codeBlockBuilder = CodeBlock.builder()
-    for ((t1, id1) in arithmeticTypes) {
-        val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
-        for ((t2, id2) in arithmeticTypes) {
-            val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
-            val converterBody = if (t1 == t2) {
-                "s ${comparison.operatorName} that"
-            } else {
-                if (t1IsIntegerType && t2IsIntegerType)
-                    "s.integerLong ${comparison.operatorName} that.integerLong"
-                else
-                    "s.realDouble ${comparison.operatorName} that.realDouble"
-            }
-            codeBlockBuilder.addStatement("if (this.type is %T && that is %T) return (this as %T).convert(%T) { s, t -> t.set($converterBody) }", t1, t2, t1, boolTypeClass)
-        }
-    }
-}
-
+private val booleanTypeWildcard = BooleanType::class.asTypeName().parameterizedBy(STAR)
+private val booleantTypeWildcardProducer = WildcardTypeName.producerOf(booleanTypeWildcard)
 
 private enum class Comparison(val infixName: String, val operatorName: String, private val reverseId: String? = null) {
 
@@ -73,6 +35,7 @@ fun generateLogicalExtensions(`as`: String, fileName: String): String {
             .builder("net.imglib2.imklib", fileName)
             .addComparisonsWithContainer(container)
             .addComparisonsWithScalar(container)
+            .addChoose(container)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
@@ -191,4 +154,33 @@ private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, compa
             .addFunction(funSpecScalarReverse)
             .addFunction(funSpecScalarPrimitive)
             .addFunction(funSpecScalarPrimitiveReverse)
+}
+
+fun FileSpec.Builder.addChoose(container: ClassName): FileSpec.Builder {
+    val genericT = TypeVariableName("T")
+    val typeOfT = Type::class.asTypeName().parameterizedBy(genericT)
+    val boundedT = TypeVariableName("T", typeOfT)
+    val parameterizedContainer = container.parameterizedBy(genericT)
+    addImport("net.imglib2.imklib.converter", "TriConverter")
+    val funSpecContainerContainer = FunSpec
+            .builder("choose")
+            .receiver(container.parameterizedBy(booleantTypeWildcardProducer))
+            .addParameter("chooseOnTrue", parameterizedContainer)
+            .addParameter("chooseOnFalse", parameterizedContainer)
+            .addTypeVariable(boundedT)
+            .returns(parameterizedContainer)
+            .addStatement("return·TriConverter.convert(this,·chooseOnTrue,·chooseOnFalse,·{·chooseOnTrue.type.createVariable()·})·{·a:·%T,·b:·T,·c:·T,·t:·T·-> t.set(if·(a.get())·b·else·c)·} ", booleanTypeWildcard)
+            .build()
+    val funSpecConstantConstant = FunSpec
+            .builder("choose")
+            .receiver(container.parameterizedBy(booleantTypeWildcardProducer))
+            .addParameter("chooseOnTrue", genericT)
+            .addParameter("chooseOnFalse", genericT)
+            .addTypeVariable(boundedT)
+            .returns(parameterizedContainer)
+            .addStatement("return·this.choose(this.constant(chooseOnTrue), this.constant(chooseOnFalse))")
+            .build()
+    return this
+            .addFunction(funSpecContainerContainer)
+            .addFunction(funSpecConstantConstant)
 }
