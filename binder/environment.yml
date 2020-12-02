@@ -1,0 +1,5 @@
+name: kotlin-jupyter
+dependencies:
+  - kotlin-jupyter-kernel>=0.8.2.4
+channels:
+  - jetbrains

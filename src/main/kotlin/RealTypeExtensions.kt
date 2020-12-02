@@ -28,6 +28,7 @@ package net.imglib2.imklib
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.type.operators.Add
@@ -59,6 +60,16 @@ fun <T: RealType<T>> Int.asType(type: T) = type.createWithValue(this)
 fun <T: RealType<T>> Long.asType(type: T) = type.createWithValue(this)
 fun <T: RealType<T>> Float.asType(type: T) = type.createWithValue(this)
 fun <T: RealType<T>> Double.asType(type: T) = type.createWithValue(this)
+
+fun Number.asType(): RealType<*> = when (this) {
+    is Byte -> asType()
+    is Short -> asType()
+    is Int -> asType()
+    is Long -> asType()
+    is Float -> asType()
+    is Double -> asType()
+    else -> throw IllegalArgumentException("Type ${this::class} not supported")
+}
 
 fun Float.asType() = asType(FloatType())
 fun Double.asType() = asType(DoubleType())

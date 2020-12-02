@@ -26,13 +26,16 @@
 package net.imglib2.imklib
 
 import bdv.util.volatiles.VolatileViews
+import gnu.trove.list.array.TLongArrayList
 import net.imglib2.Interval
 import net.imglib2.Localizable
+import net.imglib2.Point
 import net.imglib2.cache.LoaderCache
 import net.imglib2.cache.ref.SoftRefLoaderCache
 import net.imglib2.img.ImgFactory
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess
 import net.imglib2.img.cell.Cell
+import net.imglib2.type.BooleanType
 import net.imglib2.type.NativeType
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.ARGBType
@@ -44,6 +47,7 @@ import net.imglib2.type.operators.Add
 import net.imglib2.type.operators.Div
 import net.imglib2.type.operators.Mul
 import net.imglib2.type.operators.Sub
+import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
 import net.imglib2.RandomAccessible as RA
@@ -141,3 +145,19 @@ operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>) = set(th
 operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> - other[this]).asType(type))
 operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> * other[this]).asType(type))
 operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<RealType<*>>) = set(this, (this as RAI<RealType<*>> / other[this]).asType(type))
+
+inline fun <T: BooleanType<T>> RAI<T>.where(consumeWhereTrue: (Localizable) -> Unit) {
+    val cursor = this.iterable.cursor()
+    while (cursor.hasNext())
+        if (cursor.next().get())
+            consumeWhereTrue(cursor)
+}
+fun <T: BooleanType<T>> RAI<T>.where(): List<Point> = mutableListOf<Point>().also { l -> where { l += Point(it) } }
+fun <T: BooleanType<T>> RAI<T>.whereAsArrays(): Array<LongArray> {
+    val nDim = this.nDim
+    val indices = Array(nDim) { TLongArrayList() }
+    where { l -> for (d in 0 until nDim) indices[d].add(l.getLongPosition(d)) }
+    return indices.map { it.toArray() }.toTypedArray()
+}
+
+fun <T> RAI<*>.constant(constant: T) = ConstantUtils.constantRandomAccessibleInterval(constant, this)

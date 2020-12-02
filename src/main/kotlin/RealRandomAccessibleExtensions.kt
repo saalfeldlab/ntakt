@@ -26,6 +26,7 @@
 package net.imglib2.imklib
 
 import net.imglib2.FinalRealInterval
+import net.imglib2.RandomAccessibleInterval
 import net.imglib2.RealInterval
 import net.imglib2.RealLocalizable
 import net.imglib2.RealRandomAccessible as RRA
@@ -33,6 +34,7 @@ import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 import net.imglib2.realtransform.*
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.RealType
+import net.imglib2.util.ConstantUtils
 import net.imglib2.view.Views
 
 operator fun <T> RRA<T>.get(vararg position: Double) = getAt(*position)
@@ -77,3 +79,5 @@ private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInte
     constructor(source: RRA<T>, vararg minMax: Float) : this(source, minMax.minMaxReal)
     override fun numDimensions() = source.numDimensions()
 }
+
+fun <T: Type<T>> RRA<*>.constant(constant: T) = imklib.function(numDimensions(), { constant.copy() }) { _, _ -> }

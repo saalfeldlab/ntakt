@@ -25,13 +25,14 @@
  */
 package net.imglib2.imklib
 
+import net.imglib2.RandomAccessibleInterval as RAI
 import net.imglib2.Interval
 import net.imglib2.RealLocalizable
 import net.imglib2.img.array.ArrayImg
 import net.imglib2.img.array.ArrayImgs
 import net.imglib2.position.FunctionRealRandomAccessible
+import net.imglib2.type.BooleanType
 import net.imglib2.type.NativeType
-import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
@@ -149,5 +150,7 @@ object imklib {
 
         val realTypes get() = arrayOf<RealType<*>>(byte, short, int, long, unsignedByte, unsignedShort, unsignedInt, unsignedLong, float, double)
     }
+
+    fun <T: BooleanType<T>> where(rai: RAI<T>) = rai.where()
 
 }

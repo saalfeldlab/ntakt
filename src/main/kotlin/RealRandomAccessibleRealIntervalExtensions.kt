@@ -25,6 +25,7 @@
  */
 package net.imglib2.imklib
 
+import net.imglib2.RealRandomAccessible
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.RealType
 import net.imglib2.RealRandomAccessibleRealInterval as RRARI
@@ -34,3 +35,5 @@ val <T: Type<T>> RRARI<T>.type get() = realRandomAccess().get().createVariable()
 @JvmName("typeWildCard") fun RRARI<*>.getType() = realRandomAccess().get()
 @JvmName("typeWildCardType") fun RRARI<out Type<*>>.getType() = realRandomAccess().get().createVariable()
 @JvmName("typeWildCardRealType") fun RRARI<out RealType<*>>.getType() = realRandomAccess().get().createVariable()
+
+fun <T: Type<T>> RRARI<*>.constant(constant: T) = (this as RealRandomAccessible<T>).constant(constant)[this]

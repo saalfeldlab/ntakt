@@ -37,6 +37,7 @@ import net.imglib2.type.Type
 import net.imglib2.type.numeric.ARGBType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.util.ConstantUtils
 import net.imglib2.view.Views
 import java.util.function.BiConsumer
 import net.imglib2.RandomAccessible as RA
@@ -81,3 +82,5 @@ val RA<ARGBType>.interpoalteNLinear get() = interpolate(NLinearInterpolatorARGBF
 val <T: RealType<T>> RA<T>.interpolatedLanczos get() = interpolate(LanczosInterpolatorFactory())
 
 fun <T: Type<T>> RA<T>.writeInto(target: RAI<T>) = LoopBuilder.setImages(this[target], target).forEachPixel(BiConsumer { s, t -> t.set(s) })
+
+fun <T> RA<*>.constant(constant: T) = ConstantUtils.constantRandomAccessible(constant, nDim)
