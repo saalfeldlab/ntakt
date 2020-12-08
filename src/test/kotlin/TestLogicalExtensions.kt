@@ -40,20 +40,6 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestLogicalExtensions {
-
-    open class Comp1(val v1: Int) : Comparable<Comp1> {
-        override fun compareTo(other: Comp1): Int {
-            println("Comparing $this to $other")
-            val comp = v1.compareTo(other.v1)
-            println("Comparison is $comp")
-            return comp
-        }
-
-        override fun toString(): String = "${this::class.simpleName}: v1=$v1"
-    }
-
-    class Comp2(v1: Int) : Comp1(v1)
-
     val oneInt = 1
     val oneDouble = 1.0
 
