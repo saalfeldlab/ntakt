@@ -33,6 +33,8 @@ fun generateLogicalExtensions(`as`: String, fileName: String): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile = FileSpec
             .builder("net.imglib2.imklib", fileName)
+            .indent("    ")
+            .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
             .addComparisonsWithContainer(container)
             .addComparisonsWithScalar(container)
             .addChoose(container)
@@ -46,6 +48,7 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, co
 
     fun typeCombinations(): CodeBlock {
         val codeBlockBuilder = CodeBlock.builder()
+        codeBlockBuilder.addStatement("return·when·{").indent()
         for ((t1, id1) in arithmeticTypes) {
             val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
             for ((t2, id2) in arithmeticTypes) {
@@ -59,15 +62,12 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, co
                         "s1.realDouble·${comparison.operatorName}·s2.realDouble"
                 }
                 codeBlockBuilder.addStatement(
-                        "if (this.type is %T && that.type is %T) return·(this·as·%T).convert(that as %T, %T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
-                        t1,
-                        t2,
-                        container.parameterizedBy(t1.asTypeName()),
-                        container.parameterizedBy(t2.asTypeName()),
-                        boolTypeClass)
+                        "this.type·is·%T·&&·that.type·is·%T·->·this.asType(%T()).convert(that.asType(%T()),·%T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
+                        t1, t2, t1, t2, boolTypeClass)
             }
         }
-        codeBlockBuilder.addStatement("throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
+        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
+        codeBlockBuilder.unindent().addStatement("}")
         return codeBlockBuilder.build()
     }
 
@@ -94,6 +94,7 @@ private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, compa
 
     fun typeCombinations(): CodeBlock {
         val codeBlockBuilder = CodeBlock.builder()
+        codeBlockBuilder.addStatement("return·when·{").indent()
         for ((t1, id1) in arithmeticTypes) {
             val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
             for ((t2, id2) in arithmeticTypes) {
@@ -106,10 +107,13 @@ private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, compa
                     else
                         "s.realDouble·${comparison.operatorName}·that.realDouble"
                 }
-                codeBlockBuilder.addStatement("if (this.type is %T && that is %T) return·(this·as·%T).convert(%T())·{·s,·t·->·t.set($converterBody)·}", t1, t2, container.parameterizedBy(t1.asTypeName()), boolTypeClass)
+                codeBlockBuilder.addStatement(
+                        "this.type·is·%T·&&·that·is·%T·->·this.asType(%T()).convert(%T())·{·s,·t·->·t.set($converterBody)·}",
+                        t1, t2, t1, boolTypeClass)
             }
         }
-        codeBlockBuilder.addStatement("throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\$that)\")")
+        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\$that)\")")
+        codeBlockBuilder.unindent().addStatement("}")
         return codeBlockBuilder.build()
     }
 
