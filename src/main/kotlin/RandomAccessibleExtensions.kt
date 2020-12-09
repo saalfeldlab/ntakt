@@ -25,6 +25,9 @@
  */
 package net.imglib2.imklib
 
+import bdv.util.BdvFunctions
+import bdv.util.BdvOptions
+import bdv.util.BdvStackSource
 import net.imglib2.Interval
 import net.imglib2.Localizable
 import net.imglib2.interpolation.InterpolatorFactory
@@ -84,3 +87,8 @@ val <T: RealType<T>> RA<T>.interpolatedLanczos get() = interpolate(LanczosInterp
 fun <T: Type<T>> RA<T>.writeInto(target: RAI<T>) = LoopBuilder.setImages(this[target], target).forEachPixel(BiConsumer { s, t -> t.set(s) })
 
 fun <T> RA<*>.constant(constant: T) = ConstantUtils.constantRandomAccessible(constant, nDim)
+
+fun <T: NumericType<T>> RA<T>.show(name: String, interval: Interval?, options: BdvOptions = BdvOptions.options()) =
+        BdvFunctions.show(this, interval ?: (LongArray(nDim) { -1L } + LongArray(nDim) { +1L }).intervalMinMax, name, options)
+fun <T: NumericType<T>> RA<T>.show(name: String, interval: Interval?, bdv: BdvStackSource<*>, options: BdvOptions = BdvOptions.options()) =
+        show(name, interval, options.addTo(bdv))

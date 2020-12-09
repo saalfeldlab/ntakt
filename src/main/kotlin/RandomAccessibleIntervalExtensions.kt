@@ -25,6 +25,10 @@
  */
 package net.imglib2.imklib
 
+import bdv.util.BdvFunctions
+import bdv.util.BdvOptions
+import bdv.util.BdvStackSource
+import bdv.util.volatiles.VolatileRandomAccessibleIntervalView
 import bdv.util.volatiles.VolatileViews
 import gnu.trove.list.array.TLongArrayList
 import net.imglib2.Interval
@@ -95,7 +99,8 @@ fun <T: NativeType<T>> RAI<T>.cache(
         vararg blockSize: Int = IntArray(numDimensions()) { 32 },
         loaderCache: LoaderCache<Long, Cell<VolatileArrayDataAccess<*>>> = SoftRefLoaderCache()) = cacheRAI(this, blockSize, loaderCache)
 
-val RAI<*>.volatileView get() = VolatileViews.wrapAsVolatile(this) ?: error("Unable to create volatile view for $this")
+val RAI<out Type<*>>.volatileView: RAI<out Type<*>> get() =
+    VolatileViews.wrapAsVolatile(this) as? RAI<out Type<*>> ?: error("Unable to create volatile view for $this")
 
 // TODO add to all containers
 fun RAI<IntType>.asARGBs(shiftRight: Int = 0) = convert(ARGBType()) { s, t -> t.set(s.get() shr shiftRight) }
@@ -161,3 +166,8 @@ fun <T: BooleanType<T>> RAI<T>.whereAsArrays(): Array<LongArray> {
 }
 
 fun <T> RAI<*>.constant(constant: T) = ConstantUtils.constantRandomAccessibleInterval(constant, this)
+
+fun <T: Type<T>> RAI<T>.show(name: String, options: BdvOptions = BdvOptions.options()) =
+        BdvFunctions.show(this, name, options)
+fun <T: Type<T>> RAI<T>.show(name: String, bdv: BdvStackSource<*>, options: BdvOptions = BdvOptions.options()) =
+        show(name, options.addTo(bdv))
