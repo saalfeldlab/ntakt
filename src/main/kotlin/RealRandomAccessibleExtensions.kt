@@ -25,10 +25,11 @@
  */
 package net.imglib2.imklib
 
-import net.imglib2.FinalRealInterval
-import net.imglib2.RandomAccessibleInterval
-import net.imglib2.RealInterval
-import net.imglib2.RealLocalizable
+import bdv.util.BdvFunctions
+import bdv.util.BdvOptions
+import bdv.util.BdvStackSource
+import net.imglib2.*
+import net.imglib2.RandomAccessible as RA
 import net.imglib2.RealRandomAccessible as RRA
 import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 import net.imglib2.realtransform.*
@@ -51,16 +52,16 @@ val <T: Type<T>> RRA<T>.type get() = realRandomAccess().get().createVariable()
 
 val <T> RRA<T>.rastered get() = Views.raster(this)
 
-fun <T> RRA<T>.transform(transform: InvertibleRealTransform) = RealViews.transform(this, transform)
-fun <T> RRA<T>.transformReal(transform: InvertibleRealTransform) = RealViews.transformReal(this, transform)
-fun <T> RRA<T>.affine(transformFromSource: AffineGet) = RealViews.affine(this, transformFromSource)
-fun <T> RRA<T>.affineReal(transformFromSource: AffineGet) = RealViews.affineReal(this, transformFromSource)
-fun <T> RRA<T>.translate(vararg translation: Double) = affine(Translation(*translation))
-fun <T> RRA<T>.translateReal(vararg translation: Double) = affineReal(Translation(*translation))
-fun <T> RRA<T>.scale(vararg scale: Double) = affine(Scale(*scale))
-fun <T> RRA<T>.scaleReal(vararg scale: Double) = affineReal(Scale(*scale))
-fun <T> RRA<T>.scaleAndTranslate(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }) = affine(ScaleAndTranslation(scale, translation))
-fun <T> RRA<T>.scaleAndTranslateReal(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }) = affineReal(ScaleAndTranslation(scale, translation))
+fun <T> RRA<T>.transform(transform: InvertibleRealTransform): RA<T> = RealViews.transform(this, transform)
+fun <T> RRA<T>.transformReal(transform: InvertibleRealTransform): RRA<T> = RealViews.transformReal(this, transform)
+fun <T> RRA<T>.affine(transformFromSource: AffineGet): RA<T> = RealViews.affine(this, transformFromSource)
+fun <T> RRA<T>.affineReal(transformFromSource: AffineGet): RRA<T> = RealViews.affineReal(this, transformFromSource)
+fun <T> RRA<T>.translate(vararg translation: Double): RA<T> = affine(Translation(*translation))
+fun <T> RRA<T>.translateReal(vararg translation: Double): RRA<T> = affineReal(Translation(*translation))
+fun <T> RRA<T>.scale(vararg scale: Double): RA<T> = affine(Scale(*scale))
+fun <T> RRA<T>.scaleReal(vararg scale: Double): RRA<T> = affineReal(Scale(*scale))
+fun <T> RRA<T>.scaleAndTranslate(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }): RA<T> = affine(ScaleAndTranslation(scale, translation))
+fun <T> RRA<T>.scaleAndTranslateReal(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }): RRA<T> = affineReal(ScaleAndTranslation(scale, translation))
 
 fun <T> RRA<T>.realInterval(realInterval: RealInterval): RRARI<T> = RealIntervalView(this, realInterval)
 fun <T> RRA<T>.realInterval(min: DoubleArray, max: DoubleArray): RRARI<T> = RealIntervalView(this, min, max)
@@ -81,3 +82,8 @@ private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInte
 }
 
 fun <T: Type<T>> RRA<*>.constant(constant: T) = imklib.function(numDimensions(), { constant.copy() }) { _, _ -> }
+
+fun <T: Type<T>> RRA<T>.show(name: String, interval: Interval? = null, options: BdvOptions = BdvOptions.options()) =
+        BdvFunctions.show(this, interval ?: (LongArray(nDim) { -1L } + LongArray(nDim) { +1L }).intervalMinMax, name, options)
+fun <T: Type<T>> RRA<T>.show(name: String, bdv: BdvStackSource<*>, interval: Interval? = null, options: BdvOptions = BdvOptions.options()) =
+        show(name, interval, options.addTo(bdv))
