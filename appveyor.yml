@@ -12,9 +12,6 @@ branches:
 # Do not build feature branch with open Pull Requests
 skip_branch_with_pr: true
 
-# fetch repo as zip archive
-shallow_clone: true
-
 install:
   - ./gradlew clean
   - ./gradlew generateAllExtensions
