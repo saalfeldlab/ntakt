@@ -84,6 +84,8 @@ fun <T> RAI<T>.extendBorder() = Views.extendBorder(this)
 fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
 fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
 fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
+fun <T> RAI<T>.extendPeriodic() = Views.extendPeriodic(this)
+fun <T: RealType<T>> RAI<T>.extendRandom(min: Double, max: Double) = Views.extendRandom(this, min, max)
 
 val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(" ,", "[", "]")}"
 

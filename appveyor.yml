@@ -4,6 +4,14 @@ image:
   - Visual Studio 2019
 stack: jdk 8
 
+# only build master branch but not feature branches
+branches:
+  only:
+    - master
+
+# Do not build feature branch with open Pull Requests
+skip_branch_with_pr: true
+
 install:
   - ./gradlew clean
   - ./gradlew generateAllExtensions
