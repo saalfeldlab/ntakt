@@ -47,64 +47,106 @@ import java.util.function.BiConsumer
 import java.util.function.Supplier
 import net.imglib2.imklib.io.io as _io
 
+private fun IntArray.toLongArray() = LongArray(size) { this[it].toLong() }
+
 object imklib {
 
-    fun bits(vararg dim: Long) = ArrayImgs.bits(*dim)
-    fun booleans(vararg dim: Long) = ArrayImgs.booleans(*dim)
+    fun bits(vararg dim: Long) = ArrayImgs.bits(*dim)!!
+    fun bits(vararg dim: Int) = bits(*dim.toLongArray())
+    fun booleans(vararg dim: Long) = ArrayImgs.booleans(*dim)!!
+    fun booleans(vararg dim: Int) = booleans(*dim.toLongArray())
 
-    fun argbs(vararg dim: Long) = ArrayImgs.argbs(*dim)
+    fun argbs(vararg dim: Long) = ArrayImgs.argbs(*dim)!!
+    fun argbs(vararg dim: Int) = argbs(*dim.toLongArray())
 
-    fun bytes(vararg dim: Long) = ArrayImgs.bytes(*dim)
-    fun shorts(vararg dim: Long) = ArrayImgs.shorts(*dim)
-    fun ints(vararg dim: Long) = ArrayImgs.ints(*dim)
-    fun longs(vararg dim: Long) = ArrayImgs.longs(*dim)
+    fun bytes(vararg dim: Long) = ArrayImgs.bytes(*dim)!!
+    fun bytes(vararg dim: Int) = bytes(*dim.toLongArray())
+    fun shorts(vararg dim: Long) = ArrayImgs.shorts(*dim)!!
+    fun shorts(vararg dim: Int) = shorts(*dim.toLongArray())
+    fun ints(vararg dim: Long) = ArrayImgs.ints(*dim)!!
+    fun ints(vararg dim: Int) = ints(*dim.toLongArray())
+    fun longs(vararg dim: Long) = ArrayImgs.longs(*dim)!!
+    fun longs(vararg dim: Int) = longs(*dim.toLongArray())
 
-    fun unsignedBytes(vararg dim: Long) = ArrayImgs.unsignedBytes(*dim)
-    fun unsignedShorts(vararg dim: Long) = ArrayImgs.unsignedShorts(*dim)
-    fun unsignedInts(vararg dim: Long) = ArrayImgs.unsignedInts(*dim)
-    fun unsignedLongs(vararg dim: Long) = ArrayImgs.unsignedLongs(*dim)
+    fun unsignedBytes(vararg dim: Long) = ArrayImgs.unsignedBytes(*dim)!!
+    fun unsignedBytes(vararg dim: Int) = unsignedBytes(*dim.toLongArray())
+    fun unsignedShorts(vararg dim: Long) = ArrayImgs.unsignedShorts(*dim)!!
+    fun unsignedShorts(vararg dim: Int) = unsignedShorts(*dim.toLongArray())
+    fun unsignedInts(vararg dim: Long) = ArrayImgs.unsignedInts(*dim)!!
+    fun unsignedInts(vararg dim: Int) = unsignedInts(*dim.toLongArray())
+    fun unsignedLongs(vararg dim: Long) = ArrayImgs.unsignedLongs(*dim)!!
+    fun unsignedLongs(vararg dim: Int) = unsignedLongs(*dim.toLongArray())
 
-    fun unsigned2Bits(vararg dim: Long) = ArrayImgs.unsigned2Bits(*dim)
-    fun unsigned4Bits(vararg dim: Long) = ArrayImgs.unsigned4Bits(*dim)
-    fun unsigned12Bits(vararg dim: Long) = ArrayImgs.unsigned12Bits(*dim)
-    fun unsigned128Bits(vararg dim: Long) = ArrayImgs.unsigned128Bits(*dim)
-    fun unsignedVariableBitLengths(nbits: Int, vararg dim: Long) = ArrayImgs.unsignedVariableBitLengths(nbits, *dim)
+    fun unsigned2Bits(vararg dim: Long) = ArrayImgs.unsigned2Bits(*dim)!!
+    fun unsigned2Bits(vararg dim: Int) = unsigned2Bits(*dim.toLongArray())
+    fun unsigned4Bits(vararg dim: Long) = ArrayImgs.unsigned4Bits(*dim)!!
+    fun unsigned4Bits(vararg dim: Int) = unsigned4Bits(*dim.toLongArray())
+    fun unsigned12Bits(vararg dim: Long) = ArrayImgs.unsigned12Bits(*dim)!!
+    fun unsigned12Bits(vararg dim: Int) = unsigned12Bits(*dim.toLongArray())
+    fun unsigned128Bits(vararg dim: Long) = ArrayImgs.unsigned128Bits(*dim)!!
+    fun unsigned128Bits(vararg dim: Int) = unsigned128Bits(*dim.toLongArray())
+    fun unsignedVariableBitLengths(nbits: Int, vararg dim: Long) = ArrayImgs.unsignedVariableBitLengths(nbits, *dim)!!
+    fun unsignedVariableBitLengths(nbits: Int, vararg dim: Int) = unsignedVariableBitLengths(nbits, *dim.toLongArray())
 
-    fun floats(vararg dim: Long) = ArrayImgs.floats(*dim)
-    fun doubles(vararg dim: Long) = ArrayImgs.doubles(*dim)
+    fun floats(vararg dim: Long) = ArrayImgs.floats(*dim)!!
+    fun floats(vararg dim: Int) = floats(*dim.toLongArray())
+    fun doubles(vararg dim: Long) = ArrayImgs.doubles(*dim)!!
+    fun doubles(vararg dim: Int) = doubles(*dim.toLongArray())
 
-    fun complexFloats(vararg dim: Long) = ArrayImgs.complexFloats(*dim)
-    fun complexDoubles(vararg dim: Long) = ArrayImgs.complexDoubles(*dim)
+    fun complexFloats(vararg dim: Long) = ArrayImgs.complexFloats(*dim)!!
+    fun complexFloats(vararg dim: Int) = complexFloats(*dim.toLongArray())
+    fun complexDoubles(vararg dim: Long) = ArrayImgs.complexDoubles(*dim)!!
+    fun complexDoubles(vararg dim: Int) = complexDoubles(*dim.toLongArray())
 
     // with initializers
     inline fun <T : NativeType<T>> ArrayImg<T, *>.init(init: (Int, T) -> Unit) = also { it.forEachIndexed { i, t -> init(i, t) } }
 
     inline fun bits(vararg dim: Long, init: (Int) -> Boolean) = bits(*dim).init { i, t -> t.set(init(i)) }
+    inline fun bits(vararg dim: Int, init: (Int) -> Boolean) = bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun booleans(vararg dim: Long, init: (Int) -> Boolean) = booleans(*dim).init { i, t -> t.set(init(i)) }
+    inline fun booleans(vararg dim: Int, init: (Int) -> Boolean) = booleans(*dim).init { i, t -> t.set(init(i)) }
 
     inline fun argbs(vararg dim: Long, init: (Int) -> Int) = argbs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun argbs(vararg dim: Int, init: (Int) -> Int) = argbs(*dim).init { i, t -> t.set(init(i)) }
 
     inline fun bytes(vararg dim: Long, init: (Int) -> Byte) = bytes(*dim).init { i, t -> t.set(init(i)) }
+    inline fun bytes(vararg dim: Int, init: (Int) -> Byte) = bytes(*dim).init { i, t -> t.set(init(i)) }
     inline fun shorts(vararg dim: Long, init: (Int) -> Short) = shorts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun shorts(vararg dim: Int, init: (Int) -> Short) = shorts(*dim).init { i, t -> t.set(init(i)) }
     inline fun ints(vararg dim: Long, init: (Int) -> Int) = ints(*dim).init { i, t -> t.set(init(i)) }
+    inline fun ints(vararg dim: Int, init: (Int) -> Int) = ints(*dim).init { i, t -> t.set(init(i)) }
     inline fun longs(vararg dim: Long, init: (Int) -> Long) = longs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun longs(vararg dim: Int, init: (Int) -> Long) = longs(*dim).init { i, t -> t.set(init(i)) }
 
     inline fun unsignedBytes(vararg dim: Long, init: (Int) -> Int) = unsignedBytes(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsignedBytes(vararg dim: Int, init: (Int) -> Int) = unsignedBytes(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedShorts(vararg dim: Long, init: (Int) -> Int) = unsignedShorts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsignedShorts(vararg dim: Int, init: (Int) -> Int) = unsignedShorts(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedInts(vararg dim: Long, init: (Int) -> Long) = unsignedInts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsignedInts(vararg dim: Int, init: (Int) -> Long) = unsignedInts(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedLongs(vararg dim: Long, init: (Int) -> Long) = unsignedLongs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsignedLongs(vararg dim: Int, init: (Int) -> Long) = unsignedLongs(*dim).init { i, t -> t.set(init(i)) }
 
     inline fun unsigned2Bits(vararg dim: Long, init: (Int) -> Long) = unsigned2Bits(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsigned2Bits(vararg dim: Int, init: (Int) -> Long) = unsigned2Bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsigned4Bits(vararg dim: Long, init: (Int) -> Long) = unsigned4Bits(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsigned4Bits(vararg dim: Int, init: (Int) -> Long) = unsigned4Bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsigned12Bits(vararg dim: Long, init: (Int) -> Long) = unsigned12Bits(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsigned12Bits(vararg dim: Int, init: (Int) -> Long) = unsigned12Bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsigned128Bits(vararg dim: Long, init: (Int) -> BigInteger) = unsigned128Bits(*dim).init { i, t -> t.set(init(i)) }
+    inline fun unsigned128Bits(vararg dim: Int, init: (Int) -> BigInteger) = unsigned128Bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedVariableBitLengths(nbits: Int, vararg dim: Long, init: (Int) -> Long) = unsignedVariableBitLengths(nbits, *dim).init { i, t -> t.set(init(i)) }
+    inline fun unsignedVariableBitLengths(nbits: Int, vararg dim: Int, init: (Int) -> Long) = unsignedVariableBitLengths(nbits, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun floats(vararg dim: Long, init: (Int) -> Float) = floats(*dim).init { i, t -> t.set(init(i)) }
+    inline fun floats(vararg dim: Int, init: (Int) -> Float) = floats(*dim).init { i, t -> t.set(init(i)) }
     inline fun doubles(vararg dim: Long, init: (Int) -> Double) = doubles(*dim).init { i, t -> t.set(init(i)) }
+    inline fun doubles(vararg dim: Int, init: (Int) -> Double) = doubles(*dim).init { i, t -> t.set(init(i)) }
 
     inline fun complexFloats(vararg dim: Long, init: (Int, ComplexFloatType) -> Unit) = complexFloats(*dim).init(init)
+    inline fun complexFloats(vararg dim: Int, init: (Int, ComplexFloatType) -> Unit) = complexFloats(*dim).init(init)
     inline fun complexDoubles(vararg dim: Long, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(*dim).init(init)
+    inline fun complexDoubles(vararg dim: Int, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(*dim).init(init)
 
 
     // virtual constant RA & RAI
