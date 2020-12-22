@@ -173,3 +173,19 @@ fun <T: Type<T>> RAI<T>.show(name: String, options: BdvOptions = BdvOptions.opti
         BdvFunctions.show(this, name, options)
 fun <T: Type<T>> RAI<T>.show(name: String, bdv: BdvStackSource<*>, options: BdvOptions = BdvOptions.options()) =
         show(name, options.addTo(bdv))
+
+fun <T> RAI<T>.hyperSlice(d: Int, pos: Long) = Views.hyperSlice(this, d, pos)
+fun <T> RAI<T>.hyperSlicesList(d: Int): List<RAI<T>> = (min(d) .. max(d)).map { hyperSlice(d, it) }
+
+fun <T> RAI<T>.reduce(d: Int, operation: (RAI<T>, RAI<T>) -> RAI<T>) = hyperSlicesList(d).reduce(operation)
+fun <T, U> RAI<T>.fold(d: Int, initial: U, operation: (U, RAI<T>) -> U) = hyperSlicesList(d).fold(initial, operation)
+
+fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.sum(d: Int, i: I) = asType(i).reduce(d) { rai1, rai2 -> rai1 + rai2 }
+fun <T: RealType<T>, R: RealType<R>> RAI<T>.sum(d: Int, r: R) = asType(r).reduce(d) { rai1, rai2 -> rai1 + rai2 }
+@JvmName("sumInt") fun <T: IntegerType<T>> RAI<T>.sum(d: Int) = sum(d, imklib.types.long)
+@JvmName("sumReal") fun <T: RealType<T>> RAI<T>.sum(d: Int) = sum(d, imklib.types.double)
+
+fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.mean(d: Int, i: I) = sum(d, i) / (max(d) - min(d) + 1).toDouble()
+fun <T: RealType<T>, R: RealType<R>> RAI<T>.mean(d: Int, r: R) = sum(d, r) / (max(d) - min(d) + 1).toDouble()
+@JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int) = mean(d, imklib.types.long)
+@JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int) = mean(d, imklib.types.double)
