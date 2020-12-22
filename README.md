@@ -245,6 +245,53 @@ To include imklib as a dependency:
 The [`kotlin-jupyter` kernel](https://github.com/Kotlin/kotlin-jupyter) is required to run the [notebooks](notebooks/examples).
 
 Installation has been tested on Manjaro Linux and the notebooks have been tested on Manjaro Linux and Windows 10.
+
+### Installation into Fiji/Script Interpreter (Experimental)
+imklib can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) imklib into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
+ 1. Download a fresh Fiji from [fiji.sc](https://fiji.sc)
+ 2. Unzip (this will create a `Fiji.app` directory within your current working directory)
+    ```
+    unzip /path/to/fiji-linux64.zip
+    ```
+ 3. Checkout the [`fix-kotlin-engine` branch](https://github.com/scijava/scripting-kotlin/tree/fix-kotlin-engine) of the SciJava Kotlin scripting plugin, navigate to the repository, and install to unzipped `Fiji.app`:
+    ```
+    git clone https://github.com/scijava/scripting-kotlin
+    cd scripting-kotlin
+    git switch fix-kotlin-engine
+    mvn -Dscijava.app.directory=../Fiji.app
+    ```
+  4. Navigate to `Fiji.app` dir 
+     ```
+     cd ../Fiji.app
+     ```
+     and install additional jars:
+     1. Copy JetBrains' Trove fork from your local Maven repository into the `jars` directory. To make sure that Fiji includes both the original Trove jar and the JetBrains Trove jar, rename the JetBrains Trove jar. **WARNING**: This may have unintended side effects on your Fiji installation.
+        ```
+        cp ~/.m2/repository/org/jetbrains/intellij/deps/trove4j/1.0.20181211/trove4j-1.0.20181211.jar jars/jetbrains-trove4j-1.0.20181211.jar
+        ```
+     2. Copy the imklib jar from your local Maven repository into the `jars` directory (follow [these instructions to install imklib into your local Maven repository](#Installation)):
+        ```
+        cp ~/.m2/repository/net/imglib2/imklib2/0.1.0-SNAPSHOT/imklib2-0.1.0-SNAPSHOT.jar jars/
+        ```
+  5. Start Fiji
+     ```
+     ./ImageJ-linux64
+     ```
+  6. Open the script interpreter and run the following commands to confirm that it all worked:
+     Change language to Kotlin
+     ```
+     :lang kotlin
+     ```
+     Run test script
+     ```kotlin
+     import net.imglib2.imklib.*
+     val img = imklib.ints(300, 200) { it }
+     ui.show(img)
+     ```
+     
+        
+ 
+This procedure has been tested on Manjaro Linux with a fresh Fiji download on Monday, Dec 21, 22:50 EST.
    
 ## Usage
 
