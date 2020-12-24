@@ -27,8 +27,6 @@ package net.imglib2.imklib
 
 import net.imglib2.Point
 import net.imglib2.type.logic.BoolType
-import net.imglib2.type.numeric.RealType
-import net.imglib2.type.numeric.integer.IntType
 import kotlin.test.Test
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI

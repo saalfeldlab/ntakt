@@ -28,7 +28,6 @@ package net.imglib2.imklib
 import bdv.util.BdvFunctions
 import bdv.util.BdvOptions
 import bdv.util.BdvStackSource
-import bdv.util.volatiles.VolatileRandomAccessibleIntervalView
 import bdv.util.volatiles.VolatileViews
 import gnu.trove.list.array.TLongArrayList
 import net.imglib2.Interval
@@ -54,6 +53,7 @@ import net.imglib2.type.operators.Sub
 import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
+import kotlin.math.absoluteValue
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
@@ -74,6 +74,7 @@ val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
 
 val <T> RAI<T>.iterable get() = Views.iterable(this)
 val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
+fun <T> RAI<T>.iterable(useFlatIterationOrder: Boolean) = if (useFlatIterationOrder) flatIterable else iterable
 
 fun <T: Type<T>> RAI<T>.extendValue(extension: T) = Views.extendValue(this, extension)
 fun <T: RealType<T>> RAI<T>.extendValue(extension: Float) = Views.extendValue(this, extension)
@@ -89,8 +90,11 @@ fun <T: RealType<T>> RAI<T>.extendRandom(min: Double, max: Double) = Views.exten
 
 val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(" ,", "[", "]")}"
 
-val <T> RAI<T>.isZeroMin get() = Views.isZeroMin(this)
+val RAI<*>.isZeroMin get() = Views.isZeroMin(this)
 val <T> RAI<T>.zeroMin get() = if (isZeroMin) this else Views.zeroMin(this)
+fun <T> RAI<T>.subsample(step: Long) = Views.subsample(this, step)
+fun <T> RAI<T>.subsample(vararg steps: Long): RAI<T> = Views.subsample(this, *steps)
+fun <T> RAI<T>.invertAxis(d: Int): RAI<T> = Views.invertAxis(this, d)
 
 fun <T: NativeType<T>> RAI<T>.materialize(factory: ImgFactory<T> = Util.getSuitableImgFactory(this, type)) = factory
         .create(this)
@@ -189,3 +193,50 @@ fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.mean(d: Int, i: I) = sum(d, i)
 fun <T: RealType<T>, R: RealType<R>> RAI<T>.mean(d: Int, r: R) = sum(d, r) / (max(d) - min(d) + 1).toDouble()
 @JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int) = mean(d, imklib.types.long)
 @JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int) = mean(d, imklib.types.double)
+
+fun RAI<out BooleanType<*>>.all() = iterable.cursor().let { c ->
+    while (c.hasNext()) {
+        if (!c.next().get())
+            return@let false
+    }
+    true
+}
+
+fun RAI<BooleanType<*>>.any() = iterable.cursor().let { c ->
+    while (c.hasNext()) {
+        if (c.next().get())
+            return@let true
+    }
+    false
+}
+
+operator fun <T> RAI<T>.get(vararg slicing: Slicing): RAI<T> {
+    require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }
+    require(slicing.filter { it == _el }.size <= 1) { "Cannot use more than 1 Ellipsis object. Slicing: ${slicing.toList()}" }
+    return when {
+        slicing.any { it == _el } -> {
+            val index = slicing.indexOf(_el)
+            val before = slicing.toList().subList(0, index)
+            val after = slicing.toList().subList(index + 1, slicing.size)
+            get(*(before + List(nDim - before.size - after.size) { Slice() } + after).toTypedArray())
+        }
+        slicing.size < nDim -> get(*(slicing.toList() + List(nDim - slicing.size) { Slice() }).toTypedArray())
+        slicing.all { it is Slice } -> this.applyCompleteSlicing(slicing.map { it as Slice })
+        else -> error("blub")
+    }
+}
+
+public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true) =
+    IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.getInteger() } }
+public fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true) =
+    LongArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getIntegerLong() } }
+public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true) =
+    FloatArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealFloat() } }
+public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true) =
+    DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealDouble() } }
+
+private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<Slice>): RAI<T> {
+    val restricted = this[slicing.interval(this)] as RAI<T>
+    val inverted = (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step?.let { it < 0 } == true) acc.invertAxis(d) else acc }
+    return inverted.zeroMin.subsample(*slicing.map { it.step?.absoluteValue ?: 1 }.toLongArray())
+}

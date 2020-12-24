@@ -61,6 +61,8 @@ val Interval.maxAsInts: IntArray get() = IntArray(numDimensions()) { max(it).toI
 val Interval.minAsPoint: Point get() = minAsPoint()
 val Interval.maxAsPoint: Point get() = maxAsPoint()
 
+val Interval.numElements: Long get() = Intervals.numElements(this)
+
 infix fun Interval.intersect(that: Interval) = Intervals.intersect(this, that)
 infix fun Interval.union(that: Interval) = Intervals.union(this, that)
 operator fun Interval.contains(that: Interval) = Intervals.contains(this, that)
