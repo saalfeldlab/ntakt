@@ -1,6 +1,9 @@
 plugins {
     kotlin("jvm") version "1.3.72"
 
+    // generate documentation
+    id("org.jetbrains.dokka") version "1.4.20"
+
     // add support for building CLI application
     application
 
