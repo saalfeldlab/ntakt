@@ -59,26 +59,54 @@ class TestSlicing {
 
     @Test fun `test 1D slicing start at 3`() {
         val data = imklib.ints(10) { it }
-        val sliced = data[3.start]
-        Assert.assertArrayEquals(IntArray(7) { it + 3 }, sliced.toIntArray())
+        val sliced1 = data[3.start]
+        val sliced2 = data[(-7).start]
+        val sliced3 = data[(-17).start]
+        Assert.assertArrayEquals(IntArray(7) { it + 3 }, sliced1.toIntArray())
+        Assert.assertArrayEquals(IntArray(7) { it + 3 }, sliced2.toIntArray())
+        Assert.assertArrayEquals(IntArray(7) { it + 3 }, sliced3.toIntArray())
     }
 
     @Test fun `test 1D slicing stop at 7`() {
         val data = imklib.ints(10) { it }
-        val sliced = data[7.stop]
-        Assert.assertArrayEquals(IntArray(7) { it }, sliced.toIntArray())
+        val sliced1 = data[7.stop]
+        val sliced2 = data[(-3).stop]
+        val sliced3 = data[(-13).stop]
+        Assert.assertArrayEquals(IntArray(7) { it }, sliced1.toIntArray())
+        Assert.assertArrayEquals(IntArray(7) { it }, sliced2.toIntArray())
+        Assert.assertArrayEquals(IntArray(7) { it }, sliced3.toIntArray())
     }
 
     @Test fun `test 1D slicing start=3 stop=7 step=3`() {
         val data = imklib.ints(10) { it }
-        val sliced = data[3 sl 7 st 3]
-        Assert.assertArrayEquals(intArrayOf(3, 6), sliced.toIntArray())
+        val sliced1 = data[3 sl 7 st 3]
+        val sliced2 = data[3 sl -3 st 3]
+        val sliced3 = data[-7 sl -3 st 3]
+        Assert.assertArrayEquals(intArrayOf(3, 6), sliced1.toIntArray())
+        Assert.assertArrayEquals(intArrayOf(3, 6), sliced2.toIntArray())
+        Assert.assertArrayEquals(intArrayOf(3, 6), sliced3.toIntArray())
     }
 
     @Test fun `test 1D slicing start=3 stop=7 step=-3`() {
         val data = imklib.ints(10) { it }
-        val sliced = data[3 sl 7 st -3]
-        Assert.assertArrayEquals(intArrayOf(6, 3), sliced.toIntArray())
+        val sliced1 = data[3 sl 7 st -3]
+        val sliced2 = data[3 sl -3 st -3]
+        val sliced3 = data[-7 sl -3 st -3]
+        Assert.assertArrayEquals(intArrayOf(6, 3), sliced1.toIntArray())
+        Assert.assertArrayEquals(intArrayOf(6, 3), sliced2.toIntArray())
+        Assert.assertArrayEquals(intArrayOf(6, 3), sliced3.toIntArray())
+    }
+
+    @Test fun `test 1D slicing empty`() {
+        val data = imklib.ints(10) { it }
+        val sliced1 = data[10.start]
+        val sliced2 = data[0.stop]
+        val sliced3 = data[3 sl 2]
+        val sliced4 = data[7 sl -3]
+        Assert.assertTrue(sliced1.isEmpty)
+        Assert.assertTrue(sliced2.isEmpty)
+        Assert.assertTrue(sliced3.isEmpty)
+        Assert.assertTrue(sliced4.isEmpty)
     }
 
     @Test fun `slice 3D`() {
@@ -95,6 +123,16 @@ class TestSlicing {
         val sliced = data[(-1).step, (-1).step, 3 sl 4]
         val expected = IntArray(6) { it + 18 }.reversedArray()
         Assert.assertArrayEquals(expected, sliced.toIntArray())
+    }
+
+    @Test fun `test 3D slicing empty`() {
+        val data = imklib.ints(2, 3, 4) { it }
+        val sliced1 = data[0.stop]
+        val sliced2 = data[Slice(), 0.stop]
+        val sliced3 = data[_el, 0.stop]
+        Assert.assertTrue(sliced1.isEmpty)
+        Assert.assertTrue(sliced2.isEmpty)
+        Assert.assertTrue(sliced3.isEmpty)
     }
 
 }

@@ -37,9 +37,12 @@ data class Slice(
         val stop: Long? = null,
         val step: Long? = null): Slicing {
     init {
-        require(start === null || stop === null || stop > start)
         require(step === null || step != 0L)
     }
+
+    fun withStart(start: Long?) = Slice(start = start, stop = stop, step = step)
+    fun withStop(stop: Long?) = Slice(start = start, stop = stop, step = step)
+    fun withStep(step: Long?) = Slice(start = start, stop = stop, step = step)
 }
 
 class Ellipsis private constructor() : Slicing {
@@ -63,10 +66,3 @@ val Long.step get() = Slice(step=this)
 
 infix fun Slice.st(step: Int) = st(step.toLong())
 infix fun Slice.st(step: Long) = Slice(start=start, stop=stop, step=step)
-
-fun List<Slice>.interval(interval: Interval): Interval {
-    require(size == interval.nDim) {"Inconsistent size: size != interval.nDim: $size != ${interval.nDim}"}
-    val min = LongArray(size) { i -> this[i].start?.let { min(max(it, interval.min(i)), interval.max(i)) } ?: interval.min(i) }
-    val max = LongArray(size) { i -> this[i].stop?.let { min(max(it - 1, interval.min(i)), interval.max(i)) } ?: interval.max(i) }
-    return FinalInterval(min, max)
-}

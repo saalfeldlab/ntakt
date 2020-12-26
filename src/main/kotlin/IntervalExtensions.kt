@@ -111,3 +111,5 @@ fun RealInterval.transformBoundingBox(transformation: AffineGet): RealInterval {
 }
 
 val RealInterval.smallestsContaining get() = Intervals.smallestContainingInterval(this)
+
+val Interval.isEmpty: Boolean get() = Intervals.isEmpty(this)

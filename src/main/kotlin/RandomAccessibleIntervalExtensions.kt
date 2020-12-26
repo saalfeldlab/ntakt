@@ -30,6 +30,7 @@ import bdv.util.BdvOptions
 import bdv.util.BdvStackSource
 import bdv.util.volatiles.VolatileViews
 import gnu.trove.list.array.TLongArrayList
+import net.imglib2.Dimensions
 import net.imglib2.Interval
 import net.imglib2.Localizable
 import net.imglib2.Point
@@ -53,6 +54,7 @@ import net.imglib2.type.operators.Sub
 import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
@@ -210,20 +212,51 @@ fun RAI<BooleanType<*>>.any() = iterable.cursor().let { c ->
     false
 }
 
+/**
+ * Add slicing access to [RAI] similar to Python. Slices are used to create a sub-interval view that is contained in the
+ * original [RAI]. Note that only the dimensions of a [RAI] are considered, but not its min and max. The start and stop
+ * values of a [Slice] are with respect to the dimensions of a [RAI], i.e. between `0` and `dimension`, while min may be
+ * non-zero, and max at `min + dimension - 1`. In other words, [RAI.isZeroMin] is ensured if necessary. Example:
+ * ```kotlin
+ * val data = imklib.ints(10) { it }
+ * // all elements
+ * val data = data[Slice()]
+ * // all elements
+ * val data = data[_el]
+ * // every other element
+ * data[2.step]
+ * // data in reversed order
+ * data[(-1).step]
+ * // all elements starting at index 3
+ * data[3.start]
+ * // all elements before index 7
+ * data[7.stop]
+ * // every other element between 3 (inclusive) and 7 (exclusive)
+ * data[3 sl 7 st 2]
+ * // every other element between 7 (exclusive) and 3 (inclusive)
+ * data[3 sl 7 st -2]
+ * ```
+ *
+ * In the case of multiple dimensions, slices need not be provided for all dimensions. If there are fewer slices than
+ * dimensions, multiple `Slice()` will be appended as needed. To omit `Slice()` at the start or in the middle, use the
+ * Ellipsis object `_el`. Only one ellipsis can be passed (more ellipses would be ambiguous). Examples:
+ * ```kotlin
+ * data = imklib.ints(3, 4) { it }
+ * // all data
+ * data[_el]
+ * // every other column
+ * data[2.step]
+ * // every other row
+ * data[Slice(), 2.step]
+ * // every other row
+ * data[_el, 2.step]
+ * // every other row from index 4 (exclusive) to index 1 (inclusive)
+ * data[_el, 1.start st -2]
+ * ```
+ */
 operator fun <T> RAI<T>.get(vararg slicing: Slicing): RAI<T> {
-    require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }
-    require(slicing.filter { it == _el }.size <= 1) { "Cannot use more than 1 Ellipsis object. Slicing: ${slicing.toList()}" }
-    return when {
-        slicing.any { it == _el } -> {
-            val index = slicing.indexOf(_el)
-            val before = slicing.toList().subList(0, index)
-            val after = slicing.toList().subList(index + 1, slicing.size)
-            get(*(before + List(nDim - before.size - after.size) { Slice() } + after).toTypedArray())
-        }
-        slicing.size < nDim -> get(*(slicing.toList() + List(nDim - slicing.size) { Slice() }).toTypedArray())
-        slicing.all { it is Slice } -> this.applyCompleteSlicing(slicing.map { it as Slice })
-        else -> error("blub")
-    }
+    val nonNullSlices = sanitizeSlicing(slicing.toList()).mapIndexed { d, slice -> sanitizeSlice(slice, dimension(d)) }
+    return applyCompleteSlicing(nonNullSlices)
 }
 
 public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true) =
@@ -235,8 +268,49 @@ public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true) =
 public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true) =
     DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealDouble() } }
 
-private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<Slice>): RAI<T> {
-    val restricted = this[slicing.interval(this)] as RAI<T>
-    val inverted = (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step?.let { it < 0 } == true) acc.invertAxis(d) else acc }
-    return inverted.zeroMin.subsample(*slicing.map { it.step?.absoluteValue ?: 1 }.toLongArray())
+private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Slice> {
+    require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }
+    require(slicing.count { it == _el } <= 1) { "Cannot use more than 1 Ellipsis object. Slicing: ${slicing.toList()}" }
+    return when {
+        slicing.any { it == _el } -> {
+            val index = slicing.indexOf(_el)
+            val before = slicing.toList().subList(0, index)
+            val after = slicing.toList().subList(index + 1, slicing.size)
+            sanitizeSlicing(before + List(nDim - before.size - after.size) { Slice() } + after)
+        }
+        slicing.size < nDim -> sanitizeSlicing(slicing + listOf(_el)) // Using listOf(_el) here only works because the case slicing.any { it == _el } is executed first
+        slicing.all { it is Slice } -> slicing.map { it as Slice }
+        else -> error("Invalid slicing: $slicing")
+    }
 }
+
+private fun sanitizeSlice(slice: Slice, dimension: Long): SanitizedSlice =  when {
+    slice.start === null -> sanitizeSlice(slice.withStart(0L), dimension)
+    slice.stop === null -> sanitizeSlice(slice.withStop(dimension), dimension)
+    slice.step === null -> sanitizeSlice(slice.withStep(1L), dimension)
+    slice.start < 0 -> sanitizeSlice(slice.withStart(dimension - abs(slice.start.rem(dimension))), dimension)
+    slice.stop < 0 -> sanitizeSlice(slice.withStop(dimension - abs(slice.stop.rem(dimension))), dimension)
+    slice.start > dimension -> sanitizeSlice(slice.withStart(dimension), dimension)
+    slice.stop > dimension -> sanitizeSlice(slice.withStop(dimension), dimension)
+    slice.start > slice.stop -> sanitizeSlice(slice.withStop(slice.start), dimension)
+    else -> SanitizedSlice(start = slice.start, stop = slice.stop, step = slice.step)
+}
+
+private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<SanitizedSlice>): RAI<T> = when {
+    isZeroMin -> {
+        val restricted = this[slicing.interval].zeroMin as RAI<T>
+        val inverted = (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step.let { it < 0 } == true) acc.invertAxis(d) else acc }
+        inverted.zeroMin.subsample(*slicing.map { it.step.absoluteValue }.toLongArray())
+    }
+    else -> zeroMin.applyCompleteSlicing(slicing)
+
+}
+
+private data class SanitizedSlice(val start: Long, val stop: Long, val step: Long) {
+    init {
+        require(start <= stop) {"start is larger than stop: $start > $stop"}
+        require(step != 0L) {"Invalid step=$step"}
+    }
+}
+
+private val List<SanitizedSlice>.interval get() = (map { it.start } + map { it.stop - 1 }).toLongArray().intervalMinMax
