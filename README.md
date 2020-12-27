@@ -246,8 +246,8 @@ The [`kotlin-jupyter` kernel](https://github.com/Kotlin/kotlin-jupyter) is requi
 
 Installation has been tested on Manjaro Linux and the notebooks have been tested on Manjaro Linux and Windows 10.
 
-### Installation into Fiji/Script Interpreter (Experimental)
-imklib can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) imklib into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
+### Installation into Fiji/Script Interpreter
+**Experimental**: imklib can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) imklib into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
  1. Download a fresh Fiji from [fiji.sc](https://fiji.sc)
  2. Unzip (this will create a `Fiji.app` directory within your current working directory)
     ```
