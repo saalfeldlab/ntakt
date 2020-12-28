@@ -25,7 +25,12 @@ class ExtensionsPlugin : Plugin<Project> {
         tasks.register(GenerateAllExtensions.name, GenerateAllExtensions::class.java)
         tasks["compileKotlin"].dependsOn(tasks[GenerateAllExtensions.name])
         tasks.registerExtension(GenerateConverterExtensionsTask.name, GenerateConverterExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticExtensionsTask.name, GenerateArithmeticExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticPlusExtensionsTask.name, GenerateArithmeticPlusExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticMinusExtensionsTask.name, GenerateArithmeticMinusExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticTimesExtensionsTask.name, GenerateArithmeticTimesExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticDivExtensionsTask.name, GenerateArithmeticDivExtensionsTask::class.java)
+        // TODO register class that triggers all arithmetic extensions
+        // tasks.registerExtension("generateArithmeticExtensions")
         tasks.registerExtension(GenerateArithmeticScalarExtensionsTask.name, GenerateArithmeticScalarExtensionsTask::class.java)
         tasks.registerExtension(GenerateLogicalExtensionsTask.name, GenerateLogicalExtensionsTask::class.java)
     }

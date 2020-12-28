@@ -1,33 +1,77 @@
-import org.gradle.api.tasks.Input
-import java.io.File
 import java.nio.file.Files
 
-open class GenerateArithmeticExtensionsTask : ExtensionsTask("Arithmetic") {
+private val operatorMap = arithmetics.operatorNames.map { it.name to it }.toMap()
+
+open class GenerateArithmeticPlusExtensionsTask : ExtensionsTask("ArithmeticPlus") {
 
     @org.gradle.api.tasks.TaskAction
     fun runTask() {
-        for ((operator, an) in typeFileMapping2) {
-            val (`as`, name) = an
-            println("generating arithmetic extensions for $`as` ($name)")
-            // TODO for some reason, need to create parent directory to build successfully on Windows@appveyor
-            // TODO strangely, this does not affect any of the other extension tasks
+        for ((`as`, name) in typeFileMapping) {
+            println("generating arithmetic plus extensions for $`as` ($name)")
             Files.createDirectories(name.second.parentFile.toPath())
-            println(name)
             Files.write(
                 name.second.toPath(),
-                generateArithmeticExtensions(`as`, name.first, operator).withHeader.toByteArray())
+                generateArithmeticExtensions(`as`, name.first, operatorMap["plus"]!!).withHeader.toByteArray())
         }
     }
 
-    private val typeFileMapping2 = arithmetics
-        .operatorNames
-        .map { getTypeFileMapping("Arithmetic${it.name.capitalize()}").toList().map { m -> it to m } }
-        .reduce { acc, map -> acc + map }
-
     companion object {
-        const val name = "generateArithmeticExtensions"
+        const val name = "generateArithmeticPlusExtensions"
+    }
+}
+
+open class GenerateArithmeticMinusExtensionsTask : ExtensionsTask("ArithmeticMinus") {
+
+    @org.gradle.api.tasks.TaskAction
+    fun runTask() {
+        for ((`as`, name) in typeFileMapping) {
+            println("generating arithmetic minus extensions for $`as` ($name)")
+            Files.createDirectories(name.second.parentFile.toPath())
+            Files.write(
+                name.second.toPath(),
+                generateArithmeticExtensions(`as`, name.first, operatorMap["minus"]!!).withHeader.toByteArray())
+        }
     }
 
+    companion object {
+        const val name = "generateArithmeticMinusExtensions"
+    }
+}
+
+open class GenerateArithmeticTimesExtensionsTask : ExtensionsTask("ArithmeticTimes") {
+
+    @org.gradle.api.tasks.TaskAction
+    fun runTask() {
+        for ((`as`, name) in typeFileMapping) {
+            println("generating arithmetic times extensions for $`as` ($name)")
+            Files.createDirectories(name.second.parentFile.toPath())
+            Files.write(
+                name.second.toPath(),
+                generateArithmeticExtensions(`as`, name.first, operatorMap["times"]!!).withHeader.toByteArray())
+        }
+    }
+
+    companion object {
+        const val name = "generateArithmeticTimesExtensions"
+    }
+}
+
+open class GenerateArithmeticDivExtensionsTask : ExtensionsTask("ArithmeticDiv") {
+
+    @org.gradle.api.tasks.TaskAction
+    fun runTask() {
+        for ((`as`, name) in typeFileMapping) {
+            println("generating arithmetic plus extensions for $`as` ($name)")
+            Files.createDirectories(name.second.parentFile.toPath())
+            Files.write(
+                name.second.toPath(),
+                generateArithmeticExtensions(`as`, name.first, operatorMap["div"]!!).withHeader.toByteArray())
+        }
+    }
+
+    companion object {
+        const val name = "generateArithmeticDivExtensions"
+    }
 }
 
 open class GenerateArithmeticScalarExtensionsTask : ExtensionsTask("ArithmeticScalar") {

@@ -32,7 +32,6 @@ fun generateArithmeticExtensions(`as`: String, fileName: String, operator: arith
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     kotlinFile.addAliasedImport(container, `as`)
     kotlinFile.addUnaryPlusMinus(container, operator.name)
-//    for ((name, operatorName, type) in arithmetics.operatorNames) {
     val (name, operatorName, type) = operator
     var index = 0
     kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
@@ -41,7 +40,6 @@ fun generateArithmeticExtensions(`as`: String, fileName: String, operator: arith
         kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t2, t1, o, jvmName = "${name}_${++index}"))
     }
     kotlinFile.addFunction(generateArithmeticOperatorStarProjection(name, operatorName, container, jvmName = "${name}_${++index}"))
-//    }
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
@@ -160,7 +158,4 @@ private fun FileSpec.Builder.addUnaryPlusMinus(container: ClassName, operatorNam
         "minus" -> this.addFunction(unaryMinus)
         else -> this
     }
-//    return this
-//            .addFunction(unaryPlus)
-//            .addFunction(unaryMinus)
 }
