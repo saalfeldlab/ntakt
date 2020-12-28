@@ -32,7 +32,17 @@ class ExtensionsPlugin : Plugin<Project> {
         // TODO register class that triggers all arithmetic extensions
         // tasks.registerExtension("generateArithmeticExtensions")
         tasks.registerExtension(GenerateArithmeticScalarExtensionsTask.name, GenerateArithmeticScalarExtensionsTask::class.java)
-        tasks.registerExtension(GenerateLogicalExtensionsTask.name, GenerateLogicalExtensionsTask::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerEQ.name, GenerateLogicalExtensionsTaskContainerEQ::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerGE.name, GenerateLogicalExtensionsTaskContainerGE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerLE.name, GenerateLogicalExtensionsTaskContainerLE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerGT.name, GenerateLogicalExtensionsTaskContainerGT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerLT.name, GenerateLogicalExtensionsTaskContainerLT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarEQ.name, GenerateLogicalExtensionsTaskScalarEQ::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarGE.name, GenerateLogicalExtensionsTaskScalarGE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarLE.name, GenerateLogicalExtensionsTaskScalarLE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarGT.name, GenerateLogicalExtensionsTaskScalarGT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarLT.name, GenerateLogicalExtensionsTaskScalarLT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskChoose.name, GenerateLogicalExtensionsTaskChoose::class.java)
     }
 
     private fun <T: Task> TaskContainer.registerExtension(name: String, type: Class<T>) {

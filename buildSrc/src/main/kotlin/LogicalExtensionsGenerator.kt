@@ -9,7 +9,7 @@ private val boolTypeClass = BoolType::class
 private val booleanTypeWildcard = BooleanType::class.asTypeName().parameterizedBy(STAR)
 private val booleantTypeWildcardProducer = WildcardTypeName.producerOf(booleanTypeWildcard)
 
-private enum class Comparison(val infixName: String, val operatorName: String, private val reverseId: String? = null) {
+enum class Comparison(val infixName: String, val operatorName: String, private val reverseId: String? = null) {
 
     EQ("eq", "=="),
     GE("ge", ">=", "LE"),
@@ -27,22 +27,35 @@ private enum class Comparison(val infixName: String, val operatorName: String, p
         }
 }
 
-
-
-fun generateLogicalExtensions(`as`: String, fileName: String): String {
+fun generateLogicalExtensionsContainer(`as`: String, fileName: String, comparison: Comparison): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile = FileSpec
             .builder("net.imglib2.imklib", fileName)
             .indent("    ")
             .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
-            .addComparisonsWithContainer(container)
-            .addComparisonsWithScalar(container)
-            .addChoose(container)
+            .addComparisonWithContainer(container, comparison)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
-private fun FileSpec.Builder.addComparisonsWithContainer(container: ClassName) =
-        Comparison.values().fold(this) { b, c -> b.addComparisonWithContainer(container, c) }
+fun generateLogicalExtensionsScalar(`as`: String, fileName: String, comparison: Comparison): String {
+    val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
+    val kotlinFile = FileSpec
+        .builder("net.imglib2.imklib", fileName)
+        .indent("    ")
+        .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
+        .addComparisonWithScalar(container, comparison)
+    return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
+}
+
+fun generateLogicalExtensionsChoose(`as`: String, fileName: String): String {
+    val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
+    val kotlinFile = FileSpec
+        .builder("net.imglib2.imklib", fileName)
+        .indent("    ")
+        .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
+        .addChoose(container)
+    return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
+}
 
 private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, comparison: Comparison): FileSpec.Builder {
 
@@ -86,9 +99,6 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, co
     return this
             .addFunction(funSpec)
 }
-
-private fun FileSpec.Builder.addComparisonsWithScalar(container: ClassName) =
-        Comparison.values().fold(this) { b, c -> b.addComparisonWithScalar(container, c) }
 
 private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, comparison: Comparison): FileSpec.Builder {
 

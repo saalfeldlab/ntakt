@@ -26,8 +26,11 @@
 
 // auto-generated, do not modify!
 
+@file:Suppress("UNCHECKED_CAST")
+
 package net.imglib2.imklib
 
+import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.RealType
