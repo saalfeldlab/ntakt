@@ -7,6 +7,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.kotlin.dsl.get
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -64,7 +65,7 @@ open class ExtensionsTask(extensionsIdentifier: String) : AbstractTask() {
     //   > Warning: Type 'GenerateArithmeticExtensionsTask': property 'typeFileMapping' is not annotated with an input or output annotation.
     //   > Warning: Type 'GenerateConverterExtensionsTask': property 'typeFileMapping' is not annotated with an input or output annotation.
     @Input
-    protected val typeFileMapping = getTypeFileMapping(extensionsIdentifier)
+    protected val typeFileMapping: Map<String, Pair<String, File>> = getTypeFileMapping(extensionsIdentifier)
     // this annotation has to be on a fun, not a val
     // https://docs.gradle.org/current/userguide/custom_plugins.html#sec:working_with_files_in_custom_tasks_and_plugins
     @OutputFile
