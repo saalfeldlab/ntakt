@@ -111,7 +111,7 @@ class TestSlicing {
 
     @Test fun `slice 3D`() {
         val data = imklib.ints(2, 3, 4) { it }
-        val sliced1 = data[Slice(), _el, 3 sl 4]
+        val sliced1 = data[slice(), _el, 3 sl 4]
         val sliced2 = data[_el, 3 sl 4]
         val expected = IntArray(6) { it + 18 }
         Assert.assertArrayEquals(expected, sliced1.toIntArray())
@@ -128,11 +128,43 @@ class TestSlicing {
     @Test fun `test 3D slicing empty`() {
         val data = imklib.ints(2, 3, 4) { it }
         val sliced1 = data[0.stop]
-        val sliced2 = data[Slice(), 0.stop]
+        val sliced2 = data[slice(), 0.stop]
         val sliced3 = data[_el, 0.stop]
         Assert.assertTrue(sliced1.isEmpty)
         Assert.assertTrue(sliced2.isEmpty)
         Assert.assertTrue(sliced3.isEmpty)
+    }
+
+    @Test fun `test 3D slicing with pos aka hyperSlice`() {
+        val data = imklib.ints(2, 3, 4) { it }
+        val sliced1 = data[0.pos]
+        val sliced2 = data[slice(), 1.pos]
+        val sliced3 = data[_el, 2.pos]
+        Assert.assertEquals(2, sliced1.numDimensions())
+        Assert.assertEquals(2, sliced2.numDimensions())
+        Assert.assertEquals(2, sliced3.numDimensions())
+        Assert.assertArrayEquals(longArrayOf(3, 4), sliced1.dimensionsAsLongArray())
+        Assert.assertArrayEquals(longArrayOf(2, 4), sliced2.dimensionsAsLongArray())
+        Assert.assertArrayEquals(longArrayOf(2, 3), sliced3.dimensionsAsLongArray())
+        Assert.assertArrayEquals(IntArray(12) { it * 2 }, sliced1.toIntArray())
+        Assert.assertArrayEquals(intArrayOf(2, 3, 8, 9, 14, 15 ,20, 21), sliced2.toIntArray())
+        Assert.assertArrayEquals(IntArray(6) { it + 12 }, sliced3.toIntArray())
+    }
+
+    @Test fun `test 3D slicing with pos and slice`() {
+        val data = imklib.ints(2, 3, 4) { it }
+        val sliced1 = data[0.pos, 2.step]
+        val sliced2 = data[_el, 1.pos, 3.step]
+        val sliced3 = data[1 sl 2, _el, 2.pos]
+        Assert.assertEquals(2, sliced1.numDimensions())
+        Assert.assertEquals(2, sliced2.numDimensions())
+        Assert.assertEquals(2, sliced3.numDimensions())
+        Assert.assertArrayEquals(longArrayOf(2, 4), sliced1.dimensionsAsLongArray())
+        Assert.assertArrayEquals(longArrayOf(2, 2), sliced2.dimensionsAsLongArray())
+        Assert.assertArrayEquals(longArrayOf(1, 3), sliced3.dimensionsAsLongArray())
+        Assert.assertArrayEquals(intArrayOf(0, 4, 6, 10, 12, 16, 18, 22), sliced1.toIntArray())
+        Assert.assertArrayEquals(intArrayOf(2, 3, 20, 21), sliced2.toIntArray())
+        Assert.assertArrayEquals(IntArray(3) { 13 + 2 * it }, sliced3.toIntArray())
     }
 
 }
