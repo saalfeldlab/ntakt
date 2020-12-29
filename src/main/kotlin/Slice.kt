@@ -25,44 +25,51 @@
  */
 package net.imglib2.imklib
 
-import net.imglib2.FinalInterval
-import net.imglib2.Interval
-import kotlin.math.max
-import kotlin.math.min
+interface Slicing {
 
-interface Slicing
-
-data class Slice(
+    data class Slice(
         val start: Long? = null,
         val stop: Long? = null,
-        val step: Long? = null): Slicing {
-    init {
-        require(step === null || step != 0L)
+        val step: Long? = null
+    ) : Slicing {
+        init {
+            require(step === null || step != 0L) { "Invalid step: $step" }
+        }
+
+        fun withStart(start: Long?) = Slice(start = start, stop = stop, step = step)
+        fun withStop(stop: Long?) = Slice(start = start, stop = stop, step = step)
+        fun withStep(step: Long?) = Slice(start = start, stop = stop, step = step)
     }
 
-    fun withStart(start: Long?) = Slice(start = start, stop = stop, step = step)
-    fun withStop(stop: Long?) = Slice(start = start, stop = stop, step = step)
-    fun withStep(step: Long?) = Slice(start = start, stop = stop, step = step)
+    class Ellipsis private constructor() : Slicing {
+        override fun toString() = this::class.simpleName ?: "Ellipsis"
+        companion object {
+            val instance = Ellipsis()
+        }
+    }
+
+    data class Position(val pos: Long): Slicing
 }
 
-class Ellipsis private constructor() : Slicing {
-    companion object {
-        val instance = Ellipsis()
-    }
-}
-val _el = Ellipsis.instance
+fun slice(start: Long? = null, stop: Long? = null, step: Long? = null) = Slicing.Slice(start = start, stop = stop, step = step)
 
 infix fun Int.sl(stop: Int) = toLong() sl stop
 infix fun Int.sl(stop: Long) = toLong() sl stop
 infix fun Long.sl(stop: Int) = sl(stop.toLong())
-infix fun Long.sl(stop: Long) = Slice(start=this, stop=stop)
+infix fun Long.sl(stop: Long) = Slicing.Slice(start=this, stop=stop)
 
 val Int.start get() = toLong().start
 val Int.stop get() = toLong().stop
 val Int.step get() = toLong().step
-val Long.start get() = Slice(start=this)
-val Long.stop get() = Slice(stop=this)
-val Long.step get() = Slice(step=this)
+val Long.start get() = Slicing.Slice(start=this)
+val Long.stop get() = Slicing.Slice(stop=this)
+val Long.step get() = Slicing.Slice(step=this)
 
-infix fun Slice.st(step: Int) = st(step.toLong())
-infix fun Slice.st(step: Long) = Slice(start=start, stop=stop, step=step)
+infix fun Slicing.Slice.st(step: Int) = st(step.toLong())
+infix fun Slicing.Slice.st(step: Long) = Slicing.Slice(start=start, stop=stop, step=step)
+
+
+val _el = Slicing.Ellipsis.instance
+
+val Int.pos get() = toLong().pos
+val Long.pos get() = Slicing.Position(this)

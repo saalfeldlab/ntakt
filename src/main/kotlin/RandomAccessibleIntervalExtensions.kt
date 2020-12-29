@@ -54,7 +54,6 @@ import net.imglib2.type.operators.Sub
 import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
@@ -212,6 +211,15 @@ fun RAI<BooleanType<*>>.any() = iterable.cursor().let { c ->
     false
 }
 
+public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true) =
+    IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.getInteger() } }
+public fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true) =
+    LongArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getIntegerLong() } }
+public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true) =
+    FloatArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealFloat() } }
+public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true) =
+    DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealDouble() } }
+
 /**
  * Add slicing access to [RAI] similar to Python. Slices are used to create a sub-interval view that is contained in the
  * original [RAI]. Note that only the dimensions of a [RAI] are considered, but not its min and max. The start and stop
@@ -255,62 +263,98 @@ fun RAI<BooleanType<*>>.any() = iterable.cursor().let { c ->
  * ```
  */
 operator fun <T> RAI<T>.get(vararg slicing: Slicing): RAI<T> {
-    val nonNullSlices = sanitizeSlicing(slicing.toList()).mapIndexed { d, slice -> sanitizeSlice(slice, dimension(d)) }
-    return applyCompleteSlicing(nonNullSlices)
+    val sanitized = sanitizeSlicing(slicing.toList())
+    val positions = sanitized.withIndex().filter { it.value is SanitizedPosition }.map { it.index to it.value as SanitizedPosition }
+    val slices = sanitized.filter { it is SanitizedSlice }.map { it as SanitizedSlice }
+    return applyHyperSlicesForPositions(positions).applyCompleteSlicing(slices)
 }
 
-public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true) =
-    IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.getInteger() } }
-public fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true) =
-    LongArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getIntegerLong() } }
-public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true) =
-    FloatArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealFloat() } }
-public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true) =
-    DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealDouble() } }
-
-private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Slice> {
+private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Sanitized> {
     require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }
     require(slicing.count { it == _el } <= 1) { "Cannot use more than 1 Ellipsis object. Slicing: ${slicing.toList()}" }
+    require(slicing.all { it::class in compatibleSlicings }) { "Found incompatible slicing: ${slicing.map { it::class }.filter { it !in compatibleSlicings }.toSet().map { it.simpleName }}. Compatible slicings: ${compatibleSlicings.map { it.simpleName }}" }
+
     return when {
         slicing.any { it == _el } -> {
             val index = slicing.indexOf(_el)
             val before = slicing.toList().subList(0, index)
             val after = slicing.toList().subList(index + 1, slicing.size)
-            sanitizeSlicing(before + List(nDim - before.size - after.size) { Slice() } + after)
+            sanitizeSlicing(before + List(nDim - before.size - after.size) { slice() } + after)
         }
         slicing.size < nDim -> sanitizeSlicing(slicing + listOf(_el)) // Using listOf(_el) here only works because the case slicing.any { it == _el } is executed first
-        slicing.all { it is Slice } -> slicing.map { it as Slice }
+        slicing.all { it is Slicing.Slice || it is Slicing.Position } -> slicing.mapIndexed { d, s -> sanitizeSlicing(s, dimension(d)) }
         else -> error("Invalid slicing: $slicing")
     }
 }
 
-private fun sanitizeSlice(slice: Slice, dimension: Long): SanitizedSlice =  when {
+private val compatibleSlicings = setOf(Slicing.Ellipsis::class, Slicing.Slice::class, Slicing.Position::class)
+
+private fun sanitizeSlicing(slicing: Slicing, dimension: Long): Sanitized = when (slicing) {
+    is Slicing.Slice -> sanitizeSlice(slicing, dimension)
+    is Slicing.Position -> SanitizedPosition(normalizeIndexStrict(slicing.pos, dimension))
+    else -> error("Expected ${Slicing.Slice::class} or ${Slicing.Position::class} but got $slicing (${slicing::class})")
+}
+
+private fun sanitizeSlice(slice: Slicing.Slice, dimension: Long): SanitizedSlice =  when {
     slice.start === null -> sanitizeSlice(slice.withStart(0L), dimension)
     slice.stop === null -> sanitizeSlice(slice.withStop(dimension), dimension)
     slice.step === null -> sanitizeSlice(slice.withStep(1L), dimension)
-    slice.start < 0 -> sanitizeSlice(slice.withStart(dimension - abs(slice.start.rem(dimension))), dimension)
-    slice.stop < 0 -> sanitizeSlice(slice.withStop(dimension - abs(slice.stop.rem(dimension))), dimension)
-    slice.start > dimension -> sanitizeSlice(slice.withStart(dimension), dimension)
-    slice.stop > dimension -> sanitizeSlice(slice.withStop(dimension), dimension)
+    slice.start < 0 || slice.start > dimension -> sanitizeSlice(slice.withStart(normalizeIndex(slice.start, dimension)), dimension)
+    slice.stop < 0 || slice.stop > dimension -> sanitizeSlice(slice.withStop(normalizeIndex(slice.stop, dimension)), dimension)
     slice.start > slice.stop -> sanitizeSlice(slice.withStop(slice.start), dimension)
-    else -> SanitizedSlice(start = slice.start, stop = slice.stop, step = slice.step)
+    else -> SanitizedSlice(start = normalizeIndex(slice.start, dimension), stop = normalizeIndex(slice.stop, dimension), step = slice.step)
 }
 
-private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<SanitizedSlice>): RAI<T> = when {
-    isZeroMin -> {
-        val restricted = this[slicing.interval].zeroMin as RAI<T>
-        val inverted = (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step.let { it < 0 } == true) acc.invertAxis(d) else acc }
-        inverted.zeroMin.subsample(*slicing.map { it.step.absoluteValue }.toLongArray())
+private fun <T> RAI<T>.applyHyperSlicesForPositions(slicing: List<Pair<Int, SanitizedPosition>>): RAI<T> {
+    require(nDim >= slicing.size) { "Number of slices inconsistent with number of dimensions: $nDim < ${slicing.size}. slicing=$slicing" }
+    require(slicing.map { it.first }.toSet().size == slicing.size) { "Found duplicates in slicing: $slicing" }
+    require(slicing.none { it.first < 0 || it.first >= nDim }) {"Found slicing dimensions < 0 or > numDimensions: $slicing"}
+    return slicing.sortedByDescending { it.first }.fold(this) { acc, s -> acc.hyperSlice(s.first, s.second.pos) }
+}
+
+private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<SanitizedSlice>): RAI<T> {
+    require(nDim == slicing.size) { "Number of slices inconsistent with number of dimensions: $nDim != ${slicing.size}. slicing=$slicing" }
+    return when {
+        isZeroMin -> {
+            val restricted = this[slicing.interval].zeroMin as RAI<T>
+            val inverted =
+                (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step.let { it < 0 } == true) acc.invertAxis(d) else acc }
+            inverted.zeroMin.subsample(*slicing.map { it.step.absoluteValue }.toLongArray())
+        }
+        else -> zeroMin.applyCompleteSlicing(slicing)
     }
-    else -> zeroMin.applyCompleteSlicing(slicing)
 
 }
 
-private data class SanitizedSlice(val start: Long, val stop: Long, val step: Long) {
+private interface Sanitized
+
+private data class SanitizedSlice(val start: Long, val stop: Long, val step: Long): Sanitized {
     init {
         require(start <= stop) {"start is larger than stop: $start > $stop"}
         require(step != 0L) {"Invalid step=$step"}
     }
 }
 
+private data class SanitizedPosition(val pos: Long): Sanitized
+
 private val List<SanitizedSlice>.interval get() = (map { it.start } + map { it.stop - 1 }).toLongArray().intervalMinMax
+
+private fun normalizeIndex(index: Long, dimension: Long): Long {
+    return if (index < 0) {
+        require(-index <= dimension) { "Index out of bounds: Absolute value of negative index $index must be smaller than or equal to dimension $dimension."}
+        dimension + index
+    } else {
+        require(index <= dimension) { "Index out of bounds: Index $index must be smaller than or equal to dimension $dimension." }
+        index
+    }
+}
+
+private fun normalizeIndexStrict(index: Long, dimension: Long): Long {
+    return if (index < 0) {
+        require(-index <= dimension) { "Index out of bounds: Absolute value of negative index $index must be smaller than or equal to dimension $dimension."}
+        dimension + index
+    } else {
+        require(index < dimension) { "Index out of bounds: Index $index must be smaller than dimension $dimension." }
+        index
+    }
+}
