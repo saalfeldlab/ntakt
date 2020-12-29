@@ -54,7 +54,6 @@ import net.imglib2.type.operators.Sub
 import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
@@ -273,7 +272,7 @@ operator fun <T> RAI<T>.get(vararg slicing: Slicing): RAI<T> {
 private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Sanitized> {
     require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }
     require(slicing.count { it == _el } <= 1) { "Cannot use more than 1 Ellipsis object. Slicing: ${slicing.toList()}" }
-    require(slicing.all { it::class in compatibleSlicings }) { "Found incompatible slicing: ${slicing.map { it::class }.filter { it !in compatibleSlicings }.toSet()}. Compatible slicings: $compatibleSlicings" }
+    require(slicing.all { it::class in compatibleSlicings }) { "Found incompatible slicing: ${slicing.map { it::class }.filter { it !in compatibleSlicings }.toSet().map { it.simpleName }}. Compatible slicings: ${compatibleSlicings.map { it.simpleName }}" }
 
     return when {
         slicing.any { it == _el } -> {
@@ -292,20 +291,18 @@ private val compatibleSlicings = setOf(Slicing.Ellipsis::class, Slicing.Slice::c
 
 private fun sanitizeSlicing(slicing: Slicing, dimension: Long): Sanitized = when (slicing) {
     is Slicing.Slice -> sanitizeSlice(slicing, dimension)
-    is Slicing.Position -> SanitizedPosition(slicing.pos)
+    is Slicing.Position -> SanitizedPosition(normalizeIndexStrict(slicing.pos, dimension))
     else -> error("Expected ${Slicing.Slice::class} or ${Slicing.Position::class} but got $slicing (${slicing::class})")
-}.also { println("LOL SLIZING $it") }
+}
 
 private fun sanitizeSlice(slice: Slicing.Slice, dimension: Long): SanitizedSlice =  when {
     slice.start === null -> sanitizeSlice(slice.withStart(0L), dimension)
     slice.stop === null -> sanitizeSlice(slice.withStop(dimension), dimension)
     slice.step === null -> sanitizeSlice(slice.withStep(1L), dimension)
-    slice.start < 0 -> sanitizeSlice(slice.withStart(dimension - abs(slice.start.rem(dimension))), dimension)
-    slice.stop < 0 -> sanitizeSlice(slice.withStop(dimension - abs(slice.stop.rem(dimension))), dimension)
-    slice.start > dimension -> sanitizeSlice(slice.withStart(dimension), dimension)
-    slice.stop > dimension -> sanitizeSlice(slice.withStop(dimension), dimension)
+    slice.start < 0 || slice.start > dimension -> sanitizeSlice(slice.withStart(normalizeIndex(slice.start, dimension)), dimension)
+    slice.stop < 0 || slice.stop > dimension -> sanitizeSlice(slice.withStop(normalizeIndex(slice.stop, dimension)), dimension)
     slice.start > slice.stop -> sanitizeSlice(slice.withStop(slice.start), dimension)
-    else -> SanitizedSlice(start = slice.start, stop = slice.stop, step = slice.step)
+    else -> SanitizedSlice(start = normalizeIndex(slice.start, dimension), stop = normalizeIndex(slice.stop, dimension), step = slice.step)
 }
 
 private fun <T> RAI<T>.applyHyperSlicesForPositions(slicing: List<Pair<Int, SanitizedPosition>>): RAI<T> {
@@ -341,3 +338,23 @@ private data class SanitizedSlice(val start: Long, val stop: Long, val step: Lon
 private data class SanitizedPosition(val pos: Long): Sanitized
 
 private val List<SanitizedSlice>.interval get() = (map { it.start } + map { it.stop - 1 }).toLongArray().intervalMinMax
+
+private fun normalizeIndex(index: Long, dimension: Long): Long {
+    return if (index < 0) {
+        require(-index <= dimension) { "Index out of bounds: Absolute value of negative index $index must be smaller than or equal to dimension $dimension."}
+        dimension + index
+    } else {
+        require(index <= dimension) { "Index out of bounds: Index $index must be smaller than or equal to dimension $dimension." }
+        index
+    }
+}
+
+private fun normalizeIndexStrict(index: Long, dimension: Long): Long {
+    return if (index < 0) {
+        require(-index <= dimension) { "Index out of bounds: Absolute value of negative index $index must be smaller than or equal to dimension $dimension."}
+        dimension + index
+    } else {
+        require(index < dimension) { "Index out of bounds: Index $index must be smaller than dimension $dimension." }
+        index
+    }
+}

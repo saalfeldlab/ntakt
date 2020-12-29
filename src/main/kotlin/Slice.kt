@@ -33,7 +33,7 @@ interface Slicing {
         val step: Long? = null
     ) : Slicing {
         init {
-            require(step === null || step != 0L)
+            require(step === null || step != 0L) { "Invalid step: $step" }
         }
 
         fun withStart(start: Long?) = Slice(start = start, stop = stop, step = step)
@@ -42,6 +42,7 @@ interface Slicing {
     }
 
     class Ellipsis private constructor() : Slicing {
+        override fun toString() = this::class.simpleName ?: "Ellipsis"
         companion object {
             val instance = Ellipsis()
         }
