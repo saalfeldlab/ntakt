@@ -309,7 +309,7 @@ private fun <T> RAI<T>.applyHyperSlicesForPositions(slicing: List<Pair<Int, Sani
     require(nDim >= slicing.size) { "Number of slices inconsistent with number of dimensions: $nDim < ${slicing.size}. slicing=$slicing" }
     require(slicing.map { it.first }.toSet().size == slicing.size) { "Found duplicates in slicing: $slicing" }
     require(slicing.none { it.first < 0 || it.first >= nDim }) {"Found slicing dimensions < 0 or > numDimensions: $slicing"}
-    return slicing.sortedByDescending { it.first }.fold(this) { acc, s -> acc.hyperSlice(s.first, s.second.pos) }
+    return slicing.sortedByDescending { it.first }.fold(zeroMin) { acc, s -> acc.hyperSlice(s.first, s.second.pos) }
 }
 
 private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<SanitizedSlice>): RAI<T> {
@@ -318,7 +318,7 @@ private fun <T> RAI<T>.applyCompleteSlicing(slicing: List<SanitizedSlice>): RAI<
         isZeroMin -> {
             val restricted = this[slicing.interval].zeroMin as RAI<T>
             val inverted =
-                (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step.let { it < 0 } == true) acc.invertAxis(d) else acc }
+                (0 until nDim).fold(restricted) { acc, d -> if (slicing[d].step < 0 ) acc.invertAxis(d) else acc }
             inverted.zeroMin.subsample(*slicing.map { it.step.absoluteValue }.toLongArray())
         }
         else -> zeroMin.applyCompleteSlicing(slicing)
