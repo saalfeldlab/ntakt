@@ -63,13 +63,20 @@ fun <T> RRA<T>.scaleReal(vararg scale: Double): RRA<T> = affineReal(Scale(*scale
 fun <T> RRA<T>.scaleAndTranslate(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }): RA<T> = affine(ScaleAndTranslation(scale, translation))
 fun <T> RRA<T>.scaleAndTranslateReal(vararg scale: Double, translation: DoubleArray = DoubleArray(scale.size) { 0.0 }): RRA<T> = affineReal(ScaleAndTranslation(scale, translation))
 
+
+@JvmName("floatPair") operator fun <T> RRA<T>.get(vararg minMax: Pair<Float, Float>): RRARI<T> = this[minMax.asInterval()]
+@JvmName("doublePair") operator fun <T> RRA<T>.get(vararg minMax: Pair<Double, Double>): RRARI<T> = this[minMax.asInterval()]
+@JvmName("floatRange") operator fun <T> RRA<T>.get(vararg minMax: ClosedRange<Float>): RRARI<T> = this[minMax.asInterval()]
+@JvmName("doubleRange") operator fun <T> RRA<T>.get(vararg minMax: ClosedRange<Double>): RRARI<T> = this[minMax.asInterval()]
+operator fun <T> RRA<T>.get(min: FloatArray, max: FloatArray): RRARI<T> = this[min .. max]
+operator fun <T> RRA<T>.get(min: DoubleArray, max: DoubleArray): RRARI<T> = this[min .. max]
+operator fun <T> RRA<T>.get(interval: RealInterval): RRARI<T> = realInterval(interval)
 fun <T> RRA<T>.realInterval(realInterval: RealInterval): RRARI<T> = RealIntervalView(this, realInterval)
 fun <T> RRA<T>.realInterval(min: DoubleArray, max: DoubleArray): RRARI<T> = RealIntervalView(this, min, max)
 fun <T> RRA<T>.realInterval(min: FloatArray, max: FloatArray): RRARI<T> = RealIntervalView(this, min, max)
 fun <T> RRA<T>.realInterval(min: RealLocalizable, max: RealLocalizable): RRARI<T> = RealIntervalView(this, min, max)
 fun <T> RRA<T>.realInterval(vararg minMax: Double): RRARI<T> = RealIntervalView(this,*minMax)
 fun <T> RRA<T>.realInterval(vararg minMax: Float): RRARI<T> = RealIntervalView(this, *minMax)
-operator fun <T> RRA<T>.get(realInterval: RealInterval) = realInterval(realInterval)
 
 
 private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInterval) : RRARI<T>, RRA<T> by source, RealInterval by realInterval {
@@ -78,6 +85,9 @@ private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInte
     constructor(source: RRA<T>, min: RealLocalizable, max: RealLocalizable) : this(source, FinalRealInterval(min, max))
     constructor(source: RRA<T>, vararg minMax: Double) : this(source, minMax.minMaxReal)
     constructor(source: RRA<T>, vararg minMax: Float) : this(source, minMax.minMaxReal)
+    init {
+        require(source.nDim == realInterval.nDim) { "Dimensionality mismatch: ${source.nDim} != ${realInterval.nDim}"}
+    }
     override fun numDimensions() = source.numDimensions()
 }
 

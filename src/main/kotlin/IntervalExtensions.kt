@@ -45,6 +45,44 @@ val DoubleArray.intervalMinMax get() = Intervals.createMinMaxReal(*this)
 val Collection<Double>.intervalMinMax get() = toDoubleArray().intervalMinMax
 val FloatArray.intervalMinMax get() = map { it.toDouble() }.intervalMinMax
 
+@JvmName("intRange") fun Iterable<ClosedRange<Int>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("intRange") fun Array<out ClosedRange<Int>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("pairInt") fun Iterable<Pair<Int, Int>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("pairInt") fun Array<out Pair<Int, Int>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("longRange")fun Iterable<ClosedRange<Long>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("longRange") fun Array<out ClosedRange<Long>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("pairLong")fun Iterable<Pair< Long, Long>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("pairLong") fun Array<out Pair<Long, Long>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("rangeToInt") operator fun Collection<Int>.rangeTo(max: Collection<Int>) = this.toIntArray() .. max.toIntArray()
+@JvmName("rangeToLong") operator fun Collection<Long>.rangeTo(max: Collection<Long>) = this.toLongArray() .. max.toLongArray()
+operator fun IntArray.rangeTo(max: IntArray) = this.longs .. max.longs
+operator fun IntArray.rangeTo(max: LongArray) = this.longs .. max
+operator fun LongArray.rangeTo(max: IntArray) = this .. max.longs
+operator fun LongArray.rangeTo(max: LongArray) = Point(*this) .. Point(*max)
+operator fun Localizable.rangeTo(max: Localizable): Interval {
+    require(nDim == max.nDim) { "Dimensionality mismatch for min=$this and max=$max: $nDim != {max.nDim}" }
+    return FinalInterval(this, max)
+}
+
+@JvmName("floatRange") fun Iterable<ClosedRange<Float>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("floatRange") fun Array<out ClosedRange<Float>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("pairFloat")fun Iterable<Pair<Float, Float>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("pairFloat") fun Array<out Pair<Float, Float>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("doubleRange")fun Iterable<ClosedRange<Double>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("doubleRange") fun Array<out ClosedRange<Double>>.asInterval() = map { it.start to it.endInclusive }.asInterval()
+@JvmName("pairDouble")fun Iterable<Pair<Double, Double>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("pairDouble") fun Array<out Pair<Double, Double>>.asInterval() = unzip().let { (min, max) -> min .. max }
+@JvmName("rangeToFloat") operator fun Collection<Float>.rangeTo(max: Collection<Float>) = this.toFloatArray() .. max.toFloatArray()
+@JvmName("rangeToDouble") operator fun Collection<Double>.rangeTo(max: Collection<Double>) = this.toDoubleArray() .. max.toDoubleArray()
+operator fun FloatArray.rangeTo(max: FloatArray) = this.doubles .. max.doubles
+operator fun FloatArray.rangeTo(max: DoubleArray) = this.doubles .. max
+operator fun DoubleArray.rangeTo(max: FloatArray) = this .. max.doubles
+operator fun DoubleArray.rangeTo(max: DoubleArray) = RealPoint(*this) .. RealPoint(*max)
+operator fun RealLocalizable.rangeTo(max: RealLocalizable): RealInterval {
+    require(nDim == max.nDim) { "Dimensionality mismatch for min=$this and max=$max: $nDim != {max.nDim}" }
+    return FinalRealInterval(this, max)
+}
+
 fun Interval.translate(vararg translation: Long) = Intervals.translate(this, *translation)
 fun Interval.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
 fun Interval.translateInverse(vararg translation: Long) = Intervals.translateInverse(this, *translation)
