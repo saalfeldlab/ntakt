@@ -148,7 +148,7 @@ operator fun <T: RealType<T>> RAI<T>.divAssign(value: Long) = this.divAssign(typ
 operator fun <T: RealType<T>> RAI<T>.divAssign(value: Float) = this.divAssign(type.createWithValue(value))
 operator fun <T: RealType<T>> RAI<T>.divAssign(value: Double) = this.divAssign(type.createWithValue(value))
 
-operator fun <T: Type<T>> RAI<T>.set(interval: Interval, value: T) = this[interval].forEach { it.set(value) }
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, value: T) = this[interval].iterable.forEach { it.set(value) }
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterator: Iterator<T>) = this[interval].flatIterable.forEach { it.set(iterator.next()) }
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterable: Iterable<T>) = set(interval, iterable.iterator())
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, rai: RAI<T>) = set(interval, rai.flatIterable)

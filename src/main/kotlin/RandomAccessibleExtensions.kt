@@ -71,12 +71,22 @@ val <T: Type<T>> RA<T>.type get() = randomAccess().get().createVariable()
 //val <C: ComplexType<C>> RA<C>.real get() = real(DoubleType())
 //val <C: ComplexType<C>> RA<C>.imaginary get() = imaginary(DoubleType())
 
+@JvmName("intPair") operator fun <T> RA<T>.get(vararg minMax: Pair<Int, Int>): RAI<T> = this[minMax.asInterval()]
+@JvmName("longPair") operator fun <T> RA<T>.get(vararg minMax: Pair<Long, Long>): RAI<T> = this[minMax.asInterval()]
+@JvmName("intRange") operator fun <T> RA<T>.get(vararg minMax: ClosedRange<Int>): RAI<T> = this[minMax.asInterval()]
+@JvmName("longRange") operator fun <T> RA<T>.get(vararg minMax: ClosedRange<Long>): RAI<T> = this[minMax.asInterval()]
+operator fun <T> RA<T>.get(min: IntArray, max: IntArray): RAI<T> = this[min .. max]
+operator fun <T> RA<T>.get(min: LongArray, max: LongArray): RAI<T> = this[min .. max]
+operator fun <T> RA<T>.get(interval: Interval): RAI<T> = interval(interval)
+
 fun <T> RA<T>.interval(min: LongArray, max: LongArray) = Views.interval(this, min, max)
 fun <T> RA<T>.interval(min: IntArray, max: IntArray) = Views.interval(this, min.longs, max.longs)
 fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }, LongArray(dims.size) { dims[it] - 1L })
 fun <T> RA<T>.interval(vararg dims: Int) = interval(*dims.longs)
-fun <T> RA<T>.interval(interval: Interval) = Views.interval(this, interval)
-operator fun <T> RA<T>.get(interval: Interval) = interval(interval)
+fun <T> RA<T>.interval(interval: Interval): RAI<T> {
+        require(interval.nDim == nDim) { "Dimensionality mismatch: ${interval.nDim} != $nDim" }
+        return Views.interval(this, interval)
+}
 
 fun <T> RA<T>.interpolate(factory: InterpolatorFactory<T, RA<T>>) = Views.interpolate(this, factory)
 val <T> RA<T>.interpolatedNearestNeigbor get() = interpolate(NearestNeighborInterpolatorFactory())
