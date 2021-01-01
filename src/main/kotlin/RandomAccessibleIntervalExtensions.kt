@@ -30,10 +30,7 @@ import bdv.util.BdvOptions
 import bdv.util.BdvStackSource
 import bdv.util.volatiles.VolatileViews
 import gnu.trove.list.array.TLongArrayList
-import net.imglib2.Dimensions
-import net.imglib2.Interval
-import net.imglib2.Localizable
-import net.imglib2.Point
+import net.imglib2.*
 import net.imglib2.cache.LoaderCache
 import net.imglib2.cache.ref.SoftRefLoaderCache
 import net.imglib2.img.ImgFactory
@@ -47,6 +44,8 @@ import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.IntType
+import net.imglib2.type.numeric.integer.LongType
+import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.operators.Add
 import net.imglib2.type.operators.Div
 import net.imglib2.type.operators.Mul
@@ -55,45 +54,46 @@ import net.imglib2.util.ConstantUtils
 import net.imglib2.util.Util
 import net.imglib2.view.Views
 import kotlin.math.absoluteValue
+import kotlin.reflect.KClass
 import net.imglib2.RandomAccessible as RA
 import net.imglib2.RandomAccessibleInterval as RAI
 
-fun <T> RAI<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
-fun <T> RAI<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
-fun <T> RAI<T>.translateInverse(vararg translation: Long) = Views.translateInverse(this, *translation)
-fun <T> RAI<T>.translateInverse(translation: Localizable) = translateInverse(*translation.positionAsLongArray())
-operator fun <T> RAI<T>.plus(translation: LongArray) = translate(*translation)
-operator fun <T> RAI<T>.plus(translation: Localizable) = translate(translation)
-operator fun <T> RAI<T>.minus(translation: LongArray) = translateInverse(*translation)
-operator fun <T> RAI<T>.minus(translation: Localizable) = translateInverse(translation)
+fun <T> RAI<T>.translate(vararg translation: Long): RAI<T> = Views.translate(this, *translation)
+fun <T> RAI<T>.translate(translation: Localizable): RAI<T> = translate(*translation.positionAsLongArray())
+fun <T> RAI<T>.translateInverse(vararg translation: Long): RAI<T> = Views.translateInverse(this, *translation)
+fun <T> RAI<T>.translateInverse(translation: Localizable): RAI<T> = translateInverse(*translation.positionAsLongArray())
+operator fun <T> RAI<T>.plus(translation: LongArray): RAI<T> = translate(*translation)
+operator fun <T> RAI<T>.plus(translation: Localizable): RAI<T> = translate(translation)
+operator fun <T> RAI<T>.minus(translation: LongArray): RAI<T> = translateInverse(*translation)
+operator fun <T> RAI<T>.minus(translation: Localizable): RAI<T> = translateInverse(translation)
 
-val <T> RAI<T>.type get() = this[minAsPoint()]
-val <T: Type<T>> RAI<T>.type get() = this[minAsPoint()].createVariable()
-@JvmName("typeWildCard") fun RAI<*>.getType() = this[minAsPoint()]
-@JvmName("typeWildCardType") fun RAI<out Type<*>>.getType() = this[minAsPoint()].createVariable()
-@JvmName("typeWildCardRealType") fun RAI<out RealType<*>>.getType() = this[minAsPoint()].createVariable()
+val <T> RAI<T>.type: T get() = this[minAsPoint()]
+val <T: Type<T>> RAI<T>.type: T get() = this[minAsPoint()].createVariable()
+@JvmName("typeWildCard") fun RAI<*>.getType(): Any = this[minAsPoint()]
+@JvmName("typeWildCardType") fun RAI<out Type<*>>.getType(): Type<*> = this[minAsPoint()].createVariable()
+@JvmName("typeWildCardRealType") fun RAI<out RealType<*>>.getType(): RealType<*> = this[minAsPoint()].createVariable()
 
-val <T> RAI<T>.iterable get() = Views.iterable(this)
-val <T> RAI<T>.flatIterable get() = Views.flatIterable(this)
-fun <T> RAI<T>.iterable(useFlatIterationOrder: Boolean) = if (useFlatIterationOrder) flatIterable else iterable
+val <T> RAI<T>.iterable get(): IterableInterval<T> = Views.iterable(this)
+val <T> RAI<T>.flatIterable get(): IterableInterval<T> = Views.flatIterable(this)
+fun <T> RAI<T>.iterable(useFlatIterationOrder: Boolean): IterableInterval<T> = if (useFlatIterationOrder) flatIterable else iterable
 
-fun <T: Type<T>> RAI<T>.extendValue(extension: T) = Views.extendValue(this, extension)
-fun <T: RealType<T>> RAI<T>.extendValue(extension: Float) = Views.extendValue(this, extension)
-fun <T: RealType<T>> RAI<T>.extendValue(extension: Double) = Views.extendValue(this, extension)
-fun <T: IntegerType<T>> RAI<T>.extendValue(extension: Int) = Views.extendValue(this, extension)
-fun <T: IntegerType<T>> RAI<T>.extendValue(extension: Long) = Views.extendValue(this, extension)
-fun <T> RAI<T>.extendBorder() = Views.extendBorder(this)
-fun <T: NumericType<T>> RAI<T>.extendZero() = Views.extendZero(this)
-fun <T> RAI<T>.extendMirrorDouble() = Views.extendMirrorDouble(this)
-fun <T> RAI<T>.extendMirrorSingle() = Views.extendMirrorSingle(this)
-fun <T> RAI<T>.extendPeriodic() = Views.extendPeriodic(this)
-fun <T: RealType<T>> RAI<T>.extendRandom(min: Double, max: Double) = Views.extendRandom(this, min, max)
+fun <T: Type<T>> RAI<T>.extendValue(extension: T): RA<T> = Views.extendValue(this, extension)
+fun <T: RealType<T>> RAI<T>.extendValue(extension: Float): RA<T> = Views.extendValue(this, extension)
+fun <T: RealType<T>> RAI<T>.extendValue(extension: Double): RA<T> = Views.extendValue(this, extension)
+fun <T: IntegerType<T>> RAI<T>.extendValue(extension: Int): RA<T> = Views.extendValue(this, extension)
+fun <T: IntegerType<T>> RAI<T>.extendValue(extension: Long): RA<T> = Views.extendValue(this, extension)
+fun <T> RAI<T>.extendBorder(): RA<T> = Views.extendBorder(this)
+fun <T: NumericType<T>> RAI<T>.extendZero(): RA<T> = Views.extendZero(this)
+fun <T> RAI<T>.extendMirrorDouble(): RA<T> = Views.extendMirrorDouble(this)
+fun <T> RAI<T>.extendMirrorSingle(): RA<T> = Views.extendMirrorSingle(this)
+fun <T> RAI<T>.extendPeriodic(): RA<T> = Views.extendPeriodic(this)
+fun <T: RealType<T>> RAI<T>.extendRandom(min: Double, max: Double): RA<T> = Views.extendRandom(this, min, max)
 
-val <T> RAI<T>.flatStringRepresentation get() = "$this: ${flatIterable.joinToString(", ", "[", "]")}"
+val <T> RAI<T>.flatStringRepresentation: String get() = "$this: ${flatIterable.joinToString(", ", "[", "]")}"
 
-val RAI<*>.isZeroMin get() = Views.isZeroMin(this)
-val <T> RAI<T>.zeroMin get() = if (isZeroMin) this else Views.zeroMin(this)
-fun <T> RAI<T>.subsample(step: Long) = Views.subsample(this, step)
+val RAI<*>.isZeroMin: Boolean get() = Views.isZeroMin(this)
+val <T> RAI<T>.zeroMin: RAI<T> get() = if (isZeroMin) this else Views.zeroMin(this)
+fun <T> RAI<T>.subsample(step: Long): RAI<T> = Views.subsample(this, step)
 fun <T> RAI<T>.subsample(vararg steps: Long): RAI<T> = Views.subsample(this, *steps)
 fun <T> RAI<T>.invertAxis(d: Int): RAI<T> = Views.invertAxis(this, d)
 
@@ -110,48 +110,48 @@ val RAI<out Type<*>>.volatileView: RAI<out Type<*>> get() =
     VolatileViews.wrapAsVolatile(this) as? RAI<out Type<*>> ?: error("Unable to create volatile view for $this")
 
 // TODO add to all containers
-fun RAI<IntType>.asARGBs(shiftRight: Int = 0) = convert(ARGBType()) { s, t -> t.set(s.get() shr shiftRight) }
+fun RAI<IntType>.asARGBs(shiftRight: Int = 0): RAI<ARGBType> = convert(ARGBType()) { s, t -> t.set(s.get() shr shiftRight) }
 
 
 // asign operations:
 // TODO how can we make sure that it only is applied to RAIs that can be written into?
-operator fun <T: Add<T>> RAI<T>.plusAssign(value: T) = iterable.forEach { it += value }
-operator fun <T: Sub<T>> RAI<T>.minusAssign(value: T) = iterable.forEach { it -= value }
-operator fun <T: Mul<T>> RAI<T>.timesAssign(value: T) = iterable.forEach { it *= value }
-operator fun <T: Div<T>> RAI<T>.divAssign(value: T) = iterable.forEach { it /= value }
+operator fun <T: Add<T>> RAI<T>.plusAssign(value: T): Unit= iterable.forEach { it += value }
+operator fun <T: Sub<T>> RAI<T>.minusAssign(value: T): Unit = iterable.forEach { it -= value }
+operator fun <T: Mul<T>> RAI<T>.timesAssign(value: T): Unit = iterable.forEach { it *= value }
+operator fun <T: Div<T>> RAI<T>.divAssign(value: T): Unit = iterable.forEach { it /= value }
 
-operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Byte) = this.plusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Short) = this.plusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Int) = this.plusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Long) = this.plusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Float) = this.plusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Double) = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Byte): Unit = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Short): Unit = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Int): Unit = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Long): Unit = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Float): Unit = this.plusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.plusAssign(value: Double): Unit = this.plusAssign(type.createWithValue(value))
 
-operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Byte) = this.minusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Short) = this.minusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Int) = this.minusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Long) = this.minusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Float) = this.minusAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Double) = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Byte): Unit = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Short): Unit = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Int): Unit = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Long): Unit = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Float): Unit = this.minusAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(value: Double): Unit = this.minusAssign(type.createWithValue(value))
 
-operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Byte) = this.timesAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Short) = this.timesAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Int) = this.timesAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Long) = this.timesAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Float) = this.timesAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Double) = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Byte): Unit = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Short): Unit = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Int): Unit = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Long): Unit = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Float): Unit = this.timesAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(value: Double): Unit = this.timesAssign(type.createWithValue(value))
 
-operator fun <T: RealType<T>> RAI<T>.divAssign(value: Byte) = this.divAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.divAssign(value: Short) = this.divAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.divAssign(value: Int) = this.divAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.divAssign(value: Long) = this.divAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.divAssign(value: Float) = this.divAssign(type.createWithValue(value))
-operator fun <T: RealType<T>> RAI<T>.divAssign(value: Double) = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Byte): Unit = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Short): Unit = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Int): Unit = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Long): Unit = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Float): Unit = this.divAssign(type.createWithValue(value))
+operator fun <T: RealType<T>> RAI<T>.divAssign(value: Double): Unit = this.divAssign(type.createWithValue(value))
 
-operator fun <T: Type<T>> RAI<T>.set(interval: Interval, value: T) = this[interval].iterable.forEach { it.set(value) }
-operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterator: Iterator<T>) = this[interval].flatIterable.forEach { it.set(iterator.next()) }
-operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterable: Iterable<T>) = set(interval, iterable.iterator())
-operator fun <T: Type<T>> RAI<T>.set(interval: Interval, rai: RAI<T>) = set(interval, rai.flatIterable)
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, value: T): Unit = this[interval].iterable.forEach { it.set(value) }
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterator: Iterator<T>): Unit = this[interval].flatIterable.forEach { it.set(iterator.next()) }
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterable: Iterable<T>): Unit = set(interval, iterable.iterator())
+operator fun <T: Type<T>> RAI<T>.set(interval: Interval, rai: RAI<T>): Unit = set(interval, rai.flatIterable)
 
 operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
 operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
@@ -172,30 +172,30 @@ fun <T: BooleanType<T>> RAI<T>.whereAsArrays(): Array<LongArray> {
     return indices.map { it.toArray() }.toTypedArray()
 }
 
-fun <T> RAI<*>.constant(constant: T) = ConstantUtils.constantRandomAccessibleInterval(constant, this)
+fun <T> RAI<*>.constant(constant: T): RAI<T> = ConstantUtils.constantRandomAccessibleInterval(constant, this)
 
-fun <T: Type<T>> RAI<T>.show(name: String, options: BdvOptions = BdvOptions.options()) =
+fun <T: Type<T>> RAI<T>.show(name: String, options: BdvOptions = BdvOptions.options()): BdvStackSource<T> =
         BdvFunctions.show(this, name, options)
-fun <T: Type<T>> RAI<T>.show(name: String, bdv: BdvStackSource<*>, options: BdvOptions = BdvOptions.options()) =
+fun <T: Type<T>> RAI<T>.show(name: String, bdv: BdvStackSource<*>, options: BdvOptions = BdvOptions.options()): BdvStackSource<T> =
         show(name, options.addTo(bdv))
 
-fun <T> RAI<T>.hyperSlice(d: Int, pos: Long) = Views.hyperSlice(this, d, pos)
+fun <T> RAI<T>.hyperSlice(d: Int, pos: Long): RAI<T> = Views.hyperSlice(this, d, pos)
 fun <T> RAI<T>.hyperSlicesList(d: Int): List<RAI<T>> = (min(d) .. max(d)).map { hyperSlice(d, it) }
 
-fun <T> RAI<T>.reduce(d: Int, operation: (RAI<T>, RAI<T>) -> RAI<T>) = hyperSlicesList(d).reduce(operation)
-fun <T, U> RAI<T>.fold(d: Int, initial: U, operation: (U, RAI<T>) -> U) = hyperSlicesList(d).fold(initial, operation)
+fun <T> RAI<T>.reduce(d: Int, operation: (RAI<T>, RAI<T>) -> RAI<T>): RAI<T> = hyperSlicesList(d).reduce(operation)
+fun <T, U> RAI<T>.fold(d: Int, initial: U, operation: (U, RAI<T>) -> U): U = hyperSlicesList(d).fold(initial, operation)
 
-fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.sum(d: Int, i: I) = asType(i).reduce(d) { rai1, rai2 -> rai1 + rai2 }
-fun <T: RealType<T>, R: RealType<R>> RAI<T>.sum(d: Int, r: R) = asType(r).reduce(d) { rai1, rai2 -> rai1 + rai2 }
-@JvmName("sumInt") fun <T: IntegerType<T>> RAI<T>.sum(d: Int) = sum(d, imklib.types.long)
-@JvmName("sumReal") fun <T: RealType<T>> RAI<T>.sum(d: Int) = sum(d, imklib.types.double)
+fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.sum(d: Int, i: I): RAI<I> = asType(i).reduce(d) { rai1, rai2 -> rai1 + rai2 }
+fun <T: RealType<T>, R: RealType<R>> RAI<T>.sum(d: Int, r: R): RAI<R> = asType(r).reduce(d) { rai1, rai2 -> rai1 + rai2 }
+@JvmName("sumInt") fun <T: IntegerType<T>> RAI<T>.sum(d: Int): RAI<LongType> = sum(d, imklib.types.long)
+@JvmName("sumReal") fun <T: RealType<T>> RAI<T>.sum(d: Int): RAI<DoubleType> = sum(d, imklib.types.double)
 
-fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.mean(d: Int, i: I) = sum(d, i) / (max(d) - min(d) + 1).toDouble()
-fun <T: RealType<T>, R: RealType<R>> RAI<T>.mean(d: Int, r: R) = sum(d, r) / (max(d) - min(d) + 1).toDouble()
-@JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int) = mean(d, imklib.types.long)
-@JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int) = mean(d, imklib.types.double)
+fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.mean(d: Int, i: I): RAI<I> = sum(d, i) / (max(d) - min(d) + 1).toDouble()
+fun <T: RealType<T>, R: RealType<R>> RAI<T>.mean(d: Int, r: R): RAI<R> = sum(d, r) / (max(d) - min(d) + 1).toDouble()
+@JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int): RAI<LongType> = mean(d, imklib.types.long)
+@JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int): RAI<DoubleType> = mean(d, imklib.types.double)
 
-fun RAI<out BooleanType<*>>.all() = iterable.cursor().let { c ->
+fun RAI<out BooleanType<*>>.all(): Boolean = iterable.cursor().let { c ->
     while (c.hasNext()) {
         if (!c.next().get())
             return@let false
@@ -203,7 +203,7 @@ fun RAI<out BooleanType<*>>.all() = iterable.cursor().let { c ->
     true
 }
 
-fun RAI<BooleanType<*>>.any() = iterable.cursor().let { c ->
+fun RAI<BooleanType<*>>.any(): Boolean = iterable.cursor().let { c ->
     while (c.hasNext()) {
         if (c.next().get())
             return@let true
@@ -211,13 +211,13 @@ fun RAI<BooleanType<*>>.any() = iterable.cursor().let { c ->
     false
 }
 
-public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true) =
+public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true): IntArray =
     IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.getInteger() } }
-public fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true) =
+public fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true): LongArray =
     LongArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getIntegerLong() } }
-public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true) =
+public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true): FloatArray =
     FloatArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealFloat() } }
-public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true) =
+public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true): DoubleArray =
     DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealDouble() } }
 
 /**
@@ -287,7 +287,7 @@ private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Sanitized> 
     }
 }
 
-private val compatibleSlicings = setOf(Slicing.Ellipsis::class, Slicing.Slice::class, Slicing.Position::class)
+private val compatibleSlicings: Set<KClass<out Slicing>> = setOf(Slicing.Ellipsis::class, Slicing.Slice::class, Slicing.Position::class)
 
 private fun sanitizeSlicing(slicing: Slicing, dimension: Long): Sanitized = when (slicing) {
     is Slicing.Slice -> sanitizeSlice(slicing, dimension)
