@@ -48,8 +48,9 @@ import net.imglib2.type.operators.Mul
 import net.imglib2.RandomAccessible as RA
 
 @JvmName(name = "times_1")
-operator fun <T> RA<T>.times(that: RA<T>): RA<T> where T : Type<T>, T : Mul<T> = convert(that, type)
-    { t, u, v -> v.set(t); v *= u }
+operator fun <T> RA<T>.times(that: RA<T>): RA<T> where T : Type<T>, T : Mul<T> {
+  return convert(that, type, BiConverterTimes.instance<T>())
+}
 
 @JvmName(name = "times_2")
 operator fun RA<DoubleType>.times(that: RA<FloatType>): RA<DoubleType> =

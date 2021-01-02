@@ -51,8 +51,9 @@ import net.imglib2.RealRandomAccessible as RRA
 operator fun <T : NumericType<T>> RRA<T>.unaryPlus() = this
 
 @JvmName(name = "plus_1")
-operator fun <T> RRA<T>.plus(that: RRA<T>): RRA<T> where T : Type<T>, T : Add<T> = convert(that,
-    type) { t, u, v -> v.set(t); v += u }
+operator fun <T> RRA<T>.plus(that: RRA<T>): RRA<T> where T : Type<T>, T : Add<T> {
+  return convert(that, type, BiConverterPlus.instance<T>())
+}
 
 @JvmName(name = "plus_2")
 operator fun RRA<DoubleType>.plus(that: RRA<FloatType>): RRA<DoubleType> =

@@ -29,7 +29,7 @@ private val arithmeticTypeCombinations = mutableListOf<Triple<KClass<*>, KClass<
 
 fun generateArithmeticExtensions(`as`: String, fileName: String, operator: arithmetics.OperatorName): String {
     val kotlinFile =  FileSpec
-        .builder("net.imglib2.imklib", fileName)
+        .builder(packageName, fileName)
         .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     kotlinFile.addAliasedImport(container, `as`)
@@ -59,14 +59,14 @@ private fun generatePlusSameGenericTypes(name: String, operator: String, contain
     val parameterizedContainer = container.parameterizedBy(genericT)
 
     return FunSpec
-            .builder(name)
-            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
-            .addModifiers(KModifier.OPERATOR)
-            .addTypeVariable(boundedT)
-            .receiver(parameterizedContainer)
-            .addParameter("that", parameterizedContainer)
-            .returns(parameterizedContainer)
-            .addStatement("return convert(that, type) { t, u, v -> v.set(t); v ${operator}= u }")
+        .builder(name)
+        .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
+        .addModifiers(KModifier.OPERATOR)
+        .addTypeVariable(boundedT)
+        .receiver(parameterizedContainer)
+        .addParameter("that", parameterizedContainer)
+        .returns(parameterizedContainer)
+            .addStatement("return·convert(that,·type,·BiConverter${name.toLowerCase().capitalize()}.instance<T>())")
             .build()
 }
 

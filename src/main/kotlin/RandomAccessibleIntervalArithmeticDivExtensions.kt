@@ -48,8 +48,9 @@ import net.imglib2.type.operators.Div
 import net.imglib2.RandomAccessibleInterval as RAI
 
 @JvmName(name = "div_1")
-operator fun <T> RAI<T>.div(that: RAI<T>): RAI<T> where T : Type<T>, T : Div<T> = convert(that,
-    type) { t, u, v -> v.set(t); v /= u }
+operator fun <T> RAI<T>.div(that: RAI<T>): RAI<T> where T : Type<T>, T : Div<T> {
+  return convert(that, type, BiConverterDiv.instance<T>())
+}
 
 @JvmName(name = "div_2")
 operator fun RAI<DoubleType>.div(that: RAI<FloatType>): RAI<DoubleType> =

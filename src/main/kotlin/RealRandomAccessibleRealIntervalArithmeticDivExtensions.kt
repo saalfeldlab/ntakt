@@ -48,8 +48,9 @@ import net.imglib2.type.operators.Div
 import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 
 @JvmName(name = "div_1")
-operator fun <T> RRARI<T>.div(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Div<T> =
-    convert(that, type) { t, u, v -> v.set(t); v /= u }
+operator fun <T> RRARI<T>.div(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Div<T> {
+  return convert(that, type, BiConverterDiv.instance<T>())
+}
 
 @JvmName(name = "div_2")
 operator fun RRARI<DoubleType>.div(that: RRARI<FloatType>): RRARI<DoubleType> =

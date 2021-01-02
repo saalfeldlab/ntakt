@@ -52,8 +52,9 @@ operator fun <T : NumericType<T>> RAI<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
 @JvmName(name = "minus_1")
-operator fun <T> RAI<T>.minus(that: RAI<T>): RAI<T> where T : Type<T>, T : Sub<T> = convert(that,
-    type) { t, u, v -> v.set(t); v -= u }
+operator fun <T> RAI<T>.minus(that: RAI<T>): RAI<T> where T : Type<T>, T : Sub<T> {
+  return convert(that, type, BiConverterMinus.instance<T>())
+}
 
 @JvmName(name = "minus_2")
 operator fun RAI<DoubleType>.minus(that: RAI<FloatType>): RAI<DoubleType> =

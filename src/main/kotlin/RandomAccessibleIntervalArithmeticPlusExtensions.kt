@@ -51,8 +51,9 @@ import net.imglib2.RandomAccessibleInterval as RAI
 operator fun <T : NumericType<T>> RAI<T>.unaryPlus() = this
 
 @JvmName(name = "plus_1")
-operator fun <T> RAI<T>.plus(that: RAI<T>): RAI<T> where T : Type<T>, T : Add<T> = convert(that,
-    type) { t, u, v -> v.set(t); v += u }
+operator fun <T> RAI<T>.plus(that: RAI<T>): RAI<T> where T : Type<T>, T : Add<T> {
+  return convert(that, type, BiConverterPlus.instance<T>())
+}
 
 @JvmName(name = "plus_2")
 operator fun RAI<DoubleType>.plus(that: RAI<FloatType>): RAI<DoubleType> =

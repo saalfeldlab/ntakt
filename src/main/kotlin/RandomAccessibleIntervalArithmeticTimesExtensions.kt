@@ -48,8 +48,9 @@ import net.imglib2.type.operators.Mul
 import net.imglib2.RandomAccessibleInterval as RAI
 
 @JvmName(name = "times_1")
-operator fun <T> RAI<T>.times(that: RAI<T>): RAI<T> where T : Type<T>, T : Mul<T> = convert(that,
-    type) { t, u, v -> v.set(t); v *= u }
+operator fun <T> RAI<T>.times(that: RAI<T>): RAI<T> where T : Type<T>, T : Mul<T> {
+  return convert(that, type, BiConverterTimes.instance<T>())
+}
 
 @JvmName(name = "times_2")
 operator fun RAI<DoubleType>.times(that: RAI<FloatType>): RAI<DoubleType> =

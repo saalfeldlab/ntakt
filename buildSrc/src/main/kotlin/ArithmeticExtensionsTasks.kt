@@ -1,3 +1,7 @@
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputFile
+import java.io.File
 import java.nio.file.Files
 
 private val operatorMap = arithmetics.operatorNames.map { it.name to it }.toMap()
@@ -86,6 +90,35 @@ open class GenerateArithmeticScalarExtensionsTask : ExtensionsTask("ArithmeticSc
 
     companion object {
         const val name = "generateArithmeticScalarExtensions"
+    }
+
+}
+
+open class GenerateArithmeticExtensionHelperTask : DefaultTask() {
+
+    init {
+        group = ExtensionsTask.group
+    }
+
+    @Input
+    var header: String? = null
+
+    @Input
+    fun getClassName(): String = "ArtithmeticExtensionsHelper"
+
+    @OutputFile
+    fun getOutputFile(): File = outputDir.resolve("${getClassName()}.kt")
+
+    @org.gradle.api.tasks.TaskAction
+    fun runTask() {
+        println("generating arithmetic extensions helper")
+        Files.write(getOutputFile().toPath(), makeArithmeticBiConverters(getClassName()).withHeader.toByteArray())
+    }
+
+    val String.withHeader get() = header?.let { "$it$this" } ?: this
+
+    companion object {
+        const val name = "generateArithmeticExtensionHelperTask"
     }
 
 }

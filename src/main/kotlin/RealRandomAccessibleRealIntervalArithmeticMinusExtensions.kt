@@ -52,8 +52,9 @@ operator fun <T : NumericType<T>> RRARI<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
 @JvmName(name = "minus_1")
-operator fun <T> RRARI<T>.minus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Sub<T> =
-    convert(that, type) { t, u, v -> v.set(t); v -= u }
+operator fun <T> RRARI<T>.minus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Sub<T> {
+  return convert(that, type, BiConverterMinus.instance<T>())
+}
 
 @JvmName(name = "minus_2")
 operator fun RRARI<DoubleType>.minus(that: RRARI<FloatType>): RRARI<DoubleType> =

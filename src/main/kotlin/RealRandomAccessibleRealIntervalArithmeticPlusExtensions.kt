@@ -51,8 +51,9 @@ import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 operator fun <T : NumericType<T>> RRARI<T>.unaryPlus() = this
 
 @JvmName(name = "plus_1")
-operator fun <T> RRARI<T>.plus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Add<T> =
-    convert(that, type) { t, u, v -> v.set(t); v += u }
+operator fun <T> RRARI<T>.plus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Add<T> {
+  return convert(that, type, BiConverterPlus.instance<T>())
+}
 
 @JvmName(name = "plus_2")
 operator fun RRARI<DoubleType>.plus(that: RRARI<FloatType>): RRARI<DoubleType> =

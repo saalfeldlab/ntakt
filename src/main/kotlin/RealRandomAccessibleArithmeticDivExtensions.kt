@@ -48,8 +48,9 @@ import net.imglib2.type.operators.Div
 import net.imglib2.RealRandomAccessible as RRA
 
 @JvmName(name = "div_1")
-operator fun <T> RRA<T>.div(that: RRA<T>): RRA<T> where T : Type<T>, T : Div<T> = convert(that,
-    type) { t, u, v -> v.set(t); v /= u }
+operator fun <T> RRA<T>.div(that: RRA<T>): RRA<T> where T : Type<T>, T : Div<T> {
+  return convert(that, type, BiConverterDiv.instance<T>())
+}
 
 @JvmName(name = "div_2")
 operator fun RRA<DoubleType>.div(that: RRA<FloatType>): RRA<DoubleType> =
