@@ -1,8 +1,10 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import groovyjarjarpicocli.CommandLine
 import net.imglib2.type.BooleanType
 import net.imglib2.type.Type
 import net.imglib2.type.logic.BoolType
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 
 private val boolTypeClass = BoolType::class
@@ -59,27 +61,37 @@ fun generateLogicalExtensionsChoose(`as`: String, fileName: String): String {
 
 private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, comparison: Comparison): FileSpec.Builder {
 
+    val integerTypeName = IntegerType::class.asTypeName()
+
     fun typeCombinations(): CodeBlock {
         val codeBlockBuilder = CodeBlock.builder()
         codeBlockBuilder.addStatement("return·when·{").indent()
-        for ((t1, id1) in arithmeticTypes) {
-            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
-            for ((t2, id2) in arithmeticTypes) {
-                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
-                val converterBody = if (t1 == t2) {
-                    "s1·${comparison.operatorName}·s2"
-                } else {
-                    if (t1IsIntegerType && t2IsIntegerType)
-                        "s1.integerLong·${comparison.operatorName}·s2.integerLong"
-                    else
-                        "s1.realDouble·${comparison.operatorName}·s2.realDouble"
-                }
-                codeBlockBuilder.addStatement(
-                        "this.type·is·%T·&&·that.type·is·%T·->·this.asType(%T()).convert(that.asType(%T()),·%T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
-                        t1, t2, t1, t2, boolTypeClass)
-            }
-        }
-        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
+        codeBlockBuilder.addStatement(
+            "this.type·is·%T·&&·that.type·is·%T·->·(this as %T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.integerLong·${comparison.operatorName}·s2.integerLong)·}",
+            integerTypeName, integerTypeName, container.parameterizedBy(integerTypeName.parameterizedBy(STAR)), container.parameterizedBy(integerTypeName.parameterizedBy(STAR)), boolTypeClass
+        )
+        codeBlockBuilder.addStatement(
+            "else·->·convert(that,·%T())·{·s1,·s2,·t·->·t.set(s1.realDouble·${comparison.operatorName}·s2.realDouble)·}",
+            boolTypeClass
+        )
+//        for ((t1, id1) in arithmeticTypes) {
+//            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
+//            for ((t2, id2) in arithmeticTypes) {
+//                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
+//                val converterBody = if (t1 == t2) {
+//                    "s1·${comparison.operatorName}·s2"
+//                } else {
+//                    if (t1IsIntegerType && t2IsIntegerType)
+//                        "s1.integerLong·${comparison.operatorName}·s2.integerLong"
+//                    else
+//                        "s1.realDouble·${comparison.operatorName}·s2.realDouble"
+//                }
+//                codeBlockBuilder.addStatement(
+//                        "this.type·is·%T·&&·that.type·is·%T·->·this.asType(%T()).convert(that.asType(%T()),·%T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
+//                        t1, t2, t1, t2, boolTypeClass)
+//            }
+//        }
+//        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
         codeBlockBuilder.unindent().addStatement("}")
         return codeBlockBuilder.build()
     }
@@ -102,27 +114,37 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, co
 
 private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, comparison: Comparison): FileSpec.Builder {
 
+    val integerTypeName = IntegerType::class.asTypeName()
+
     fun typeCombinations(): CodeBlock {
         val codeBlockBuilder = CodeBlock.builder()
         codeBlockBuilder.addStatement("return·when·{").indent()
-        for ((t1, id1) in arithmeticTypes) {
-            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
-            for ((t2, id2) in arithmeticTypes) {
-                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
-                val converterBody = if (t1 == t2) {
-                    "s·${comparison.operatorName}·that"
-                } else {
-                    if (t1IsIntegerType && t2IsIntegerType)
-                        "s.integerLong·${comparison.operatorName}·that.integerLong"
-                    else
-                        "s.realDouble·${comparison.operatorName}·that.realDouble"
-                }
-                codeBlockBuilder.addStatement(
-                        "this.type·is·%T·&&·that·is·%T·->·this.asType(%T()).convert(%T())·{·s,·t·->·t.set($converterBody)·}",
-                        t1, t2, t1, boolTypeClass)
-            }
-        }
-        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\$that)\")")
+        codeBlockBuilder.addStatement(
+            "this.type·is·%T·&&·that·is·%T·->·(this·as·%T).convert(%T())·{·s,·t·->·t.set(s.integerLong·${comparison.operatorName}·that.integerLong)·}",
+            integerTypeName, integerTypeName, container.parameterizedBy(integerTypeName.parameterizedBy(STAR)), boolTypeClass
+        )
+        codeBlockBuilder.addStatement(
+            "else·->·convert(%T())·{·s,·t·->·t.set(s.realDouble·${comparison.operatorName}·that.realDouble)·}",
+            boolTypeClass
+        )
+//        for ((t1, id1) in arithmeticTypes) {
+//            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
+//            for ((t2, id2) in arithmeticTypes) {
+//                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
+//                val converterBody = if (t1 == t2) {
+//                    "s·${comparison.operatorName}·that"
+//                } else {
+//                    if (t1IsIntegerType && t2IsIntegerType)
+//                        "s.integerLong·${comparison.operatorName}·that.integerLong"
+//                    else
+//                        "s.realDouble·${comparison.operatorName}·that.realDouble"
+//                }
+//                codeBlockBuilder.addStatement(
+//                        "this.type·is·%T·&&·that·is·%T·->·this.asType(%T()).convert(%T())·{·s,·t·->·t.set($converterBody)·}",
+//                        t1, t2, t1, boolTypeClass)
+//            }
+//        }
+//        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\$that)\")")
         codeBlockBuilder.unindent().addStatement("}")
         return codeBlockBuilder.build()
     }
