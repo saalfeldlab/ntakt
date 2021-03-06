@@ -13,6 +13,8 @@ import org.gradle.api.tasks.OutputFile
 import java.io.File
 import kotlin.reflect.KClass
 
+val packageName = "net.imglib2.imklib"
+
 object identifiers {
     const val complex = "complex"
     const val real = "real"

@@ -1,15 +1,17 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import groovyjarjarpicocli.CommandLine
 import net.imglib2.type.BooleanType
 import net.imglib2.type.Type
 import net.imglib2.type.logic.BoolType
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 
 private val boolTypeClass = BoolType::class
 private val booleanTypeWildcard = BooleanType::class.asTypeName().parameterizedBy(STAR)
 private val booleantTypeWildcardProducer = WildcardTypeName.producerOf(booleanTypeWildcard)
 
-private enum class Comparison(val infixName: String, val operatorName: String, private val reverseId: String? = null) {
+enum class Comparison(val infixName: String, val operatorName: String, private val reverseId: String? = null) {
 
     EQ("eq", "=="),
     GE("ge", ">=", "LE"),
@@ -27,46 +29,69 @@ private enum class Comparison(val infixName: String, val operatorName: String, p
         }
 }
 
-
-
-fun generateLogicalExtensions(`as`: String, fileName: String): String {
+fun generateLogicalExtensionsContainer(`as`: String, fileName: String, comparison: Comparison): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile = FileSpec
             .builder("net.imglib2.imklib", fileName)
             .indent("    ")
             .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
-            .addComparisonsWithContainer(container)
-            .addComparisonsWithScalar(container)
-            .addChoose(container)
+            .addComparisonWithContainer(container, comparison)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
-private fun FileSpec.Builder.addComparisonsWithContainer(container: ClassName) =
-        Comparison.values().fold(this) { b, c -> b.addComparisonWithContainer(container, c) }
+fun generateLogicalExtensionsScalar(`as`: String, fileName: String, comparison: Comparison): String {
+    val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
+    val kotlinFile = FileSpec
+        .builder("net.imglib2.imklib", fileName)
+        .indent("    ")
+        .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
+        .addComparisonWithScalar(container, comparison)
+    return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
+}
+
+fun generateLogicalExtensionsChoose(`as`: String, fileName: String): String {
+    val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
+    val kotlinFile = FileSpec
+        .builder("net.imglib2.imklib", fileName)
+        .indent("    ")
+        .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
+        .addChoose(container)
+    return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
+}
 
 private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, comparison: Comparison): FileSpec.Builder {
+
+    val integerTypeName = IntegerType::class.asTypeName()
 
     fun typeCombinations(): CodeBlock {
         val codeBlockBuilder = CodeBlock.builder()
         codeBlockBuilder.addStatement("return·when·{").indent()
-        for ((t1, id1) in arithmeticTypes) {
-            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
-            for ((t2, id2) in arithmeticTypes) {
-                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
-                val converterBody = if (t1 == t2) {
-                    "s1·${comparison.operatorName}·s2"
-                } else {
-                    if (t1IsIntegerType && t2IsIntegerType)
-                        "s1.integerLong·${comparison.operatorName}·s2.integerLong"
-                    else
-                        "s1.realDouble·${comparison.operatorName}·s2.realDouble"
-                }
-                codeBlockBuilder.addStatement(
-                        "this.type·is·%T·&&·that.type·is·%T·->·this.asType(%T()).convert(that.asType(%T()),·%T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
-                        t1, t2, t1, t2, boolTypeClass)
-            }
-        }
-        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
+        codeBlockBuilder.addStatement(
+            "this.type·is·%T·&&·that.type·is·%T·->·(this as %T).convert(that·as·%T,·%T())·{·s1,·s2,·t·->·t.set(s1.integerLong·${comparison.operatorName}·s2.integerLong)·}",
+            integerTypeName, integerTypeName, container.parameterizedBy(integerTypeName.parameterizedBy(STAR)), container.parameterizedBy(integerTypeName.parameterizedBy(STAR)), boolTypeClass
+        )
+        codeBlockBuilder.addStatement(
+            "else·->·convert(that,·%T())·{·s1,·s2,·t·->·t.set(s1.realDouble·${comparison.operatorName}·s2.realDouble)·}",
+            boolTypeClass
+        )
+//        for ((t1, id1) in arithmeticTypes) {
+//            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
+//            for ((t2, id2) in arithmeticTypes) {
+//                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
+//                val converterBody = if (t1 == t2) {
+//                    "s1·${comparison.operatorName}·s2"
+//                } else {
+//                    if (t1IsIntegerType && t2IsIntegerType)
+//                        "s1.integerLong·${comparison.operatorName}·s2.integerLong"
+//                    else
+//                        "s1.realDouble·${comparison.operatorName}·s2.realDouble"
+//                }
+//                codeBlockBuilder.addStatement(
+//                        "this.type·is·%T·&&·that.type·is·%T·->·this.asType(%T()).convert(that.asType(%T()),·%T())·{·s1,·s2,·t·->·t.set($converterBody)·}",
+//                        t1, t2, t1, t2, boolTypeClass)
+//            }
+//        }
+//        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\${that.type})\")")
         codeBlockBuilder.unindent().addStatement("}")
         return codeBlockBuilder.build()
     }
@@ -87,32 +112,39 @@ private fun FileSpec.Builder.addComparisonWithContainer(container: ClassName, co
             .addFunction(funSpec)
 }
 
-private fun FileSpec.Builder.addComparisonsWithScalar(container: ClassName) =
-        Comparison.values().fold(this) { b, c -> b.addComparisonWithScalar(container, c) }
-
 private fun FileSpec.Builder.addComparisonWithScalar(container: ClassName, comparison: Comparison): FileSpec.Builder {
+
+    val integerTypeName = IntegerType::class.asTypeName()
 
     fun typeCombinations(): CodeBlock {
         val codeBlockBuilder = CodeBlock.builder()
         codeBlockBuilder.addStatement("return·when·{").indent()
-        for ((t1, id1) in arithmeticTypes) {
-            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
-            for ((t2, id2) in arithmeticTypes) {
-                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
-                val converterBody = if (t1 == t2) {
-                    "s·${comparison.operatorName}·that"
-                } else {
-                    if (t1IsIntegerType && t2IsIntegerType)
-                        "s.integerLong·${comparison.operatorName}·that.integerLong"
-                    else
-                        "s.realDouble·${comparison.operatorName}·that.realDouble"
-                }
-                codeBlockBuilder.addStatement(
-                        "this.type·is·%T·&&·that·is·%T·->·this.asType(%T()).convert(%T())·{·s,·t·->·t.set($converterBody)·}",
-                        t1, t2, t1, boolTypeClass)
-            }
-        }
-        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\$that)\")")
+        codeBlockBuilder.addStatement(
+            "this.type·is·%T·&&·that·is·%T·->·(this·as·%T).convert(%T())·{·s,·t·->·t.set(s.integerLong·${comparison.operatorName}·that.integerLong)·}",
+            integerTypeName, integerTypeName, container.parameterizedBy(integerTypeName.parameterizedBy(STAR)), boolTypeClass
+        )
+        codeBlockBuilder.addStatement(
+            "else·->·convert(%T())·{·s,·t·->·t.set(s.realDouble·${comparison.operatorName}·that.realDouble)·}",
+            boolTypeClass
+        )
+//        for ((t1, id1) in arithmeticTypes) {
+//            val t1IsIntegerType = id1 == identifiers.unsignedInteger || id1 == identifiers.signedInteger
+//            for ((t2, id2) in arithmeticTypes) {
+//                val t2IsIntegerType = id2 == identifiers.unsignedInteger || id2 == identifiers.signedInteger
+//                val converterBody = if (t1 == t2) {
+//                    "s·${comparison.operatorName}·that"
+//                } else {
+//                    if (t1IsIntegerType && t2IsIntegerType)
+//                        "s.integerLong·${comparison.operatorName}·that.integerLong"
+//                    else
+//                        "s.realDouble·${comparison.operatorName}·that.realDouble"
+//                }
+//                codeBlockBuilder.addStatement(
+//                        "this.type·is·%T·&&·that·is·%T·->·this.asType(%T()).convert(%T())·{·s,·t·->·t.set($converterBody)·}",
+//                        t1, t2, t1, boolTypeClass)
+//            }
+//        }
+//        codeBlockBuilder.addStatement("else·->·throw·Exception(\"Comparison·operators·not·supported·for·combination·of·voxel·types:·(\${this.type},·\$that)\")")
         codeBlockBuilder.unindent().addStatement("}")
         return codeBlockBuilder.build()
     }

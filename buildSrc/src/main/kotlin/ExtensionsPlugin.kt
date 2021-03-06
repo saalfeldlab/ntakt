@@ -7,6 +7,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.kotlin.dsl.get
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -24,15 +25,32 @@ class ExtensionsPlugin : Plugin<Project> {
         tasks.register(GenerateAllExtensions.name, GenerateAllExtensions::class.java)
         tasks["compileKotlin"].dependsOn(tasks[GenerateAllExtensions.name])
         tasks.registerExtension(GenerateConverterExtensionsTask.name, GenerateConverterExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticExtensionsTask.name, GenerateArithmeticExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticPlusExtensionsTask.name, GenerateArithmeticPlusExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticMinusExtensionsTask.name, GenerateArithmeticMinusExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticTimesExtensionsTask.name, GenerateArithmeticTimesExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticDivExtensionsTask.name, GenerateArithmeticDivExtensionsTask::class.java)
+        tasks.registerExtension(GenerateArithmeticExtensionHelperTask.name, GenerateArithmeticExtensionHelperTask::class.java)
+        // TODO register class that triggers all arithmetic extensions
+        // tasks.registerExtension("generateArithmeticExtensions")
         tasks.registerExtension(GenerateArithmeticScalarExtensionsTask.name, GenerateArithmeticScalarExtensionsTask::class.java)
-        tasks.registerExtension(GenerateLogicalExtensionsTask.name, GenerateLogicalExtensionsTask::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerEQ.name, GenerateLogicalExtensionsTaskContainerEQ::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerGE.name, GenerateLogicalExtensionsTaskContainerGE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerLE.name, GenerateLogicalExtensionsTaskContainerLE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerGT.name, GenerateLogicalExtensionsTaskContainerGT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskContainerLT.name, GenerateLogicalExtensionsTaskContainerLT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarEQ.name, GenerateLogicalExtensionsTaskScalarEQ::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarGE.name, GenerateLogicalExtensionsTaskScalarGE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarLE.name, GenerateLogicalExtensionsTaskScalarLE::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarGT.name, GenerateLogicalExtensionsTaskScalarGT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskScalarLT.name, GenerateLogicalExtensionsTaskScalarLT::class.java)
+        tasks.registerExtension(GenerateLogicalExtensionsTaskChoose.name, GenerateLogicalExtensionsTaskChoose::class.java)
     }
 
     private fun <T: Task> TaskContainer.registerExtension(name: String, type: Class<T>) {
         register(name, type)
         this[GenerateAllExtensions.name].dependsOn(this[name])
         this[name].takeIf { it is ExtensionsTask }?.let { it as ExtensionsTask }?.let { it.header = headerString }
+        this[name].takeIf { it is GenerateArithmeticExtensionHelperTask }?.let { it as GenerateArithmeticExtensionHelperTask }?.let { it.header = headerString }
     }
 }
 
@@ -64,7 +82,7 @@ open class ExtensionsTask(extensionsIdentifier: String) : AbstractTask() {
     //   > Warning: Type 'GenerateArithmeticExtensionsTask': property 'typeFileMapping' is not annotated with an input or output annotation.
     //   > Warning: Type 'GenerateConverterExtensionsTask': property 'typeFileMapping' is not annotated with an input or output annotation.
     @Input
-    protected val typeFileMapping = getTypeFileMapping(extensionsIdentifier)
+    protected val typeFileMapping: Map<String, Pair<String, File>> = getTypeFileMapping(extensionsIdentifier)
     // this annotation has to be on a fun, not a val
     // https://docs.gradle.org/current/userguide/custom_plugins.html#sec:working_with_files_in_custom_tasks_and_plugins
     @OutputFile

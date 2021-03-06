@@ -27,20 +27,21 @@ private val arithmeticTypeCombinations = mutableListOf<Triple<KClass<*>, KClass<
 
 
 
-fun generateArithmeticExtensions(`as`: String, fileName: String): String {
-    val kotlinFile =  FileSpec.builder("net.imglib2.imklib", fileName)
+fun generateArithmeticExtensions(`as`: String, fileName: String, operator: arithmetics.OperatorName): String {
+    val kotlinFile =  FileSpec
+        .builder(packageName, fileName)
+        .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     kotlinFile.addAliasedImport(container, `as`)
-    kotlinFile.addUnaryPlusMinus(container)
-    for ((name, operatorName, type) in arithmetics.operatorNames) {
-        var index = 0
-        kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
-        for ((t1, t2, o) in arithmeticTypeCombinations) {
-            kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t1, t2, o, jvmName = "${name}_${++index}"))
-            kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t2, t1, o, jvmName = "${name}_${++index}"))
-        }
-        kotlinFile.addFunction(generateArithmeticOperatorStarProjection(name, operatorName, container, jvmName = "${name}_${++index}"))
+    kotlinFile.addUnaryPlusMinus(container, operator.name)
+    val (name, operatorName, type) = operator
+    var index = 0
+    kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
+    for ((t1, t2, o) in arithmeticTypeCombinations) {
+        kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t1, t2, o, jvmName = "${name}_${++index}"))
+        kotlinFile.addFunction(generatePlusConverting(name, operatorName, container, t2, t1, o, jvmName = "${name}_${++index}"))
     }
+    kotlinFile.addFunction(generateArithmeticOperatorStarProjection(name, operatorName, container, jvmName = "${name}_${++index}"))
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
@@ -58,14 +59,14 @@ private fun generatePlusSameGenericTypes(name: String, operator: String, contain
     val parameterizedContainer = container.parameterizedBy(genericT)
 
     return FunSpec
-            .builder(name)
-            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
-            .addModifiers(KModifier.OPERATOR)
-            .addTypeVariable(boundedT)
-            .receiver(parameterizedContainer)
-            .addParameter("that", parameterizedContainer)
-            .returns(parameterizedContainer)
-            .addStatement("return convert(that, type) { t, u, v -> v.set(t); v ${operator}= u }")
+        .builder(name)
+        .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
+        .addModifiers(KModifier.OPERATOR)
+        .addTypeVariable(boundedT)
+        .receiver(parameterizedContainer)
+        .addParameter("that", parameterizedContainer)
+        .returns(parameterizedContainer)
+            .addStatement("return·convert(that,·type,·BiConverter${name.toLowerCase().capitalize()}.instance<T>())")
             .build()
 }
 
@@ -135,7 +136,7 @@ private fun generateArithmeticOperatorStarProjection(name: String, operator: Str
             .build()
 }
 
-private fun FileSpec.Builder.addUnaryPlusMinus(container: ClassName): FileSpec.Builder {
+private fun FileSpec.Builder.addUnaryPlusMinus(container: ClassName, operatorName: String): FileSpec.Builder {
     val genericT = TypeVariableName("T")
     val typeOfT = NumericType::class.asTypeName().parameterizedBy(genericT)
     val boundedT = TypeVariableName("T", typeOfT)
@@ -154,7 +155,9 @@ private fun FileSpec.Builder.addUnaryPlusMinus(container: ClassName): FileSpec.B
             .receiver(parameterizedContainer)
             .addStatement("return convert(type)·{·s,·t ->·t.set(s);·t.mul(-1.0) }")
             .build()
-    return this
-            .addFunction(unaryPlus)
-            .addFunction(unaryMinus)
+    return when (operatorName) {
+        "plus" -> this.addFunction(unaryPlus)
+        "minus" -> this.addFunction(unaryMinus)
+        else -> this
+    }
 }
