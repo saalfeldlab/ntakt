@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.4.31"
 
     // generate documentation
     id("org.jetbrains.dokka") version "1.4.20"

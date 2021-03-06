@@ -1,6 +1,5 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.sun.org.apache.xpath.internal.operations.Minus
 import net.imglib2.converter.BiConverter
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.NumericType
