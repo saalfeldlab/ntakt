@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.com/saalfeldlab/imklib2.svg?branch=master)](https://travis-ci.com/saalfeldlab/imklib2) [![Build status](https://ci.appveyor.com/api/projects/status/cvi9r5hqyiiyenlu?svg=true)](https://ci.appveyor.com/project/hanslovsky/imklib2)
 
 
-# imklib (preliminary name)
+# ntakt
 
-imklib (preliminary name) combines the expressive power and flexibility of the Java image processing library [ImgLib2](https://github.com/imglib/imglib2) with the convenience and clarity that Kotlin operators provide. Internally, imklib uses Kotlin extension functions to add operator overloading and other convenience functions that would otherwise not be possible in Java. The result is a very concise and intuitive syntax that users are familiar with from other scientific computing libraries such as [NumPy](https://numpy.org) in the [Python](https://www.python.org) world. For example, this is the Java code to multiply two images in ImgLib2:
+ntakt brings n-dimensional transformation and algebra to Kotlin! It combines the expressive power and flexibility of the Java image processing library [ImgLib2](https://github.com/imglib/imglib2) with the convenience and clarity that Kotlin operators provide. Internally, ntakt uses Kotlin extension functions to add operator overloading and other convenience functions that would otherwise not be possible in Java. The result is a very concise and intuitive syntax that users are familiar with from other scientific computing libraries such as [NumPy](https://numpy.org) in the [Python](https://www.python.org) world. For example, this is the Java code to multiply two images in ImgLib2:
 
 ``` java
 // populate data
@@ -24,12 +24,12 @@ Views.flatIterable(img3).forEach(System.out::println);
 
 ```
 
-This is the equivalent in imklib:
+This is the equivalent in ntakt:
 
 ``` kotlin
 // populate data
-val img1 = imklib.doubles(2L, 3L) { 0.1 }
-val img2 = imklib.longs(2L, 3L) { it + 1L }
+val img1 = ntakt.doubles(2L, 3L) { 0.1 }
+val img2 = ntakt.longs(2L, 3L) { it + 1L }
 // multiply images
 val img3 = img1 * img2
 img3.flatIterable.forEach { println(it) }
@@ -64,24 +64,24 @@ final RandomAccessibleInterval<IntType> rai3 = Converters.convert(rai1, rai2, (r
 ```
 **Note**: This is by no means a comparison between NumPy and ImgLib2.
 
-We created imklib to make ImgLib2 more convenient to use and accessible to users who are not ImgLib2 experts (yet) while still maintaining its flexibility and efficiency. 
+We created ntakt to make ImgLib2 more convenient to use and accessible to users who are not ImgLib2 experts (yet) while still maintaining its flexibility and efficiency. 
 We picked Kotlin as a language because
  - operators can be [overloaded](https://kotlinlang.org/docs/reference/operator-overloading.html), e.g. `+`, `-`, `*`, `/`, for artbitrary types,
  - ImgLib2 interfaces can be extended with Kotlin [extension functions](https://kotlinlang.org/docs/reference/extensions.html) without the need for new wrapper classes, and
- - Kotlin code is compiled to the JVM. When a user's needs cannot be met completely by imklib, they can always implement the missing parts using ImgLib2 in Kotlin.
+ - Kotlin code is compiled to the JVM. When a user's needs cannot be met completely by ntakt, they can always implement the missing parts using ImgLib2 in Kotlin.
  
 ### Core Concepts
 Kotlin extension functions allow us to easily add new features and convenience methods to existing interfaces and classes.
 For example,
 ```kotlin
 fun String.hello() = "Hello, $this!"
-println("imklib".hello())
+println("ntakt".hello())
 ```
 prints
 ```
-Hello, imklib!
+Hello, ntakt!
 ```
-to the console. In a similar way, imklib extends ImgLib2 interfaces.
+to the console. In a similar way, ntakt extends ImgLib2 interfaces.
 Many of the extensions exist already inside ImgLib2 core in namespace classes like `Views` or `Converters`
 but interface or class methods (and extension functions) are more accessible through the auto-completion of any modern IDE.
 For example, the Java code
@@ -94,17 +94,17 @@ translates to
 val rai = ...
 rai.convert(...)
 ```
-in imklib. In combination with operator overloading, imklib adds arithmetic operators to existing ImgLib2 interfaces, e.g.
+in ntakt. In combination with operator overloading, ntakt adds arithmetic operators to existing ImgLib2 interfaces, e.g.
 ```kotlin
 val rai1: RAI<DoubleType> = ...
 val rai2: RAI<DoubleType> = ...
 val rai3 = rai1 + rai2
 val rai4 = rai3 / 3.14
 ```
-imklib adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/examples) provide more detailed examples. 
+ntakt adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/examples) provide more detailed examples. 
 
 #### Extension Functions
-imklib adds convenience to ImgLib2 data structures with extensions functions.
+ntakt adds convenience to ImgLib2 data structures with extensions functions.
 The following sections will cover extension functions that shared among the following data structures (package names omitted):
  - `RandomAccessible`
  - `RandomAccessibleInterval`
@@ -122,12 +122,12 @@ into arbitrary values as defined by the caller without allocating any memory.
 The value at each pixel/voxel is computed on demand when accessed.
 Other names for this evaluation pattern are *lazy* or *view*:
 ```kotlin
-val rai = imklib.doubles(1L, 2L, 3L) { Random.nextDouble(0.0, 1.0) }
-val scaledAndQuantizedRai = rai.convert(imklib.types.unsignedByte) { s, t -> t.setInteger(round(255.0 * s.realDouble).toInt()) }
+val rai = ntakt.doubles(1L, 2L, 3L) { Random.nextDouble(0.0, 1.0) }
+val scaledAndQuantizedRai = rai.convert(ntakt.types.unsignedByte) { s, t -> t.setInteger(round(255.0 * s.realDouble).toInt()) }
 
-val rra1 = imklib.function(2, { imklib.types.float }) { p, t -> t.setReal(abs(p.getDoublePosition(0)) + abs(p.getDoublePosition(1))) }
-val rra2 = imklib.function(2, { imklib.types.double }) { p, t -> t.setReal(sqrt(p.getDoublePosition(0).pow(2.0) + p.getDoublePosition(1).pow(2.0))) }
-val meanRra = rra1.convert(rra2, imklib.types.double) { s, t, u -> u.setReal(s.realDouble); u.add(t); u.mul(0.5) }
+val rra1 = ntakt.function(2, { ntakt.types.float }) { p, t -> t.setReal(abs(p.getDoublePosition(0)) + abs(p.getDoublePosition(1))) }
+val rra2 = ntakt.function(2, { ntakt.types.double }) { p, t -> t.setReal(sqrt(p.getDoublePosition(0).pow(2.0) + p.getDoublePosition(1).pow(2.0))) }
+val meanRra = rra1.convert(rra2, ntakt.types.double) { s, t, u -> u.setReal(s.realDouble); u.add(t); u.mul(0.5) }
 ```
 
 Note that for expensive operations, it may be beneficial to persist/materialize views to avoid repeated execution of the expensive operation.
@@ -141,7 +141,7 @@ Operator overloading is possible for arithmetic operations (`+-*/`) on
  1. ImgLib2 data structures and primitive types and generic types with the same bounds as the data structure
  2. Pairs of ImgLib2 data structures if
     1. Both data structures have the exact same generic bounds `T`. The return type is `T`.
-    2. The generic type is any of `imklib.types.realTypes` for each of the data structures. The return type is defined in the table below.
+    2. The generic type is any of `ntakt.types.realTypes` for each of the data structures. The return type is defined in the table below.
     3. As (ii) but the types are specified with star projection (`RealType<*>`) or as mixed generic bounds. The return type is `RealType<*>`.
        Will throw an `error` if the type for either data structure is `RealType<*>` that does not fulfil these criteria.
 
@@ -190,7 +190,7 @@ For efficient access of (large numbers of) individual voxels, use ImgLib2 `Curso
 
 ##### Intervals
 It is common practice to restrict unbounded `RandomAccessible` instances to certain intervals, e.g. when cropping a block out of a function defined on infinite domain. 
-imklib exposes the `Views.interval` functions as extensions to the `RandomAccessible` interface (and by extension `RandomAccessibleInterval`).
+ntakt exposes the `Views.interval` functions as extensions to the `RandomAccessible` interface (and by extension `RandomAccessibleInterval`).
 The `[]` operator is overloaded for `Interval`:
 ```kotlin
 val i1 = ra.interval(1L, 2L)
@@ -201,7 +201,7 @@ val i5 = ra.interval(i1)
 val i6 = ra[i3]
 ```
 
-Similarly, imklib adds extension to `RealRandomAccessible` (and by extension `RealRandomAccessibleRealInterval`):
+Similarly, ntakt adds extension to `RealRandomAccessible` (and by extension `RealRandomAccessibleRealInterval`):
 ```kotlin
 val ri1: RealRandomAccessibleRealInterval<T> = rra.realInterval(1F, 2F)
 val ri2: RealRandomAccessibleRealInterval<T> = rra.realInterval(3.0, 4.0)
@@ -213,41 +213,41 @@ val ri6: RealRandomAccessibleRealInterval<T> = rra[ri3]
 
 
 ### Caveats
- - Kotlin extension functions are just syntactic sugar for static Java methods. Interface methods take precedence, if they exist. As a result, imklib code may fail to compile or, even worse, change behavior silently when interface methods are added upstream.
+ - Kotlin extension functions are just syntactic sugar for static Java methods. Interface methods take precedence, if they exist. As a result, ntakt code may fail to compile or, even worse, change behavior silently when interface methods are added upstream.
  - Some of the added convenience functions are inefficient, which is not obvious without understanding the ImgLib2 design.
  - It is not always obvious (and not currently documented) which (extension) functions genearate views and which allocate data
  - It is not always obvious (and not currently documented) which (extension) functinos generate read-only views and which generate read-write views
 
 ## Installation
 
-Installation requires Java 8. Currently, imklib is not available through remote Maven repositories (it is on the roadmap).
+Installation requires Java 8. Currently, ntakt is not available through remote Maven repositories (it is on the roadmap).
 To install into your local maven repository (typically `~/.m2/repository`), run from the root of the repository:
 ```shell script
 ./gradlew clean build publishToMavenLocal
 ```
-To include imklib as a dependency:
+To include ntakt as a dependency:
  - Maven (`pom.xml`):
    ```xml
    <dependency>
-     <groupId>net.imglib2</groupId>
-     <artifactId>imklib2</artifactId>
+     <groupId>org.ntakt</groupId>
+     <artifactId>ntakt</artifactId>
      <version>0.1.0-SNAPSHOT</version>
    </dependency>
    ``` 
  - Gradle
    ```
-   "net.imglib2:imklib2:0.1.0-SNAPSHOT"
+   "org.ntakt:ntakt:0.1.0-SNAPSHOT"
    ```
  - [`kotlin-jupyter`](https://github.com/Kotlin/kotlin-jupyter)
    ```
-   @file:DependsOn("net.imglib2:imklib2:0.1.0-SNAPSHOT")
+   @file:DependsOn("org.ntakt.ntakt:0.1.0-SNAPSHOT")
    ```
 The [`kotlin-jupyter` kernel](https://github.com/Kotlin/kotlin-jupyter) is required to run the [notebooks](notebooks/examples).
 
 Installation has been tested on Manjaro Linux and the notebooks have been tested on Manjaro Linux and Windows 10.
 
 ### Installation into Fiji/Script Interpreter
-**Experimental**: imklib can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) imklib into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
+**Experimental**: ntakt can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) ntakt into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
  1. Download a fresh Fiji from [fiji.sc](https://fiji.sc)
  2. Unzip (this will create a `Fiji.app` directory within your current working directory)
     ```
@@ -269,9 +269,9 @@ Installation has been tested on Manjaro Linux and the notebooks have been tested
         ```
         cp ~/.m2/repository/org/jetbrains/intellij/deps/trove4j/1.0.20181211/trove4j-1.0.20181211.jar jars/jetbrains-trove4j-1.0.20181211.jar
         ```
-     2. Copy the imklib jar from your local Maven repository into the `jars` directory (follow [these instructions to install imklib into your local Maven repository](#Installation)):
+     2. Copy the ntakt jar from your local Maven repository into the `jars` directory (follow [these instructions to install ntakt into your local Maven repository](#Installation)):
         ```
-        cp ~/.m2/repository/net/imglib2/imklib2/0.1.0-SNAPSHOT/imklib2-0.1.0-SNAPSHOT.jar jars/
+        cp ~/.m2/repository/org/ntakt/ntakt/0.1.0-SNAPSHOT/ntakt-0.1.0-SNAPSHOT.jar jars/
         ```
   5. Start Fiji
      ```
@@ -284,8 +284,8 @@ Installation has been tested on Manjaro Linux and the notebooks have been tested
      ```
      Run test script
      ```kotlin
-     import net.imglib2.imklib.*
-     val img = imklib.ints(300, 200) { it }
+     import org.ntakt.*
+     val img = ntakt.ints(300, 200) { it }
      ui.show(img)
      ```
      
@@ -295,8 +295,8 @@ This procedure has been tested on Manjaro Linux with a fresh Fiji download on Mo
    
 ## Usage
 
-To use imklib in your code, simply
+To use ntakt in your code, simply
 ```kotlin
-import net.imglib2.imklib.*
+import org.ntakt.*
 ```
 to include all extensions and utility objects. The [notebooks](notebooks/examples) provide detailed usage examples but are currently still WIP, as is the API documentation. 
