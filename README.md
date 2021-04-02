@@ -1,21 +1,22 @@
 [![Build Status](https://travis-ci.com/saalfeldlab/imklib2.svg?branch=master)](https://travis-ci.com/saalfeldlab/imklib2) [![Build status](https://ci.appveyor.com/api/projects/status/cvi9r5hqyiiyenlu?svg=true)](https://ci.appveyor.com/project/hanslovsky/imklib2)
 
 
-# ntakt
+# nta.kt
 
-ntakt brings n-dimensional transformation and algebra to Kotlin! It combines the expressive power and flexibility of the Java image processing library [ImgLib2](https://github.com/imglib/imglib2) with the convenience and clarity that Kotlin operators provide. Internally, ntakt uses Kotlin extension functions to add operator overloading and other convenience functions that would otherwise not be possible in Java. The result is a very concise and intuitive syntax that users are familiar with from other scientific computing libraries such as [NumPy](https://numpy.org) in the [Python](https://www.python.org) world. For example, this is the Java code to multiply two images in ImgLib2:
+The nta.kt library brings n-dimensional transformation and algebra to Kotlin! It combines the expressive power and flexibility of the Java image processing library [ImgLib2](https://github.com/imglib/imglib2) with the convenience and clarity that Kotlin language features provide. Internally, nta.kt uses Kotlin extension functions to overload operators, add infix functions, and other conveniences that would not be possible in Java. The result is a very concise and intuitive syntax comparable to what developers are familiar with from other scientific computing libraries such as [NumPy](https://numpy.org) or [Julia](https://julialang.org). For example, this is the Java code to multiply two images in ImgLib2:
+
 
 ``` java
 // populate data
-final RandomAccessibleInterval<DoubleType> img1 = ArrayImgs.doubles(2, 3);
+final var img1 = ArrayImgs.doubles(2, 3);
 Views.iterable(img1).forEach(p -> p.setReal(0.1));
-final RandomAccessibleInterval<LongType> img2 = ArrayImgs.longs(2, 3);
-final Cursor<LongType> cursor = Views.flatIterable(img2).cursor();
+final var img2 = ArrayImgs.longs(2, 3);
+final var cursor = Views.flatIterable(img2).cursor();
 for (int i = 1; cursor.hasNext(); ++i)
     cursor.next().setInteger(i);
 
 // multiply images
-final RandomAccessibleInterval<DoubleType> img3 = Converters.convert(
+final var img3 = Converters.convert(
         img1,
         img2,
         (t, u, v) -> { v.setReal(u.getRealDouble()); v.mul(t); },
@@ -24,7 +25,7 @@ Views.flatIterable(img3).forEach(System.out::println);
 
 ```
 
-This is the equivalent in ntakt:
+This is the equivalent in nta.kt:
 
 ``` kotlin
 // populate data
@@ -64,47 +65,47 @@ final RandomAccessibleInterval<IntType> rai3 = Converters.convert(rai1, rai2, (r
 ```
 **Note**: This is by no means a comparison between NumPy and ImgLib2.
 
-We created ntakt to make ImgLib2 more convenient to use and accessible to users who are not ImgLib2 experts (yet) while still maintaining its flexibility and efficiency. 
+We created nta.kt to make ImgLib2 more convenient to use and accessible while maintaining its flexibility and efficiency. 
 We picked Kotlin as a language because
  - operators can be [overloaded](https://kotlinlang.org/docs/reference/operator-overloading.html), e.g. `+`, `-`, `*`, `/`, for artbitrary types,
  - ImgLib2 interfaces can be extended with Kotlin [extension functions](https://kotlinlang.org/docs/reference/extensions.html) without the need for new wrapper classes, and
- - Kotlin code is compiled to the JVM. When a user's needs cannot be met completely by ntakt, they can always implement the missing parts using ImgLib2 in Kotlin.
+ - Kotlin code is compiled to the Java bytecode. When a user's needs cannot be met completely by nta.kt, they can always implement the missing parts using ImgLib2 in Kotlin.
  
 ### Core Concepts
 Kotlin extension functions allow us to easily add new features and convenience methods to existing interfaces and classes.
 For example,
 ```kotlin
 fun String.hello() = "Hello, $this!"
-println("ntakt".hello())
+println("nta.kt".hello())
 ```
 prints
 ```
-Hello, ntakt!
+Hello, nta.kt!
 ```
-to the console. In a similar way, ntakt extends ImgLib2 interfaces.
+to the console. Similarly, nta.kt extends ImgLib2 interfaces.
 Many of the extensions exist already inside ImgLib2 core in namespace classes like `Views` or `Converters`
 but interface or class methods (and extension functions) are more accessible through the auto-completion of any modern IDE.
 For example, the Java code
 ```java
-final RandomAccessibleInterval rai = ...
-Converters.convert(...)
+final var rai = ...
+Converters.convert(rai, ...)
 ```
 translates to
 ```
 val rai = ...
 rai.convert(...)
 ```
-in ntakt. In combination with operator overloading, ntakt adds arithmetic operators to existing ImgLib2 interfaces, e.g.
+in nta.kt. In combination with operator overloading, nta.kt adds arithmetic operators to existing ImgLib2 interfaces, e.g.
 ```kotlin
 val rai1: RAI<DoubleType> = ...
 val rai2: RAI<DoubleType> = ...
 val rai3 = rai1 + rai2
 val rai4 = rai3 / 3.14
 ```
-ntakt adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/examples) provide more detailed examples. 
+ntai.kt adds operators for `+`, `-`, `*`, and `/`. The [notebooks](notebooks/examples) provide more detailed examples. 
 
 #### Extension Functions
-ntakt adds convenience to ImgLib2 data structures with extensions functions.
+Nta.kt adds convenience to ImgLib2 data structures with extension functions.
 The following sections will cover extension functions that shared among the following data structures (package names omitted):
  - `RandomAccessible`
  - `RandomAccessibleInterval`
@@ -185,12 +186,12 @@ val t3:T = ra[RealPoint(1.0, 2.0, 3.0)]
 
 ```
 
-**Note**: This access pattern is designed for convenience but is not very efficient. Use in tight loop is discouraged.
-For efficient access of (large numbers of) individual voxels, use ImgLib2 `Cursor`, `RandomAccess`, or `LoopBuilder`.
+**Note**: This access pattern is designed for convenience but is not very efficient because it creates a new `Sampler` object instance for each value. Use in tight loop is discouraged.
+For efficient access of (large numbers of) individual voxels, this `Sampler` instance should be reused, use ImgLib2 `Cursor`, `RandomAccess`, or foreach constructs such as with `LoopBuilder`.
 
 ##### Intervals
 It is common practice to restrict unbounded `RandomAccessible` instances to certain intervals, e.g. when cropping a block out of a function defined on infinite domain. 
-ntakt exposes the `Views.interval` functions as extensions to the `RandomAccessible` interface (and by extension `RandomAccessibleInterval`).
+Nta.kt exposes the `Views.interval` functions as extensions to the `RandomAccessible` interface (and by extension `RandomAccessibleInterval`).
 The `[]` operator is overloaded for `Interval`:
 ```kotlin
 val i1 = ra.interval(1L, 2L)
@@ -201,7 +202,7 @@ val i5 = ra.interval(i1)
 val i6 = ra[i3]
 ```
 
-Similarly, ntakt adds extension to `RealRandomAccessible` (and by extension `RealRandomAccessibleRealInterval`):
+Similarly, nta.kt adds extensions to `RealRandomAccessible` (and by extension `RealRandomAccessibleRealInterval`):
 ```kotlin
 val ri1: RealRandomAccessibleRealInterval<T> = rra.realInterval(1F, 2F)
 val ri2: RealRandomAccessibleRealInterval<T> = rra.realInterval(3.0, 4.0)
@@ -213,14 +214,14 @@ val ri6: RealRandomAccessibleRealInterval<T> = rra[ri3]
 
 
 ### Caveats
- - Kotlin extension functions are just syntactic sugar for static Java methods. Interface methods take precedence, if they exist. As a result, ntakt code may fail to compile or, even worse, change behavior silently when interface methods are added upstream.
+ - Kotlin extension functions are just syntactic sugar for static Java methods. Interface methods take precedence, if they exist. As a result, nta.kt code may fail to compile or, even worse, change behavior silently when interface methods are added upstream.
  - Some of the added convenience functions are inefficient, which is not obvious without understanding the ImgLib2 design.
  - It is not always obvious (and not currently documented) which (extension) functions genearate views and which allocate data
  - It is not always obvious (and not currently documented) which (extension) functinos generate read-only views and which generate read-write views
 
 ## Installation
 
-Installation requires Java 8. Currently, ntakt is not available through remote Maven repositories (it is on the roadmap).
+Installation requires Java 8 or later. Currently, nta.kt is not available through remote Maven repositories (it is on the roadmap).
 To install into your local maven repository (typically `~/.m2/repository`), run from the root of the repository:
 ```shell script
 ./gradlew clean build publishToMavenLocal
@@ -247,7 +248,7 @@ The [`kotlin-jupyter` kernel](https://github.com/Kotlin/kotlin-jupyter) is requi
 Installation has been tested on Manjaro Linux and the notebooks have been tested on Manjaro Linux and Windows 10.
 
 ### Installation into Fiji/Script Interpreter
-**Experimental**: ntakt can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) ntakt into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
+**Experimental**: nta.kt can be used from within the Fiji script interpreter but this is an experimental feature and installation involves multiple steps. First, [install](#Installation) nta.kt into your local Maven repository. Then, follow these instructions for Linux command line. They should easily translate to macOS command line and possibly to Windows command line as well. Adjust paths as needed:
  1. Download a fresh Fiji from [fiji.sc](https://fiji.sc)
  2. Unzip (this will create a `Fiji.app` directory within your current working directory)
     ```
@@ -269,7 +270,7 @@ Installation has been tested on Manjaro Linux and the notebooks have been tested
         ```
         cp ~/.m2/repository/org/jetbrains/intellij/deps/trove4j/1.0.20181211/trove4j-1.0.20181211.jar jars/jetbrains-trove4j-1.0.20181211.jar
         ```
-     2. Copy the ntakt jar from your local Maven repository into the `jars` directory (follow [these instructions to install ntakt into your local Maven repository](#Installation)):
+     2. Copy the nta.kt jar from your local Maven repository into the `jars` directory (follow [these instructions to install ntakt into your local Maven repository](#Installation)):
         ```
         cp ~/.m2/repository/org/ntakt/ntakt/0.1.0-SNAPSHOT/ntakt-0.1.0-SNAPSHOT.jar jars/
         ```
@@ -295,7 +296,7 @@ This procedure has been tested on Manjaro Linux with a fresh Fiji download on Mo
    
 ## Usage
 
-To use ntakt in your code, simply
+To use nta.kt in your code, simply
 ```kotlin
 import org.ntakt.*
 ```
