@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import net.imglib2.Point
 import net.imglib2.type.logic.BoolType
@@ -41,8 +41,8 @@ class TestLogicalExtensions {
     val oneInt = 1
     val oneDouble = 1.0
 
-    val rai1 = imklib.ints(3) { it }
-    val rai2 = imklib.ints(3) { oneInt }
+    val rai1 = ntakt.ints(3) { it }
+    val rai2 = ntakt.ints(3) { oneInt }
     val raiEq = booleanArrayOf(false, true, false)
     val raiGe = booleanArrayOf(false, true, true)
     val raiLe = booleanArrayOf(true, true, false)
@@ -50,15 +50,15 @@ class TestLogicalExtensions {
     val raiLt = booleanArrayOf(true, false, false)
 
     val ra1 = rai1.extendBorder()
-    val ra2 = imklib.constant(oneInt.asType(), 1)
+    val ra2 = ntakt.constant(oneInt.asType(), 1)
     val raEq = arrayOf(-1 to false, 1 to true, 3 to false)
     val raGe = arrayOf(-1 to false, 1 to true, 3 to true)
     val raLe = arrayOf(-1 to true, 1 to true, 3 to false)
     val raGt = arrayOf(-1 to false, 1 to false, 3 to true)
     val raLt = arrayOf(-1 to true, 1 to false, 3 to false)
 
-    val rra1 = imklib.function(1, { DoubleType() }) { p, t -> t.set(p.getDoublePosition(0)) }
-    val rra2 = imklib.function(1, { DoubleType() }) { _, t -> t.setOne()}
+    val rra1 = ntakt.function(1, { DoubleType() }) { p, t -> t.set(p.getDoublePosition(0)) }
+    val rra2 = ntakt.function(1, { DoubleType() }) { _, t -> t.setOne()}
     val rraEq = arrayOf(-1e6 to false, 0.9 to false, 1.0 to true, 1.1 to false, 1e6 to false)
     val rraGe = arrayOf(-1e6 to false, 0.9 to false, 1.0 to true, 1.1 to true, 1e6 to true)
     val rraLe = arrayOf(-1e6 to true, 0.9 to true, 1.0 to true, 1.1 to false, 1e6 to false)
@@ -187,7 +187,7 @@ class TestLogicalExtensions {
 
     // where
     @Test fun `test where`() {
-        val data = imklib.booleans(3, 2) { it % 2 == 0 }
+        val data = ntakt.booleans(3, 2) { it % 2 == 0 }
         val expectedPoints = listOf(
                 Point(0, 0),
                 Point(2, 0),

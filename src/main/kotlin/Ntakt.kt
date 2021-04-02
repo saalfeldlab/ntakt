@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import net.imglib2.RandomAccessibleInterval as RAI
 import net.imglib2.Interval
@@ -45,11 +45,11 @@ import net.imglib2.util.ConstantUtils
 import java.math.BigInteger
 import java.util.function.BiConsumer
 import java.util.function.Supplier
-import net.imglib2.imklib.io.io as _io
+import org.ntakt.io.io as _io
 
 private fun IntArray.toLongArray() = LongArray(size) { this[it].toLong() }
 
-object imklib {
+object ntakt {
 
     fun bits(vararg dim: Long) = ArrayImgs.bits(*dim)!!
     fun bits(vararg dim: Int) = bits(*dim.toLongArray())

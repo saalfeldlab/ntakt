@@ -28,13 +28,13 @@
 
 @file:Suppress("UNCHECKED_CAST")
 
-package net.imglib2.imklib
+package org.ntakt
 
 import kotlin.Suppress
 import net.imglib2.RandomAccessible
-import net.imglib2.imklib.converter.TriConverter
 import net.imglib2.type.BooleanType
 import net.imglib2.type.Type
+import org.ntakt.converter.TriConverter
 
 fun <T : Type<T>> RandomAccessible<out BooleanType<*>>.choose(chooseOnTrue: RandomAccessible<T>,
         chooseOnFalse: RandomAccessible<T>): RandomAccessible<T> {

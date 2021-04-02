@@ -94,7 +94,7 @@ open class ExtensionsTask(extensionsIdentifier: String) : AbstractTask() {
 
 
     companion object {
-        const val group = "ImkLib extensions"
+        const val group = "ntakt extensions"
     }
 
 }

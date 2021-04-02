@@ -28,7 +28,7 @@
 
 @file:Suppress("UNCHECKED_CAST")
 
-package net.imglib2.imklib
+package org.ntakt
 
 import kotlin.Suppress
 import kotlin.jvm.JvmName
@@ -514,6 +514,6 @@ operator fun RA<RealType<*>>.times(that: RA<RealType<*>>): RA<RealType<*>> = whe
     this.type is UnsignedByteType && that.type is UnsignedIntType -> (this.asType(UnsignedByteType()) * that.asType(UnsignedIntType())) as RA<RealType<*>>
     this.type is UnsignedByteType && that.type is UnsignedShortType -> (this.asType(UnsignedByteType()) * that.asType(UnsignedShortType())) as RA<RealType<*>>
     this.type is UnsignedByteType && that.type is UnsignedByteType -> (this.asType(UnsignedByteType()) * that.asType(UnsignedByteType())) as RA<RealType<*>>
-    else -> error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
+    else -> error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${ntakt.types.realTypes.map { it::class }}.")
 }
 

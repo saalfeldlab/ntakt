@@ -26,7 +26,7 @@
 
 // auto-generated, do not modify!
 
-package net.imglib2.imklib
+package org.ntakt
 
 import kotlin.String
 import net.imglib2.converter.BiConverter

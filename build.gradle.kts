@@ -57,7 +57,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-     mainClassName = "ImkLibExampleKt"
+     mainClass.set("NtaktExampleKt")
 }
 
 buildscript {
@@ -101,8 +101,8 @@ publishing {
         create<MavenPublication>("maven") {
             from(components["kotlin"])
             pom {
-                name.set("imklib")
-                url.set("https://github.com/saalfeldlab/imklib2")
+                name.set("ntakt")
+                url.set("https://github.com/saalfeldlab/ntakt")
                 inceptionYear.set("2020")
                 licenses {
                     license {
@@ -111,14 +111,14 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/saalfeldlab/imklib2")
-                    developerConnection.set("scm:git:git@github.com:saalfeldlab/imklib2")
+                    connection.set("scm:git:git://github.com/saalfeldlab/ntakt")
+                    developerConnection.set("scm:git:git@github.com:saalfeldlab/ntakt")
                     tag.set("HEAD")
-                    url.set("https://github.com/saalfeldlab/imklib2")
+                    url.set("https://github.com/saalfeldlab/ntakt")
                 }
                 ciManagement {
                     system.set("Travis CI")
-                    url.set("https://travis-ci.com/saalfeldlab/imklib2")
+                    url.set("https://travis-ci.com/saalfeldlab/ntakt")
                 }
                 repositories {
                     add(maven("https://maven.scijava.org/content/groups/public"))

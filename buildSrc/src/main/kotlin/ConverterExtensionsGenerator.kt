@@ -35,7 +35,7 @@ private val realAndIntegerTypes = mapOf<String, KClass<out RealType<*>>>(
 fun generateConverterExtensions(`as`: String, fileName: String): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile =  FileSpec
-            .builder("net.imglib2.imklib", fileName)
+            .builder("org.ntakt", fileName)
             .addAliasedImport(container, `as`)
             .addConverterExtensions(container)
             .addTypeConversionExtensions(container)
@@ -222,7 +222,7 @@ private fun FileSpec.Builder.addComplexReadWriteConverters(container: ClassName)
         for (part in arrayOf("real", "imaginary")) {
             typedFuncSpecBuilder(part, container.parameterizedBy(ct.asTypeName()))
                     .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "complex$name${part.capitalize()}").build())
-                    .addStatement("return %T.convert(this,·%T.$part$name)", Converters::class, ClassName("net.imglib2.imklib.converter", "ComplexRealConverters"))
+                    .addStatement("return %T.convert(this,·%T.$part$name)", Converters::class, ClassName("org.ntakt.converter", "ComplexRealConverters"))
                     .build()
                     .let { addFunction(it) }
         }

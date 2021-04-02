@@ -28,7 +28,7 @@
 
 @file:Suppress("UNCHECKED_CAST")
 
-package net.imglib2.imklib
+package org.ntakt
 
 import kotlin.Suppress
 import net.imglib2.RealRandomAccessibleRealInterval

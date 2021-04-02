@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import bdv.util.BdvFunctions
 import bdv.util.BdvOptions
@@ -187,13 +187,13 @@ fun <T, U> RAI<T>.fold(d: Int, initial: U, operation: (U, RAI<T>) -> U): U = hyp
 
 fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.sum(d: Int, i: I): RAI<I> = asType(i).reduce(d) { rai1, rai2 -> rai1 + rai2 }
 fun <T: RealType<T>, R: RealType<R>> RAI<T>.sum(d: Int, r: R): RAI<R> = asType(r).reduce(d) { rai1, rai2 -> rai1 + rai2 }
-@JvmName("sumInt") fun <T: IntegerType<T>> RAI<T>.sum(d: Int): RAI<LongType> = sum(d, imklib.types.long)
-@JvmName("sumReal") fun <T: RealType<T>> RAI<T>.sum(d: Int): RAI<DoubleType> = sum(d, imklib.types.double)
+@JvmName("sumInt") fun <T: IntegerType<T>> RAI<T>.sum(d: Int): RAI<LongType> = sum(d, ntakt.types.long)
+@JvmName("sumReal") fun <T: RealType<T>> RAI<T>.sum(d: Int): RAI<DoubleType> = sum(d, ntakt.types.double)
 
 fun <T: IntegerType<T>, I: IntegerType<I>> RAI<T>.mean(d: Int, i: I): RAI<I> = sum(d, i) / (max(d) - min(d) + 1).toDouble()
 fun <T: RealType<T>, R: RealType<R>> RAI<T>.mean(d: Int, r: R): RAI<R> = sum(d, r) / (max(d) - min(d) + 1).toDouble()
-@JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int): RAI<LongType> = mean(d, imklib.types.long)
-@JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int): RAI<DoubleType> = mean(d, imklib.types.double)
+@JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int): RAI<LongType> = mean(d, ntakt.types.long)
+@JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int): RAI<DoubleType> = mean(d, ntakt.types.double)
 
 fun RAI<out BooleanType<*>>.all(): Boolean = iterable.cursor().let { c ->
     while (c.hasNext()) {
@@ -226,7 +226,7 @@ public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true): D
  * values of a [Slice] are with respect to the dimensions of a [RAI], i.e. between `0` and `dimension`, while min may be
  * non-zero, and max at `min + dimension - 1`. In other words, [RAI.isZeroMin] is ensured if necessary. Example:
  * ```kotlin
- * val data = imklib.ints(10) { it }
+ * val data = ntakt.ints(10) { it }
  * // all elements
  * val data = data[Slice()]
  * // all elements
@@ -249,7 +249,7 @@ public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true): D
  * dimensions, multiple `Slice()` will be appended as needed. To omit `Slice()` at the start or in the middle, use the
  * Ellipsis object `_el`. Only one ellipsis can be passed (more ellipses would be ambiguous). Examples:
  * ```kotlin
- * data = imklib.ints(3, 4) { it }
+ * data = ntakt.ints(3, 4) { it }
  * // all data
  * data[_el]
  * // every other column

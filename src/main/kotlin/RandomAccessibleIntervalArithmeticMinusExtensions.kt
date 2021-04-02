@@ -28,7 +28,7 @@
 
 @file:Suppress("UNCHECKED_CAST")
 
-package net.imglib2.imklib
+package org.ntakt
 
 import kotlin.Suppress
 import kotlin.jvm.JvmName
@@ -518,6 +518,6 @@ operator fun RAI<RealType<*>>.minus(that: RAI<RealType<*>>): RAI<RealType<*>> = 
     this.type is UnsignedByteType && that.type is UnsignedIntType -> (this.asType(UnsignedByteType()) - that.asType(UnsignedIntType())) as RAI<RealType<*>>
     this.type is UnsignedByteType && that.type is UnsignedShortType -> (this.asType(UnsignedByteType()) - that.asType(UnsignedShortType())) as RAI<RealType<*>>
     this.type is UnsignedByteType && that.type is UnsignedByteType -> (this.asType(UnsignedByteType()) - that.asType(UnsignedByteType())) as RAI<RealType<*>>
-    else -> error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${imklib.types.realTypes.map { it::class }}.")
+    else -> error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${ntakt.types.realTypes.map { it::class }}.")
 }
 
