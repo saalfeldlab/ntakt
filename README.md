@@ -254,26 +254,20 @@ Installation has been tested on Manjaro Linux and the notebooks have been tested
     ```
     unzip /path/to/fiji-linux64.zip
     ```
- 3. Checkout the [`fix-kotlin-engine` branch](https://github.com/scijava/scripting-kotlin/tree/fix-kotlin-engine) of the SciJava Kotlin scripting plugin, navigate to the repository, and install to unzipped `Fiji.app`:
-    ```
+ 3. Clone the SciJava Kotlin scripting plugin, navigate to the repository, and install to unzipped `Fiji.app`:
+    ```shell
     git clone https://github.com/scijava/scripting-kotlin
     cd scripting-kotlin
-    git switch fix-kotlin-engine
-    mvn -Dscijava.app.directory=../Fiji.app
+    mvn -Dscijava.app.directory=../Fiji.app # replace with path to Fiji.app as needed
     ```
   4. Navigate to `Fiji.app` dir 
      ```
      cd ../Fiji.app
      ```
-     and install additional jars:
-     1. Copy JetBrains' Trove fork from your local Maven repository into the `jars` directory. To make sure that Fiji includes both the original Trove jar and the JetBrains Trove jar, rename the JetBrains Trove jar. **WARNING**: This may have unintended side effects on your Fiji installation.
-        ```
-        cp ~/.m2/repository/org/jetbrains/intellij/deps/trove4j/1.0.20181211/trove4j-1.0.20181211.jar jars/jetbrains-trove4j-1.0.20181211.jar
-        ```
-     2. Copy the nta.kt jar from your local Maven repository into the `jars` directory (follow [these instructions to install ntakt into your local Maven repository](#Installation)):
-        ```
-        cp ~/.m2/repository/org/ntakt/ntakt/0.1.0-SNAPSHOT/ntakt-0.1.0-SNAPSHOT.jar jars/
-        ```
+     and copy the nta.kt jar from your local Maven repository into the `jars` directory (follow [these instructions to install ntakt into your local Maven repository](#Installation)):
+     ```
+     cp ~/.m2/repository/org/ntakt/ntakt/0.1.0-SNAPSHOT/ntakt-0.1.0-SNAPSHOT.jar jars/
+     ```
   5. Start Fiji
      ```
      ./ImageJ-linux64
