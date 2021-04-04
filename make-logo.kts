@@ -70,5 +70,6 @@ FileSaver(wrapped).saveAsPng("ntakt-ij.png")
 
 val wrapped2 = ARGBScreenImage(targetFramed.dimension(0).toInt(), targetFramed.dimension(1).toInt(), targetFramed.update(null))
 ImageIO.write(wrapped2.image(), "png", File("ntakt.png"))
+ImageIO.write(ARGBScreenImage(width.toInt(), height.toInt()).also { target.writeInto(it) }.image(), "png", File("ntakt-no-frame.png"))
 
 targetFramed.show("ntakt")
