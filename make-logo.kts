@@ -48,23 +48,22 @@ for (n in 0 until numSteps) {
     val colorGray = (255 shl 24) or (color shl 8) // or (color shl 8) or (color shl 16)
     val bottom: Long = (numSteps - 1 - n) * offset
     var left: Long = (numSteps -1 - n) * offset
+
     for (t in text) {
         val top = bottom + scale * letterToPixels[t]!!.dimension(1)
         val right = left + letterToPixels[t]!!.dimension(0) * scale
+        val min = longArrayOf(left, bottom)
+        val max = longArrayOf(right - 1, top - 1)
+
         val scaled = letterToPixels[t]!!.extendZero().interpolatedNearestNeighbor.scaleAndTranslate(
             scale = DoubleArray(2) { scale.toDouble() },
             translation = DoubleArray(2) { scale / 2.0 }
         )
-        val min = longArrayOf(left, bottom)
-        val max = longArrayOf(right - 1, top - 1)
-        val c1 = target[min, max].flatIterable.cursor()
-        val c2 = scaled[target[min, max].zeroMin].flatIterable.cursor()
-        while (c1.hasNext()) {
-            c1.next().let {
-                if (c2.next().integer == 1)
-                    it.set(colorGray)
-            }
+        val argb = scaled.convert(target[min, max].zeroMin, ntakt.types.argb) {
+            s1, s2, t -> t.set(if (s1.integer == 1) colorGray else s2.get())
         }
+        argb.writeInto(target[min, max].zeroMin)
+
         left = right + gap
     }
 }
