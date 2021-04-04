@@ -33,6 +33,7 @@ import net.imglib2.img.array.ArrayImgs
 import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.BooleanType
 import net.imglib2.type.NativeType
+import net.imglib2.type.numeric.ARGBType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
@@ -179,6 +180,7 @@ object ntakt {
     val io = _io
 
     object types {
+        val argb get() = ARGBType()
         val byte get() = ByteType()
         val short get() = ShortType()
         val int get() = IntType()
