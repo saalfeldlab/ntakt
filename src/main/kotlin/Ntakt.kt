@@ -47,7 +47,6 @@ import net.imglib2.type.operators.SetZero
 import net.imglib2.util.ConstantUtils
 import java.math.BigInteger
 import java.util.function.BiConsumer
-import java.util.function.Consumer
 import java.util.function.Supplier
 import org.ntakt.io.io as _io
 
@@ -200,24 +199,24 @@ object ntakt {
 
     fun <T: BooleanType<T>> where(rai: RAI<T>) = rai.where()
 
-    infix fun <T> RA<T>.`as rai`(interval: Interval) = this as? RAI<T> ?: this[interval]
-    inline fun <A> loop(rai: RAI<A>, crossinline action: (A) -> Unit) = LoopBuilder
-        .setImages(rai)
-        .forEachPixel(Consumer { a -> action(a) })
-    inline fun <A, B> loop(rai1: RAI<A>, ra2: RA<B>, crossinline action: (A, B) -> Unit) = LoopBuilder
-        .setImages(rai1, ra2 `as rai` rai1)
-        .forEachPixel(BiConsumer { a, b -> action(a, b) })
-    inline fun <A, B, C> loop(rai1: RAI<A>, ra2: RA<B>, ra3: RA<C>, crossinline action: (A, B, C) -> Unit) = LoopBuilder
-        .setImages(rai1, ra2 `as rai` rai1, ra3 `as rai` rai1)
-        .forEachPixel(LoopBuilder.TriConsumer { a, b, c -> action(a, b, c) })
-    inline fun <A, B, C, D> loop(rai1: RAI<A>, ra2: RA<B>, ra3: RA<C>, ra4: RA<D>, crossinline action: (A, B, C, D) -> Unit) = LoopBuilder
-        .setImages(rai1, ra2 `as rai` rai1, ra3 `as rai` rai1, ra4 `as rai` rai1)
-        .forEachPixel(LoopBuilder.FourConsumer { a, b, c, d -> action(a, b, c, d) })
-    inline fun <A, B, C, D, E> loop(rai1: RAI<A>, ra2: RA<B>, ra3: RA<C>, ra4: RA<D>, ra5: RA<E>, crossinline action: (A, B, C, D, E) -> Unit) = LoopBuilder
-        .setImages(rai1, ra2 `as rai` rai1, ra3 `as rai` rai1, ra4 `as rai` rai1, ra5 `as rai` rai1)
-        .forEachPixel(LoopBuilder.FiveConsumer { a, b, c, d, e -> action(a, b, c, d, e) })
-    inline fun <A, B, C, D, E, F> loop(rai1: RAI<A>, ra2: RA<B>, ra3: RA<C>, ra4: RA<D>, ra5: RA<E>, ra6: RA<F>, crossinline action: (A, B, C, D, E, F) -> Unit) = LoopBuilder
-        .setImages(rai1, ra2 `as rai` rai1, ra3 `as rai` rai1, ra4 `as rai` rai1, ra5 `as rai` rai1, ra6 `as rai` rai1)
-        .forEachPixel(LoopBuilder.SixConsumer { a, b, c, d, e, f -> action(a, b, c, d, e, f) })
+    infix fun <T> RA<T>.asRAI(interval: Interval) = this as? RAI<T> ?: this[interval]
+    fun <A> loop(a: RAI<A>) = LoopBuilder.setImages(a)
+    fun <A, B> loop(a: RAI<A>, b: RA<B>) = LoopBuilder.setImages(a, b asRAI a)
+    fun <A, B, C> loop(a: RAI<A>, b: RA<B>, c: RA<C>) = LoopBuilder.setImages(a, b asRAI a, c asRAI a)
+    fun <A, B, C, D> loop(a: RAI<A>, b: RA<B>, c: RA<C>, d: RA<D>) = LoopBuilder.setImages(a, b asRAI a, c asRAI a, d asRAI a)
+    fun <A, B, C, D, E> loop(a: RAI<A>, b: RA<B>, c: RA<C>, d: RA<D>, e: RA<E>) = LoopBuilder
+        .setImages(a, b asRAI a, c asRAI a, d asRAI a, e asRAI a)
+    fun <A, B, C, D, E, F> loop(a: RAI<A>, b: RA<B>, c: RA<C>, d: RA<D>, e: RA<E>, f: RA<F>) = LoopBuilder
+        .setImages(a, b asRAI a, c asRAI a, d asRAI a, e asRAI a, f asRAI a)
+
+    inline fun <A> loop(a: RAI<A>, crossinline action: (A) -> Unit) = loop(a).forEachPixel { _a -> action(_a) }
+    inline fun <A, B> loop(a: RAI<A>, b: RA<B>, crossinline action: (A, B) -> Unit) = loop(a, b).forEachPixel { _a, _b -> action(_a, _b) }
+    inline fun <A, B, C> loop(a: RAI<A>, b: RA<B>, c: RA<C>, crossinline action: (A, B, C) -> Unit) = loop(a, b, c).forEachPixel { _a, _b, _c -> action(_a, _b, _c) }
+    inline fun <A, B, C, D> loop(a: RAI<A>, b: RA<B>, c: RA<C>, d: RA<D>, crossinline action: (A, B, C, D) -> Unit) = loop(a, b, c, d)
+        .forEachPixel { _a, _b, _c, _d -> action(_a, _b, _c, _d) }
+    inline fun <A, B, C, D, E> loop(a: RAI<A>, b: RA<B>, c: RA<C>, d: RA<D>, e: RA<E>, crossinline action: (A, B, C, D, E) -> Unit) = loop(a, b, c, d, e)
+        .forEachPixel { _a, _b, _c, _d, _e -> action(_a, _b, _c, _d, _e) }
+    inline fun <A, B, C, D, E, F> loop(a: RAI<A>, b: RA<B>, c: RA<C>, d: RA<D>, e: RA<E>, f: RA<F>, crossinline action: (A, B, C, D, E, F) -> Unit) = loop(a, b, c, d, e, f)
+        .forEachPixel { _a, _b, _c, _d, _e, _f -> action(_a, _b, _c, _d, _e, _f) }
 
 }
