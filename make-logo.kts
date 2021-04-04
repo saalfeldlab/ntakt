@@ -59,10 +59,7 @@ for (n in 0 until numSteps) {
             scale = DoubleArray(2) { scale.toDouble() },
             translation = DoubleArray(2) { scale / 2.0 }
         )
-        val argb = scaled.convert(target[min, max].zeroMin, ntakt.types.argb) {
-            s1, s2, t -> t.set(if (s1.integer == 1) colorGray else s2.get())
-        }
-        argb.writeInto(target[min, max].zeroMin)
+        ntakt.loop(target[min, max].zeroMin, scaled) { a, b -> if (b.integer == 1) a.set(colorGray) }
 
         left = right + gap
     }

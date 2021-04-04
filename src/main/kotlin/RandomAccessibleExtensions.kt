@@ -94,7 +94,7 @@ val <T: NumericType<T>> RA<T>.interpolatedNLinear get() = interpolate(NLinearInt
 val RA<ARGBType>.interpoalteNLinear get() = interpolate(NLinearInterpolatorARGBFactory())
 val <T: RealType<T>> RA<T>.interpolatedLanczos get() = interpolate(LanczosInterpolatorFactory())
 
-fun <T: Type<T>> RA<T>.writeInto(target: RAI<T>) = LoopBuilder.setImages(this[target], target).forEachPixel(BiConsumer { s, t -> t.set(s) })
+fun <T: Type<T>> RA<T>.writeInto(target: RAI<T>) = ntakt.loop(this[target], target) { s, t -> t.set(s) }
 
 fun <T> RA<*>.constant(constant: T) = ConstantUtils.constantRandomAccessible(constant, nDim)
 
