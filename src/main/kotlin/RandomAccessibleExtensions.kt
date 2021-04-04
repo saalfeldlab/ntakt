@@ -89,7 +89,7 @@ fun <T> RA<T>.interval(interval: Interval): RAI<T> {
 }
 
 fun <T> RA<T>.interpolate(factory: InterpolatorFactory<T, RA<T>>) = Views.interpolate(this, factory)
-val <T> RA<T>.interpolatedNearestNeigbor get() = interpolate(NearestNeighborInterpolatorFactory())
+val <T> RA<T>.interpolatedNearestNeighbor get() = interpolate(NearestNeighborInterpolatorFactory())
 val <T: NumericType<T>> RA<T>.interpolatedNLinear get() = interpolate(NLinearInterpolatorFactory())
 val RA<ARGBType>.interpoalteNLinear get() = interpolate(NLinearInterpolatorARGBFactory())
 val <T: RealType<T>> RA<T>.interpolatedLanczos get() = interpolate(LanczosInterpolatorFactory())
