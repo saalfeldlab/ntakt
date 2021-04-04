@@ -79,8 +79,8 @@ operator fun <T> RA<T>.get(min: IntArray, max: IntArray): RAI<T> = this[min .. m
 operator fun <T> RA<T>.get(min: LongArray, max: LongArray): RAI<T> = this[min .. max]
 operator fun <T> RA<T>.get(interval: Interval): RAI<T> = interval(interval)
 
-fun <T> RA<T>.interval(min: LongArray, max: LongArray) = Views.interval(this, min, max)
-fun <T> RA<T>.interval(min: IntArray, max: IntArray) = Views.interval(this, min.longs, max.longs)
+fun <T> RA<T>.interval(min: LongArray, max: LongArray): RAI<T> = Views.interval(this, min, max)
+fun <T> RA<T>.interval(min: IntArray, max: IntArray): RAI<T> = Views.interval(this, min.longs, max.longs)
 fun <T> RA<T>.interval(vararg dims: Long) = interval(LongArray(dims.size) { 0L }, LongArray(dims.size) { dims[it] - 1L })
 fun <T> RA<T>.interval(vararg dims: Int) = interval(*dims.longs)
 fun <T> RA<T>.interval(interval: Interval): RAI<T> {
