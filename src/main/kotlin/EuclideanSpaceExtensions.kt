@@ -25,6 +25,8 @@
  */
 package org.ntakt
 
+import net.imglib2.Dimensions
 import net.imglib2.EuclideanSpace
 
 val EuclideanSpace.nDim get() = numDimensions()
+fun Dimensions.dim(d: Int) = dimension(d)
