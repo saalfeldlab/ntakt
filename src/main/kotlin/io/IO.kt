@@ -27,24 +27,35 @@ package org.ntakt.io
 
 import loci.formats.FormatTools
 import loci.formats.ImageReader
-import net.imglib2.RandomAccessibleInterval
+import net.imglib2.display.screenimage.awt.ARGBScreenImage
 import net.imglib2.img.array.ArrayImgs
-import org.ntakt.access.*
+import net.imglib2.type.numeric.ARGBType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.view.Views
+import org.ntakt.access.*
+import org.ntakt.dim
+import org.ntakt.nDim
+import org.ntakt.writeInto
+import org.ntakt.zeroMin
+import java.awt.image.BufferedImage
+import java.awt.image.DataBufferInt
+import java.io.File
+import java.net.URL
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import javax.imageio.ImageIO
+import net.imglib2.RandomAccessibleInterval as RAI
 
 object io {
 
-    fun open(source: String): RandomAccessibleInterval<RealType<*>> {
+    fun open(source: String): RAI<RealType<*>> {
         val reader = ImageReader()
         reader.setId(source)
         val w = reader.sizeX.toLong()
         val h = reader.sizeY.toLong()
         val slices = (0 until reader.imageCount).map {
             if (reader.isRGB)
-                ArrayImgs.ints(IntBufferAccess(reader.readAsBuffer(it)), w, h) as RandomAccessibleInterval<RealType<*>>
+                ArrayImgs.ints(IntBufferAccess(reader.readAsBuffer(it)), w, h) as RAI<RealType<*>>
             else
                 when (reader.pixelType) {
                     FormatTools.INT8 -> ArrayImgs.bytes(ByteBufferAccess(reader.readAsBuffer(it)), w, h)
@@ -56,13 +67,43 @@ object io {
                     FormatTools.FLOAT -> ArrayImgs.floats(FloatBufferAccess(reader.readAsBuffer(it)), w, h)
                     FormatTools.DOUBLE -> ArrayImgs.doubles(DoubleBufferAccess(reader.readAsBuffer(it)), w, h)
                     else -> error("Pixel type not supported: ${reader.pixelType}")
-                } as RandomAccessibleInterval<RealType<*>>
+                } as RAI<RealType<*>>
         }
         return if (slices.size == 1) slices[0] else Views.stack(slices)
     }
 
     private fun ImageReader.readAsBuffer(index: Int)
             = ByteBuffer.wrap(reader.openBytes(index)).order(if (reader.isLittleEndian) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN)
+
+    fun openARGB(path: File): RAI<ARGBType> = ImageIO.read(path).toRaiARGB()
+    fun openARGB(url: URL): RAI<ARGBType> = ImageIO.read(url).toRaiARGB()
+    fun openARGB(pathOrUrl: String): RAI<ARGBType> {
+        val isURL = try {
+            URL(pathOrUrl).toURI()
+            true
+        } catch (e: Exception) {
+            false
+        }
+        return if (isURL) openARGB(URL(pathOrUrl)) else openARGB(File(pathOrUrl))
+    }
+
+    fun writeARGB(rai: RAI<ARGBType>, path: String, formatName: String? = null) = writeARGB(rai, File(path), formatName)
+    fun writeARGB(rai: RAI<ARGBType>, path: File, formatName: String? = null) =
+        ImageIO.write(rai.asScreenImage().image(), formatName ?: path.extension, path)
+
+    private fun BufferedImage.toRaiARGB(): RAI<ARGBType> {
+        val data = when (val buffer = raster.dataBuffer) {
+            is DataBufferInt -> buffer.data
+            else -> IntArray(width * height).also { getRGB(0,0, width, height, it, 0, width) }
+        }
+        return ARGBScreenImage(width, height, data)
+    }
+
+    private fun RAI<ARGBType>.asScreenImage() = this as? ARGBScreenImage ?: copyToScreenImage()
+    private fun RAI<ARGBType>.copyToScreenImage(): ARGBScreenImage {
+        require(nDim == 2)
+        return ARGBScreenImage(dim(0).toInt(), dim(1).toInt()).also { zeroMin.writeInto(it) }
+    }
 
     val n5 = org.ntakt.io.n5.n5
 }
