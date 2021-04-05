@@ -89,6 +89,18 @@ fun <T> RAI<T>.extendMirrorSingle(): RA<T> = Views.extendMirrorSingle(this)
 fun <T> RAI<T>.extendPeriodic(): RA<T> = Views.extendPeriodic(this)
 fun <T: RealType<T>> RAI<T>.extendRandom(min: Double, max: Double): RA<T> = Views.extendRandom(this, min, max)
 
+fun <T: Type<T>> RAI<T>.expandValue(extension: T, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
+fun <T: RealType<T>> RAI<T>.expandValue(extension: Float, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
+fun <T: RealType<T>> RAI<T>.expandValue(extension: Double, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
+fun <T: IntegerType<T>> RAI<T>.expandValue(extension: Int, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
+fun <T: IntegerType<T>> RAI<T>.expandValue(extension: Long, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
+fun <T> RAI<T>.expandBorder(vararg border: Long): RAI<T> = Views.expandBorder(this, *border)
+fun <T: NumericType<T>> RAI<T>.expandZero(vararg border: Long): RAI<T> = Views.expandZero(this, *border)
+fun <T> RAI<T>.expandMirrorDouble(vararg border: Long): RAI<T> = Views.expandMirrorDouble(this, *border)
+fun <T> RAI<T>.expandMirrorSingle(vararg border: Long): RAI<T> = Views.expandMirrorSingle(this, *border)
+fun <T> RAI<T>.expandPeriodic(vararg border: Long): RAI<T> = Views.expandPeriodic(this, *border)
+fun <T: RealType<T>> RAI<T>.expandRandom(min: Double, max: Double, vararg border: Long): RAI<T> = Views.expandRandom(this, min, max, *border)
+
 val <T> RAI<T>.flatStringRepresentation: String get() = "$this: ${flatIterable.joinToString(", ", "[", "]")}"
 
 val RAI<*>.isZeroMin: Boolean get() = Views.isZeroMin(this)
