@@ -10,7 +10,8 @@ import javax.imageio.ImageIO
 import org.ntakt.*
 
 fun ByteArray.asImg(vararg dims: Int) = ntakt.bytes(*dims) { this[it] }
-val scale = 30
+val scale = IntArray(2) { 30 }
+val translation = scale.map { it / 2.0 }.toDoubleArray()
 val numSteps = 5
 val offset = 11L
 val startBrightness = 0.2
@@ -19,7 +20,7 @@ val gap = 1
 val padding = longArrayOf(55, 100)
 
 
-val letterToPixels = mapOf(
+val letters = mapOf(
     'n' to byteArrayOf(1, 1, 1, 1, 0, 1, 1, 0, 1).asImg(3, 3),
     't' to byteArrayOf(1, 1, 1, 0, 1, 0, 0, 1, 0).asImg(3, 3),
     'a' to byteArrayOf(0, 1, 0, 1, 0, 1, 1, 1, 1).asImg(3, 3),
@@ -28,8 +29,8 @@ val letterToPixels = mapOf(
 )
 
 val text = "nta.kt"
-val height = text.map { letterToPixels[it]!!.dimension(1) * scale }.max()!! + offset * (numSteps - 1)
-val width = text.map { letterToPixels[it]!!.dimension(0) * scale }.sum() + gap * (text.length - 1) + offset * (numSteps - 1)
+val height = text.map { letters[it]!!.dim(1) * scale[1] }.max()!! + offset * (numSteps - 1)
+val width = text.map { letters[it]!!.dim(0) * scale[0] }.sum() + gap * (text.length - 1) + offset * (numSteps - 1)
 
 val target = ntakt.argbs(width, height)
 
@@ -37,22 +38,15 @@ for (n in 0 until numSteps) {
     val brightness = startBrightness + (stopBrightness - startBrightness) / numSteps * n
     val color = (255 * brightness).toInt()
     val colorGray = (255 shl 24) or (color shl 8) // or (color shl 8) or (color shl 16)
-    val bottom: Long = (numSteps - 1 - n) * offset
-    var left: Long = (numSteps -1 - n) * offset
+    val min = LongArray(2) { (numSteps - 1 - n) * offset }
 
     for (t in text) {
-        val top = bottom + scale * letterToPixels[t]!!.dimension(1)
-        val right = left + letterToPixels[t]!!.dimension(0) * scale
-        val min = longArrayOf(left, bottom)
-        val max = longArrayOf(right - 1, top - 1)
+        val max = LongArray(2) { min[it] + scale[it] * letters[t]!!.dim(it) - 1 }
 
-        val scaled = letterToPixels[t]!!.extendZero().interpolatedNearestNeighbor.scaleAndTranslate(
-            scale = DoubleArray(2) { scale.toDouble() },
-            translation = DoubleArray(2) { scale / 2.0 }
-        )
+        val scaled = letters[t]!!.extendZero().interpolatedNearestNeighbor.scaleAndTranslate(scale = scale.map { it.toDouble() }.toDoubleArray(), translation = translation)
         ntakt.loop(target[min, max].zeroMin, scaled) { a, b -> if (b.integer == 1) a.set(colorGray) }
 
-        left = right + gap
+        min[0] = max[0] + 1 + gap
     }
 }
 
