@@ -2,15 +2,11 @@
 
 @file:MavenRepository("scijava", "https://maven.scijava.org/content/groups/public")
 @file:DependsOn("org.ntakt:ntakt:0.1.0-SNAPSHOT")
-@file:DependsOn("net.imglib2:imglib2-ij:2.0.0-beta-46")
 //COMPILER_OPTS -jvm-target 1.8
 
 import java.io.File
 import javax.imageio.ImageIO
 
-import ij.io.FileSaver
-import net.imglib2.display.screenimage.awt.ARGBScreenImage
-import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ntakt.*
 
 fun ByteArray.asImg(vararg dims: Int) = ntakt.bytes(*dims) { this[it] }
@@ -20,8 +16,7 @@ val offset = 11L
 val startBrightness = 0.2
 val stopBrightness = 1.0
 val gap = 1
-val frameX = 55L
-val frameY = 100L
+val padding = longArrayOf(55, 100)
 
 
 val letterToPixels = mapOf(
@@ -32,15 +27,11 @@ val letterToPixels = mapOf(
     'k' to byteArrayOf(1, 0, 1, 1, 1, 0, 1, 0, 1).asImg(3, 3)
 )
 
-println(letterToPixels)
-
-
 val text = "nta.kt"
 val height = text.map { letterToPixels[it]!!.dimension(1) * scale }.max()!! + offset * (numSteps - 1)
 val width = text.map { letterToPixels[it]!!.dimension(0) * scale }.sum() + gap * (text.length - 1) + offset * (numSteps - 1)
 
-val targetFramed = ntakt.argbs(width + 2*frameX, height + 2*frameY)
-val target = targetFramed[longArrayOf(frameX, frameY), longArrayOf(width, height)].zeroMin
+val target = ntakt.argbs(width, height)
 
 for (n in 0 until numSteps) {
     val brightness = startBrightness + (stopBrightness - startBrightness) / numSteps * n
@@ -65,11 +56,8 @@ for (n in 0 until numSteps) {
     }
 }
 
-val wrapped = ImageJFunctions.wrapRGB(targetFramed, "ntakt")
-FileSaver(wrapped).saveAsPng("ntakt-ij.png")
+ntakt.io.writeARGB(target, "ntakt-no-padding.png")
+ntakt.io.writeARGB(target.expandZero(*padding), "ntakt.png")
 
-val wrapped2 = ARGBScreenImage(targetFramed.dimension(0).toInt(), targetFramed.dimension(1).toInt(), targetFramed.update(null))
-ImageIO.write(wrapped2.image(), "png", File("ntakt.png"))
-ImageIO.write(ARGBScreenImage(width.toInt(), height.toInt()).also { target.writeInto(it) }.image(), "png", File("ntakt-no-frame.png"))
+val bdv = target.expandZero(*padding).show("ntakt")
 
-targetFramed.show("ntakt")
