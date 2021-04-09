@@ -151,3 +151,5 @@ fun RealInterval.transformBoundingBox(transformation: AffineGet): RealInterval {
 val RealInterval.smallestsContaining get() = Intervals.smallestContainingInterval(this)
 
 val Interval.isEmpty: Boolean get() = Intervals.isEmpty(this)
+
+val Interval.slice: Array<out Slicing> get() = Array(nDim) { min(it) sl (max(it) + 1) }
