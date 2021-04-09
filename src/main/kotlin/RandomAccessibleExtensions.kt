@@ -49,6 +49,10 @@ import net.imglib2.RandomAccessibleInterval as RAI
 operator fun <T> RA<T>.get(vararg position: Long): T = getAt(*position)
 operator fun <T> RA<T>.get(vararg position: Int): T = getAt(*position)
 operator fun <T> RA<T>.get(position: Localizable): T = getAt(position)
+@JvmName("getLongArrayRA")
+operator fun <T> RA<T>.get(position: LongArray): T = get(*position)
+@JvmName("getIntArrayRA")
+operator fun <T> RA<T>.get(position: IntArray): T = get(*position)
 
 fun <T> RA<T>.translate(vararg translation: Long) = Views.translate(this, *translation)
 fun <T> RA<T>.translate(translation: Localizable) = translate(*translation.positionAsLongArray())
