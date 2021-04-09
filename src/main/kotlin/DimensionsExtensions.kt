@@ -25,6 +25,10 @@
  */
 package org.ntakt
 
-import net.imglib2.EuclideanSpace
+import net.imglib2.Dimensions
+import net.imglib2.Point
 
-val EuclideanSpace.nDim get() = numDimensions()
+fun Dimensions.dim(d: Int) = dimension(d)
+val Dimensions.dimsAsLongs: LongArray get() = dimensionsAsLongArray()
+val Dimensions.dimsAsInts: IntArray get() = IntArray(numDimensions()) { dim(it).toInt() }
+val Dimensions.dimsAsPoint: Point get() = dimensionsAsPoint()
