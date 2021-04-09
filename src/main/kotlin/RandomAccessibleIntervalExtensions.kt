@@ -281,6 +281,11 @@ operator fun <T> RAI<T>.get(vararg slicing: Slicing): RAI<T> {
     return applyHyperSlicesForPositions(positions).applyCompleteSlicing(slices)
 }
 
+@JvmName("getArraySlicing")
+operator fun <T> RAI<T>.get(slicing: Array<out Slicing>): RAI<T> = get(*slicing)
+operator fun <T> RAI<T>.get(slicing: Collection<out Slicing>): RAI<T> = this[slicing.toTypedArray()]
+operator fun <T> RAI<T>.get(slicing: Iterable<out Slicing>): RAI<T> = this[slicing.map { it }]
+
 private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Sanitized> {
     require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }
     require(slicing.count { it == _el } <= 1) { "Cannot use more than 1 Ellipsis object. Slicing: ${slicing.toList()}" }
