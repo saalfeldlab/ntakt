@@ -51,32 +51,30 @@ import java.util.function.BiConsumer
 import java.util.function.Supplier
 import org.ntakt.io.io as _io
 
-private fun IntArray.toLongArray() = LongArray(size) { this[it].toLong() }
-
 object ntakt {
 
     fun bits(vararg dim: Long) = ArrayImgs.bits(*dim)!!
-    fun bits(vararg dim: Int) = bits(*dim.toLongArray())
+    fun bits(vararg dim: Int) = bits(*dim.longs)
     fun booleans(vararg dim: Long) = ArrayImgs.booleans(*dim)!!
-    fun booleans(vararg dim: Int) = booleans(*dim.toLongArray())
+    fun booleans(vararg dim: Int) = booleans(*dim.longs)
     fun <A: LongAccess> bits(access: A, vararg dim: Long) = ArrayImgs.bits(access, *dim)
     fun <A: LongAccess> bits(access: A, vararg dim: Int) = bits(access, *dim.longs)
     fun <A: BooleanAccess> booleans(access: A, vararg dim: Long) = ArrayImgs.booleans(access, *dim)
     fun <A: BooleanAccess> booleans(access: A, vararg dim: Int) = booleans(access, *dim.longs)
 
     fun argbs(vararg dim: Long) = ArrayImgs.argbs(*dim)!!
-    fun argbs(vararg dim: Int) = argbs(*dim.toLongArray())
+    fun argbs(vararg dim: Int) = argbs(*dim.longs)
     fun <A: IntAccess> argbs(access: A, vararg dim: Long) = ArrayImgs.argbs(access, *dim)
     fun <A: IntAccess> argbs(access: A, vararg dim: Int) = argbs(access, *dim.longs)
 
     fun bytes(vararg dim: Long) = ArrayImgs.bytes(*dim)!!
-    fun bytes(vararg dim: Int) = bytes(*dim.toLongArray())
+    fun bytes(vararg dim: Int) = bytes(*dim.longs)
     fun shorts(vararg dim: Long) = ArrayImgs.shorts(*dim)!!
-    fun shorts(vararg dim: Int) = shorts(*dim.toLongArray())
+    fun shorts(vararg dim: Int) = shorts(*dim.longs)
     fun ints(vararg dim: Long) = ArrayImgs.ints(*dim)!!
-    fun ints(vararg dim: Int) = ints(*dim.toLongArray())
+    fun ints(vararg dim: Int) = ints(*dim.longs)
     fun longs(vararg dim: Long) = ArrayImgs.longs(*dim)!!
-    fun longs(vararg dim: Int) = longs(*dim.toLongArray())
+    fun longs(vararg dim: Int) = longs(*dim.longs)
     fun <A: ByteAccess> bytes(access: A, vararg dim: Long) = ArrayImgs.bytes(access, *dim)
     fun <A: ByteAccess> bytes(access: A, vararg dim: Int) = bytes(access, *dim.longs)
     fun <A: ShortAccess> shorts(access: A, vararg dim: Long) = ArrayImgs.shorts(access, *dim)
@@ -87,13 +85,13 @@ object ntakt {
     fun <A: LongAccess> longs(access: A, vararg dim: Int) = longs(access, *dim.longs)
 
     fun unsignedBytes(vararg dim: Long) = ArrayImgs.unsignedBytes(*dim)!!
-    fun unsignedBytes(vararg dim: Int) = unsignedBytes(*dim.toLongArray())
+    fun unsignedBytes(vararg dim: Int) = unsignedBytes(*dim.longs)
     fun unsignedShorts(vararg dim: Long) = ArrayImgs.unsignedShorts(*dim)!!
-    fun unsignedShorts(vararg dim: Int) = unsignedShorts(*dim.toLongArray())
+    fun unsignedShorts(vararg dim: Int) = unsignedShorts(*dim.longs)
     fun unsignedInts(vararg dim: Long) = ArrayImgs.unsignedInts(*dim)!!
-    fun unsignedInts(vararg dim: Int) = unsignedInts(*dim.toLongArray())
+    fun unsignedInts(vararg dim: Int) = unsignedInts(*dim.longs)
     fun unsignedLongs(vararg dim: Long) = ArrayImgs.unsignedLongs(*dim)!!
-    fun unsignedLongs(vararg dim: Int) = unsignedLongs(*dim.toLongArray())
+    fun unsignedLongs(vararg dim: Int) = unsignedLongs(*dim.longs)
     fun <A: ByteAccess> unsignedBytes(access: A, vararg dim: Long) = ArrayImgs.unsignedBytes(access, *dim)
     fun <A: ByteAccess> unsignedBytes(access: A, vararg dim: Int) = unsignedBytes(access, *dim.longs)
     fun <A: ShortAccess> unsignedShorts(access: A, vararg dim: Long) = ArrayImgs.unsignedShorts(access, *dim)
@@ -104,15 +102,15 @@ object ntakt {
     fun <A: LongAccess> unsignedLongs(access: A, vararg dim: Int) = unsignedLongs(access, *dim.longs)
 
     fun unsigned2Bits(vararg dim: Long) = ArrayImgs.unsigned2Bits(*dim)!!
-    fun unsigned2Bits(vararg dim: Int) = unsigned2Bits(*dim.toLongArray())
+    fun unsigned2Bits(vararg dim: Int) = unsigned2Bits(*dim.longs)
     fun unsigned4Bits(vararg dim: Long) = ArrayImgs.unsigned4Bits(*dim)!!
-    fun unsigned4Bits(vararg dim: Int) = unsigned4Bits(*dim.toLongArray())
+    fun unsigned4Bits(vararg dim: Int) = unsigned4Bits(*dim.longs)
     fun unsigned12Bits(vararg dim: Long) = ArrayImgs.unsigned12Bits(*dim)!!
-    fun unsigned12Bits(vararg dim: Int) = unsigned12Bits(*dim.toLongArray())
+    fun unsigned12Bits(vararg dim: Int) = unsigned12Bits(*dim.longs)
     fun unsigned128Bits(vararg dim: Long) = ArrayImgs.unsigned128Bits(*dim)!!
-    fun unsigned128Bits(vararg dim: Int) = unsigned128Bits(*dim.toLongArray())
+    fun unsigned128Bits(vararg dim: Int) = unsigned128Bits(*dim.longs)
     fun unsignedVariableBitLengths(nbits: Int, vararg dim: Long) = ArrayImgs.unsignedVariableBitLengths(nbits, *dim)!!
-    fun unsignedVariableBitLengths(nbits: Int, vararg dim: Int) = unsignedVariableBitLengths(nbits, *dim.toLongArray())
+    fun unsignedVariableBitLengths(nbits: Int, vararg dim: Int) = unsignedVariableBitLengths(nbits, *dim.longs)
     fun <A: LongAccess> unsigned2Bits(access: A, vararg dim: Long) = ArrayImgs.unsigned2Bits(access, *dim)
     fun <A: LongAccess> unsigned2Bits(access: A, vararg dim: Int) = unsigned2Bits(access, *dim.longs)
     fun <A: LongAccess> unsigned4Bits(access: A, vararg dim: Long) = ArrayImgs.unsigned4Bits(access, *dim)
@@ -123,18 +121,18 @@ object ntakt {
     fun <A: LongAccess> unsignedVariableBitLengths(access: A, nbits: Int, vararg dim: Int) = unsignedVariableBitLengths(access, nbits, *dim.longs)
 
     fun floats(vararg dim: Long) = ArrayImgs.floats(*dim)!!
-    fun floats(vararg dim: Int) = floats(*dim.toLongArray())
+    fun floats(vararg dim: Int) = floats(*dim.longs)
     fun doubles(vararg dim: Long) = ArrayImgs.doubles(*dim)!!
-    fun doubles(vararg dim: Int) = doubles(*dim.toLongArray())
+    fun doubles(vararg dim: Int) = doubles(*dim.longs)
     fun <A: FloatAccess> floats(access: A, vararg dim: Long) = ArrayImgs.floats(access, *dim)
     fun <A: FloatAccess> floats(access: A, vararg dim: Int) = floats(access, *dim.longs)
     fun <A: DoubleAccess> doubles(access: A, vararg dim: Long) = ArrayImgs.doubles(access, *dim)
     fun <A: DoubleAccess> doubles(access: A, vararg dim: Int) = doubles(access, *dim.longs)
 
     fun complexFloats(vararg dim: Long) = ArrayImgs.complexFloats(*dim)!!
-    fun complexFloats(vararg dim: Int) = complexFloats(*dim.toLongArray())
+    fun complexFloats(vararg dim: Int) = complexFloats(*dim.longs)
     fun complexDoubles(vararg dim: Long) = ArrayImgs.complexDoubles(*dim)!!
-    fun complexDoubles(vararg dim: Int) = complexDoubles(*dim.toLongArray())
+    fun complexDoubles(vararg dim: Int) = complexDoubles(*dim.longs)
     fun <A: FloatAccess> complexFloats(access: A, vararg dim: Long) = ArrayImgs.complexFloats(access, *dim)
     fun <A: FloatAccess> complexFloats(access: A, vararg dim: Int) = complexFloats(access, *dim.longs)
     fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Long) = ArrayImgs.complexDoubles(access, *dim)
