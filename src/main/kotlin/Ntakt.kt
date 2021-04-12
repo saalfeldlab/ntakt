@@ -31,6 +31,7 @@ import net.imglib2.Interval
 import net.imglib2.RealLocalizable
 import net.imglib2.img.array.ArrayImg
 import net.imglib2.img.array.ArrayImgs
+import net.imglib2.img.basictypeaccess.*
 import net.imglib2.loops.LoopBuilder
 import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.BooleanType
@@ -58,9 +59,15 @@ object ntakt {
     fun bits(vararg dim: Int) = bits(*dim.toLongArray())
     fun booleans(vararg dim: Long) = ArrayImgs.booleans(*dim)!!
     fun booleans(vararg dim: Int) = booleans(*dim.toLongArray())
+    fun <A: LongAccess> bits(access: A, vararg dim: Long) = ArrayImgs.bits(access, *dim)
+    fun <A: LongAccess> bits(access: A, vararg dim: Int) = bits(access, *dim.longs)
+    fun <A: BooleanAccess> booleans(access: A, vararg dim: Long) = ArrayImgs.booleans(access, *dim)
+    fun <A: BooleanAccess> booleans(access: A, vararg dim: Int) = booleans(access, *dim.longs)
 
     fun argbs(vararg dim: Long) = ArrayImgs.argbs(*dim)!!
     fun argbs(vararg dim: Int) = argbs(*dim.toLongArray())
+    fun <A: IntAccess> argbs(access: A, vararg dim: Long) = ArrayImgs.argbs(access, *dim)
+    fun <A: IntAccess> argbs(access: A, vararg dim: Int) = argbs(access, *dim.longs)
 
     fun bytes(vararg dim: Long) = ArrayImgs.bytes(*dim)!!
     fun bytes(vararg dim: Int) = bytes(*dim.toLongArray())
@@ -70,6 +77,14 @@ object ntakt {
     fun ints(vararg dim: Int) = ints(*dim.toLongArray())
     fun longs(vararg dim: Long) = ArrayImgs.longs(*dim)!!
     fun longs(vararg dim: Int) = longs(*dim.toLongArray())
+    fun <A: ByteAccess> bytes(access: A, vararg dim: Long) = ArrayImgs.bytes(access, *dim)
+    fun <A: ByteAccess> bytes(access: A, vararg dim: Int) = bytes(access, *dim.longs)
+    fun <A: ShortAccess> shorts(access: A, vararg dim: Long) = ArrayImgs.shorts(access, *dim)
+    fun <A: ShortAccess> shorts(access: A, vararg dim: Int) = shorts(access, *dim.longs)
+    fun <A: IntAccess> ints(access: A, vararg dim: Long) = ArrayImgs.ints(access, *dim)
+    fun <A: IntAccess> ints(access: A, vararg dim: Int) = ints(access, *dim.longs)
+    fun <A: LongAccess> longs(access: A, vararg dim: Long) = ArrayImgs.longs(access, *dim)
+    fun <A: LongAccess> longs(access: A, vararg dim: Int) = longs(access, *dim.longs)
 
     fun unsignedBytes(vararg dim: Long) = ArrayImgs.unsignedBytes(*dim)!!
     fun unsignedBytes(vararg dim: Int) = unsignedBytes(*dim.toLongArray())
@@ -79,6 +94,14 @@ object ntakt {
     fun unsignedInts(vararg dim: Int) = unsignedInts(*dim.toLongArray())
     fun unsignedLongs(vararg dim: Long) = ArrayImgs.unsignedLongs(*dim)!!
     fun unsignedLongs(vararg dim: Int) = unsignedLongs(*dim.toLongArray())
+    fun <A: ByteAccess> unsignedBytes(access: A, vararg dim: Long) = ArrayImgs.unsignedBytes(access, *dim)
+    fun <A: ByteAccess> unsignedBytes(access: A, vararg dim: Int) = unsignedBytes(access, *dim.longs)
+    fun <A: ShortAccess> unsignedShorts(access: A, vararg dim: Long) = ArrayImgs.unsignedShorts(access, *dim)
+    fun <A: ShortAccess> unsignedShorts(access: A, vararg dim: Int) = unsignedShorts(access, *dim.longs)
+    fun <A: IntAccess> unsignedInts(access: A, vararg dim: Long) = ArrayImgs.unsignedInts(access, *dim)
+    fun <A: IntAccess> unsignedInts(access: A, vararg dim: Int) = unsignedInts(access, *dim.longs)
+    fun <A: LongAccess> unsignedLongs(access: A, vararg dim: Long) = ArrayImgs.unsignedLongs(access, *dim)
+    fun <A: LongAccess> unsignedLongs(access: A, vararg dim: Int) = unsignedLongs(access, *dim.longs)
 
     fun unsigned2Bits(vararg dim: Long) = ArrayImgs.unsigned2Bits(*dim)!!
     fun unsigned2Bits(vararg dim: Int) = unsigned2Bits(*dim.toLongArray())
@@ -90,16 +113,32 @@ object ntakt {
     fun unsigned128Bits(vararg dim: Int) = unsigned128Bits(*dim.toLongArray())
     fun unsignedVariableBitLengths(nbits: Int, vararg dim: Long) = ArrayImgs.unsignedVariableBitLengths(nbits, *dim)!!
     fun unsignedVariableBitLengths(nbits: Int, vararg dim: Int) = unsignedVariableBitLengths(nbits, *dim.toLongArray())
+    fun <A: LongAccess> unsigned2Bits(access: A, vararg dim: Long) = ArrayImgs.unsigned2Bits(access, *dim)
+    fun <A: LongAccess> unsigned2Bits(access: A, vararg dim: Int) = unsigned2Bits(access, *dim.longs)
+    fun <A: LongAccess> unsigned4Bits(access: A, vararg dim: Long) = ArrayImgs.unsigned4Bits(access, *dim)
+    fun <A: LongAccess> unsigned4Bits(access: A, vararg dim: Int) = unsigned4Bits(access, *dim.longs)
+    fun <A: LongAccess> unsigned128Bits(access: A, vararg dim: Long) = ArrayImgs.unsigned128Bits(access, *dim)
+    fun <A: LongAccess> unsigned128Bits(access: A, vararg dim: Int) = unsigned128Bits(access, *dim.longs)
+    fun <A: LongAccess> unsignedVariableBitLengths(access: A, nbits: Int, vararg dim: Long) = ArrayImgs.unsignedVariableBitLengths(access, nbits, *dim)
+    fun <A: LongAccess> unsignedVariableBitLengths(access: A, nbits: Int, vararg dim: Int) = unsignedVariableBitLengths(access, nbits, *dim.longs)
 
     fun floats(vararg dim: Long) = ArrayImgs.floats(*dim)!!
     fun floats(vararg dim: Int) = floats(*dim.toLongArray())
     fun doubles(vararg dim: Long) = ArrayImgs.doubles(*dim)!!
     fun doubles(vararg dim: Int) = doubles(*dim.toLongArray())
+    fun <A: FloatAccess> floats(access: A, vararg dim: Long) = ArrayImgs.floats(access, *dim)
+    fun <A: FloatAccess> floats(access: A, vararg dim: Int) = floats(access, *dim.longs)
+    fun <A: DoubleAccess> doubles(access: A, vararg dim: Long) = ArrayImgs.doubles(access, *dim)
+    fun <A: DoubleAccess> doubles(access: A, vararg dim: Int) = doubles(access, *dim.longs)
 
     fun complexFloats(vararg dim: Long) = ArrayImgs.complexFloats(*dim)!!
     fun complexFloats(vararg dim: Int) = complexFloats(*dim.toLongArray())
     fun complexDoubles(vararg dim: Long) = ArrayImgs.complexDoubles(*dim)!!
     fun complexDoubles(vararg dim: Int) = complexDoubles(*dim.toLongArray())
+    fun <A: FloatAccess> complexFloats(access: A, vararg dim: Long) = ArrayImgs.complexFloats(access, *dim)
+    fun <A: FloatAccess> complexFloats(access: A, vararg dim: Int) = complexFloats(access, *dim.longs)
+    fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Long) = ArrayImgs.complexDoubles(access, *dim)
+    fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Int) = complexDoubles(access, *dim.longs)
 
     // with initializers
     inline fun <T : NativeType<T>> ArrayImg<T, *>.init(init: (Int, T) -> Unit) = also { it.forEachIndexed { i, t -> init(i, t) } }
@@ -108,9 +147,15 @@ object ntakt {
     inline fun bits(vararg dim: Int, init: (Int) -> Boolean) = bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun booleans(vararg dim: Long, init: (Int) -> Boolean) = booleans(*dim).init { i, t -> t.set(init(i)) }
     inline fun booleans(vararg dim: Int, init: (Int) -> Boolean) = booleans(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> bits(access: A, vararg dim: Long, init: (Int) -> Boolean) = bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> bits(access: A, vararg dim: Int, init: (Int) -> Boolean) = bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: BooleanAccess> booleans(access: A, vararg dim: Long, init: (Int) -> Boolean) = booleans(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: BooleanAccess> booleans(access: A, vararg dim: Int, init: (Int) -> Boolean) = booleans(access, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun argbs(vararg dim: Long, init: (Int) -> Int) = argbs(*dim).init { i, t -> t.set(init(i)) }
     inline fun argbs(vararg dim: Int, init: (Int) -> Int) = argbs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> argbs(access: A, vararg dim: Long, init: (Int) -> Int) = argbs(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> argbs(access: A, vararg dim: Int, init: (Int) -> Int) = argbs(access, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun bytes(vararg dim: Long, init: (Int) -> Byte) = bytes(*dim).init { i, t -> t.set(init(i)) }
     inline fun bytes(vararg dim: Int, init: (Int) -> Byte) = bytes(*dim).init { i, t -> t.set(init(i)) }
@@ -120,6 +165,14 @@ object ntakt {
     inline fun ints(vararg dim: Int, init: (Int) -> Int) = ints(*dim).init { i, t -> t.set(init(i)) }
     inline fun longs(vararg dim: Long, init: (Int) -> Long) = longs(*dim).init { i, t -> t.set(init(i)) }
     inline fun longs(vararg dim: Int, init: (Int) -> Long) = longs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> bytes(access: A, vararg dim: Long, init: (Int) -> Byte) = bytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> bytes(access: A, vararg dim: Int, init: (Int) -> Byte) = bytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> shorts(access: A, vararg dim: Long, init: (Int) -> Short) = shorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> shorts(access: A, vararg dim: Int, init: (Int) -> Short) = shorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> ints(access: A, vararg dim: Long, init: (Int) -> Int) = ints(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> ints(access: A, vararg dim: Int, init: (Int) -> Int) = ints(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> longs(access: A, vararg dim: Long, init: (Int) -> Long) = longs(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> longs(access: A, vararg dim: Int, init: (Int) -> Long) = longs(access, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun unsignedBytes(vararg dim: Long, init: (Int) -> Int) = unsignedBytes(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedBytes(vararg dim: Int, init: (Int) -> Int) = unsignedBytes(*dim).init { i, t -> t.set(init(i)) }
@@ -129,6 +182,14 @@ object ntakt {
     inline fun unsignedInts(vararg dim: Int, init: (Int) -> Long) = unsignedInts(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedLongs(vararg dim: Long, init: (Int) -> Long) = unsignedLongs(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedLongs(vararg dim: Int, init: (Int) -> Long) = unsignedLongs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> unsignedBytes(access: A, vararg dim: Long, init: (Int) -> Int) = unsignedBytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> unsignedBytes(access: A, vararg dim: Int, init: (Int) -> Int) = unsignedBytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> unsignedShorts(access: A, vararg dim: Long, init: (Int) -> Int) = unsignedShorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> unsignedShorts(access: A, vararg dim: Int, init: (Int) -> Int) = unsignedShorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> unsignedInts(access: A, vararg dim: Long, init: (Int) -> Long) = unsignedInts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> unsignedInts(access: A, vararg dim: Int, init: (Int) -> Long) = unsignedInts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsignedLongs(access: A, vararg dim: Long, init: (Int) -> Long) = unsignedLongs(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsignedLongs(access: A, vararg dim: Int, init: (Int) -> Long) = unsignedLongs(access, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun unsigned2Bits(vararg dim: Long, init: (Int) -> Long) = unsigned2Bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsigned2Bits(vararg dim: Int, init: (Int) -> Long) = unsigned2Bits(*dim).init { i, t -> t.set(init(i)) }
@@ -140,16 +201,32 @@ object ntakt {
     inline fun unsigned128Bits(vararg dim: Int, init: (Int) -> BigInteger) = unsigned128Bits(*dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedVariableBitLengths(nbits: Int, vararg dim: Long, init: (Int) -> Long) = unsignedVariableBitLengths(nbits, *dim).init { i, t -> t.set(init(i)) }
     inline fun unsignedVariableBitLengths(nbits: Int, vararg dim: Int, init: (Int) -> Long) = unsignedVariableBitLengths(nbits, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsigned2Bits(access: A, vararg dim: Long, init: (Int) -> Long) = unsigned2Bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsigned2Bits(access: A, vararg dim: Int, init: (Int) -> Long) = unsigned2Bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsigned4Bits(access: A, vararg dim: Long, init: (Int) -> Long) = unsigned4Bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsigned4Bits(access: A, vararg dim: Int, init: (Int) -> Long) = unsigned4Bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsigned128Bits(access: A, vararg dim: Long, init: (Int) -> BigInteger) = unsigned128Bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsigned128Bits(access: A, vararg dim: Int, init: (Int) -> BigInteger) = unsigned128Bits(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsignedVariableBitLengths(access: A, nbits: Int, vararg dim: Long, init: (Int) -> Long) = unsignedVariableBitLengths(access, nbits, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> unsignedVariableBitLengths(access: A, nbits: Int, vararg dim: Int, init: (Int) -> Long) = unsignedVariableBitLengths(access, nbits, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun floats(vararg dim: Long, init: (Int) -> Float) = floats(*dim).init { i, t -> t.set(init(i)) }
     inline fun floats(vararg dim: Int, init: (Int) -> Float) = floats(*dim).init { i, t -> t.set(init(i)) }
     inline fun doubles(vararg dim: Long, init: (Int) -> Double) = doubles(*dim).init { i, t -> t.set(init(i)) }
     inline fun doubles(vararg dim: Int, init: (Int) -> Double) = doubles(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: FloatAccess> floats(access: A, vararg dim: Long, init: (Int) -> Float) = floats(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: FloatAccess> floats(access: A, vararg dim: Int, init: (Int) -> Float) = floats(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: DoubleAccess> doubles(access: A, vararg dim: Long, init: (Int) -> Double) = doubles(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: DoubleAccess> doubles(access: A, vararg dim: Int, init: (Int) -> Double) = doubles(access, *dim).init { i, t -> t.set(init(i)) }
 
     inline fun complexFloats(vararg dim: Long, init: (Int, ComplexFloatType) -> Unit) = complexFloats(*dim).init(init)
     inline fun complexFloats(vararg dim: Int, init: (Int, ComplexFloatType) -> Unit) = complexFloats(*dim).init(init)
     inline fun complexDoubles(vararg dim: Long, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(*dim).init(init)
     inline fun complexDoubles(vararg dim: Int, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(*dim).init(init)
+    inline fun <A: FloatAccess> complexFloats(access: A, vararg dim: Long, init: (Int, ComplexFloatType) -> Unit) = complexFloats(access, *dim).init(init)
+    inline fun <A: FloatAccess> complexFloats(access: A, vararg dim: Int, init: (Int, ComplexFloatType) -> Unit) = complexFloats(access, *dim).init(init)
+    inline fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Long, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(access, *dim).init(init)
+    inline fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Int, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(access, *dim).init(init)
 
 
     // virtual constant RA & RAI
