@@ -4,7 +4,7 @@ import net.imglib2.type.numeric.RealType
 import kotlin.reflect.KClass
 
 fun generateArithmeticScalarExtensions(`as`: String, fileName: String): String {
-    val kotlinFile =  FileSpec.builder("net.imglib2.imklib", fileName)
+    val kotlinFile =  FileSpec.builder("org.ntakt", fileName)
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     for ((name, operatorName, type) in arithmetics.operatorNames) {
         kotlinFile.addFunction(generateArithmeticScalarOperatorSameType(name, operatorName, container, type))

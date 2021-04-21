@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import net.imglib2.RealLocalizable
 import net.imglib2.RealRandomAccessibleRealInterval
@@ -63,11 +63,11 @@ class TestContainerArithmetics {
 
 
     private inline fun testRA(t2Value: Double, expected: Double, operator: (RA<RT<*>>, RA<RT<*>>) -> RA<RT<*>>) {
-        for ((i, t1) in imklib.types.realTypes.withIndex()) {
-            val c1 = imklib.constant(t1.createVariable().also { it.setOne() }, 1)
-            for (k in i until imklib.types.realTypes.size) {
-                val t2 = imklib.types.realTypes[k]
-                val c2 = imklib.constant(t2.createVariable().also { it.setReal(t2Value) }, 1)
+        for ((i, t1) in ntakt.types.realTypes.withIndex()) {
+            val c1 = ntakt.constant(t1.createVariable().also { it.setOne() }, 1)
+            for (k in i until ntakt.types.realTypes.size) {
+                val t2 = ntakt.types.realTypes[k]
+                val c2 = ntakt.constant(t2.createVariable().also { it.setReal(t2Value) }, 1)
                 val c3 = operator(c1, c2)
                 val v = c3.randomAccess().get()
                 when (v) {
@@ -80,11 +80,11 @@ class TestContainerArithmetics {
 
 
     private inline fun testRAI(t2Value: Double, expected: Double, operator: (RAI<RT<*>>, RAI<RT<*>>) -> RAI<RT<*>>) {
-        for ((i, t1) in imklib.types.realTypes.withIndex()) {
-            val c1 = imklib.constant(t1.createVariable().also { it.setOne() }, longArrayOf(1L).interval)
-            for (k in i until imklib.types.realTypes.size) {
-                val t2 = imklib.types.realTypes[k]
-                val c2 = imklib.constant(t2.createVariable().also { it.setReal(t2Value) }, longArrayOf(1L).interval)
+        for ((i, t1) in ntakt.types.realTypes.withIndex()) {
+            val c1 = ntakt.constant(t1.createVariable().also { it.setOne() }, longArrayOf(1L).interval)
+            for (k in i until ntakt.types.realTypes.size) {
+                val t2 = ntakt.types.realTypes[k]
+                val c2 = ntakt.constant(t2.createVariable().also { it.setReal(t2Value) }, longArrayOf(1L).interval)
                 val c3 = operator(c1, c2)
                 val v = c3.randomAccess().get()
                 when (v) {
@@ -97,11 +97,11 @@ class TestContainerArithmetics {
 
 
     private inline fun testRRA(t2Value: Double, expected: Double, operator: (RRA<RT<*>>, RRA<RT<*>>) -> RRA<RT<*>>) {
-        for ((i, t1) in imklib.types.realTypes.withIndex()) {
-            val c1 = imklib.function(1, { t1.createVariable() }) { p, t -> t.setOne() }
-            for (k in i until imklib.types.realTypes.size) {
-                val t2 = imklib.types.realTypes[k]
-                val c2 = imklib.function(1, { t2.createVariable() }) { p, t -> t.setReal(t2Value) }
+        for ((i, t1) in ntakt.types.realTypes.withIndex()) {
+            val c1 = ntakt.function(1, { t1.createVariable() }) { p, t -> t.setOne() }
+            for (k in i until ntakt.types.realTypes.size) {
+                val t2 = ntakt.types.realTypes[k]
+                val c2 = ntakt.function(1, { t2.createVariable() }) { p, t -> t.setReal(t2Value) }
                 val c3 = operator(c1, c2)
                 val v = c3.realRandomAccess().get()
                 when (v) {
@@ -114,10 +114,10 @@ class TestContainerArithmetics {
 
 
     private inline fun testRRARI(t2Value: Double, expected: Double, operator: (RRARI<RT<*>>, RRARI<RT<*>>) -> RRARI<RT<*>>) {
-        for ((i, t1) in imklib.types.realTypes.withIndex()) {
+        for ((i, t1) in ntakt.types.realTypes.withIndex()) {
             val c1 = function({ t1.createVariable() }) { p, t -> t.setOne() }
-            for (k in i until imklib.types.realTypes.size) {
-                val t2 = imklib.types.realTypes[k]
+            for (k in i until ntakt.types.realTypes.size) {
+                val t2 = ntakt.types.realTypes[k]
                 val c2 = function({ t2.createVariable() }) { p, t -> t.setReal(t2Value) }
                 val c3 = operator(c1, c2)
                 val v = c3.realRandomAccess().get()
@@ -148,4 +148,4 @@ private inline fun <T> function(
 private inline fun <T> function(
         vararg minMax: Double,
         crossinline typeSupplier: () -> T,
-        crossinline f: (RealLocalizable, T) -> Unit) = FunctionRealInterval(imklib.function(minMax.size / 2, typeSupplier, f), *minMax)
+        crossinline f: (RealLocalizable, T) -> Unit) = FunctionRealInterval(ntakt.function(minMax.size / 2, typeSupplier, f), *minMax)

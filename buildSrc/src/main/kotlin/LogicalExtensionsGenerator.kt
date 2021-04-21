@@ -32,7 +32,7 @@ enum class Comparison(val infixName: String, val operatorName: String, private v
 fun generateLogicalExtensionsContainer(`as`: String, fileName: String, comparison: Comparison): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile = FileSpec
-            .builder("net.imglib2.imklib", fileName)
+            .builder("org.ntakt", fileName)
             .indent("    ")
             .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
             .addComparisonWithContainer(container, comparison)
@@ -42,7 +42,7 @@ fun generateLogicalExtensionsContainer(`as`: String, fileName: String, compariso
 fun generateLogicalExtensionsScalar(`as`: String, fileName: String, comparison: Comparison): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile = FileSpec
-        .builder("net.imglib2.imklib", fileName)
+        .builder("org.ntakt", fileName)
         .indent("    ")
         .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
         .addComparisonWithScalar(container, comparison)
@@ -52,7 +52,7 @@ fun generateLogicalExtensionsScalar(`as`: String, fileName: String, comparison: 
 fun generateLogicalExtensionsChoose(`as`: String, fileName: String): String {
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     val kotlinFile = FileSpec
-        .builder("net.imglib2.imklib", fileName)
+        .builder("org.ntakt", fileName)
         .indent("    ")
         .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
         .addChoose(container)
@@ -197,7 +197,7 @@ fun FileSpec.Builder.addChoose(container: ClassName): FileSpec.Builder {
     val typeOfT = Type::class.asTypeName().parameterizedBy(genericT)
     val boundedT = TypeVariableName("T", typeOfT)
     val parameterizedContainer = container.parameterizedBy(genericT)
-    addImport("net.imglib2.imklib.converter", "TriConverter")
+    addImport("org.ntakt.converter", "TriConverter")
     val funSpecContainerContainer = FunSpec
             .builder("choose")
             .receiver(container.parameterizedBy(booleantTypeWildcardProducer))

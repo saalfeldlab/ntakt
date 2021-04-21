@@ -1,5 +1,4 @@
 image:
-  - Ubuntu2004
   - macos
   - Visual Studio 2019
 stack: jdk 8

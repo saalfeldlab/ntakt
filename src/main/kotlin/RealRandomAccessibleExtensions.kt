@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import bdv.util.BdvFunctions
 import bdv.util.BdvOptions
@@ -91,7 +91,7 @@ private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInte
     override fun numDimensions() = source.numDimensions()
 }
 
-fun <T: Type<T>> RRA<*>.constant(constant: T) = imklib.function(numDimensions(), { constant.copy() }) { _, _ -> }
+fun <T: Type<T>> RRA<*>.constant(constant: T) = ntakt.function(numDimensions(), { constant.copy() }) { _, _ -> }
 
 fun <T: Type<T>> RRA<T>.show(name: String, interval: Interval? = null, options: BdvOptions = BdvOptions.options()) =
         BdvFunctions.show(this, interval ?: (LongArray(nDim) { -1L } + LongArray(nDim) { +1L }).intervalMinMax, name, options)

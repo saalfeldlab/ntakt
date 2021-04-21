@@ -26,14 +26,13 @@
 
 // auto-generated, do not modify!
 
-package net.imglib2.imklib
+package org.ntakt
 
 import kotlin.Unit
 import kotlin.jvm.JvmName
 import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
-import net.imglib2.imklib.converter.ComplexRealConverters
 import net.imglib2.type.Type
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
@@ -49,6 +48,7 @@ import net.imglib2.type.numeric.integer.UnsignedLongType
 import net.imglib2.type.numeric.integer.UnsignedShortType
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
+import org.ntakt.converter.ComplexRealConverters
 import net.imglib2.RandomAccessible as RA
 
 fun <T, U : Type<U>> RA<T>.convert(u: U, converter: Converter<T, U>) =

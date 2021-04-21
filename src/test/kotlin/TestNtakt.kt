@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import net.imglib2.*
 import net.imglib2.img.array.ArrayImgs
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.TestInstance
 import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TestImklib {
+class TestNtakt {
 
     val reference: RandomAccessibleInterval<IntType> = ArrayImgs
         .ints(IntArray(6) { it + 1 }, 2, 3)
@@ -72,12 +72,12 @@ class TestImklib {
 
     @Test
     fun `test function`() {
-        val f = imklib.function(3, { DoubleArray(3) }) { l, p -> l.localize(p) }
+        val f = ntakt.function(3, { DoubleArray(3) }) { l, p -> l.localize(p) }
         Assert.assertArrayEquals(doubleArrayOf(1.0, 2.0, 3.0), f[1, 2, 3], 0.0)
 
         // stateful
         var accessCount = 0
-        val counter = imklib.function(1, { IntType() }) { -> { _, p -> p.setInteger(++accessCount) } }
+        val counter = ntakt.function(1, { IntType() }) { -> { _, p -> p.setInteger(++accessCount) } }
         Assert.assertEquals(1, counter[0].integer)
         Assert.assertEquals(2, counter[0].integer)
         Assert.assertEquals(3, counter[1].integer)

@@ -1,2 +1,2 @@
-rootProject.name = "imklib2"
+rootProject.name = "ntakt"
 

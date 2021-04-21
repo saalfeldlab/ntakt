@@ -23,24 +23,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-// auto-generated, do not modify!
-
-@file:Suppress("UNCHECKED_CAST")
-
 package org.ntakt
 
-import kotlin.Suppress
-import net.imglib2.RandomAccessible
-import net.imglib2.type.logic.BoolType
-import net.imglib2.type.numeric.IntegerType
-import net.imglib2.type.numeric.RealType
+import org.ntakt.access.*
+import java.nio.*
 
-infix fun RandomAccessible<out RealType<*>>.gt(that: RandomAccessible<out RealType<*>>):
-        RandomAccessible<BoolType> {
-    return when {
-        this.type is IntegerType && that.type is IntegerType -> (this as
-                RandomAccessible<IntegerType<*>>).convert(that as RandomAccessible<IntegerType<*>>, BoolType()) { s1, s2, t -> t.set(s1.integerLong > s2.integerLong) }
-        else -> convert(that, BoolType()) { s1, s2, t -> t.set(s1.realDouble > s2.realDouble) }
-    }
-}
+val ByteBuffer.access get() = ByteBufferAccess(this)
+val ShortBuffer.access get() = ShortBufferAccess(this)
+val IntBuffer.access get() = IntBufferAccess(this)
+val LongBuffer.access get() = LongBufferAccess(this)
+val FloatBuffer.access get() = FloatBufferAccess(this)
+val DoubleBuffer.access get() = DoubleBufferAccess(this)

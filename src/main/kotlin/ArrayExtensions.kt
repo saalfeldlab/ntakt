@@ -23,7 +23,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
+
+import net.imglib2.img.basictypeaccess.volatiles.array.*
 
 val ByteArray.shorts get() = ShortArray(size) { this[it].toShort() }
 
@@ -44,3 +46,13 @@ val ShortArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
 val IntArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
 val LongArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
 val FloatArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
+
+// accesses
+val BooleanArray.access get() = VolatileBooleanArray(this, true)
+val CharArray.access get() = VolatileCharArray(this, true)
+val ByteArray.access get() = VolatileByteArray(this, true)
+val ShortArray.access get() = VolatileShortArray(this, true)
+val IntArray.access get() = VolatileIntArray(this, true)
+val LongArray.access get() = VolatileLongArray(this, true)
+val FloatArray.access get() = VolatileFloatArray(this, true)
+val DoubleArray.access get() = VolatileDoubleArray(this, true)

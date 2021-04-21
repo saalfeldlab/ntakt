@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.imglib2.imklib
+package org.ntakt
 
 import net.imglib2.*
 import net.imglib2.realtransform.AffineGet
@@ -151,3 +151,5 @@ fun RealInterval.transformBoundingBox(transformation: AffineGet): RealInterval {
 val RealInterval.smallestsContaining get() = Intervals.smallestContainingInterval(this)
 
 val Interval.isEmpty: Boolean get() = Intervals.isEmpty(this)
+
+val Interval.slice: Array<out Slicing> get() = Array(nDim) { min(it) sl (max(it) + 1) }
