@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/saalfeldlab/imklib2.svg?branch=master)](https://travis-ci.com/saalfeldlab/imklib2) [![Build status](https://ci.appveyor.com/api/projects/status/cvi9r5hqyiiyenlu?svg=true)](https://ci.appveyor.com/project/hanslovsky/imklib2) [![Join the chat at https://gitter.im/saalfeldlab/ntakt](https://badges.gitter.im/saalfeldlab/ntakt.svg)](https://gitter.im/saalfeldlab/ntakt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://api.travis-ci.com/saalfeldlab/ntakt.svg?branch=master)](https://travis-ci.com/saalfeldlab/ntakt) [![Build status](https://ci.appveyor.com/api/projects/status/cvi9r5hqyiiyenlu?svg=true)](https://ci.appveyor.com/project/hanslovsky/imklib2) [![Join the chat at https://gitter.im/saalfeldlab/ntakt](https://badges.gitter.im/saalfeldlab/ntakt.svg)](https://gitter.im/saalfeldlab/ntakt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 # nta.kt
