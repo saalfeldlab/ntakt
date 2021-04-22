@@ -137,6 +137,53 @@ Many of the other convenience functions are implemented as converters, e.g. the 
 #### Other Convenience Functions
 *TBD*
 
+##### Types
+As an extension library for ImgLib2, nta.kt relies on ImgLib2's type system.
+ImgLib2 has a type hierarchy of complex, real, and integer (signed and unsigned) types
+that are named after their primitive type equivalents followed by `Type` and prefixed with `Unsigned` if applicable.
+Type names follow CamelCase convention, e.g. `UnsignedByteType`.
+These types are used frequently, e.g. to convert a `RandomAccessible` from `FloatType` to `DoubleType`,
+and can be conveniently created with the properties in the `ntakt.types` object, e.g. `ntakt.types.unsignedByte`.
+Types can also be created with aliases that specify the type (`int`, `uint`, `float`, `complex`) and the size in number of bits,
+e.g. `uint8`, similar to what is used in other popular libraries like NumPy:
+
+|   ImgLib2 Type in `ntakt.types` |        Alias |
+| ------------------------------- | ------------ |
+|                      `byteType` |       `int8` |
+|                     `shortType` |      `int16` |
+|                       `intType` |      `int32` |
+|                      `longType` |      `int64` |
+|              `unsignedByteType` |      `uint8` |
+|             `unsignedShortType` |     `uint16` |
+|               `unsignedIntType` |     `uint32` |
+|              `unsignedLongType` |     `uint64` |
+|                     `floatType` |    `float32` |
+|                    `doubleType` |    `float64` |
+|              `complexFloatType` |  `complex64` |
+|             `complexDoubleType` | `complex128` |
+
+##### Images
+ImgLib2 is interface driven and a `RandomAccessibleInterval` can be backed by arbitrary data or even completely virtual.
+The `ArrayImg` is one of the most straight forward ways to expose data as a `RandomAccessibleInterval`.
+It is typically backed by Java primitive type arrays, but it can also read data from other backends like Java buffers.
+`ArrayImgs` can be conveniently created for many ImgLib2 types including the ones listed [above](#Types).
+Naming of these convenience functions follows the conventions in the [`ntakt.types`](#Types) object, e.g.
+```kotlin
+import org.ntakt.*
+val data1 = ntakt.unsignedShorts(30, 40, 50)
+// with initialization:
+val data2 = ntakt.doubles(30, 40, 50) { 1.0 / it }
+```
+or with type aliases
+```kotlin
+import org.ntakt.*
+val data1 = ntakt.uint16s(30, 40, 50)
+// with initialization:
+val data2 = ntakt.float64s(30, 40, 50) { 1.0 / it }
+```
+
+
+
 ##### Arithmetic Operators
 Operator overloading is possible for arithmetic operations (`+-*/`) on 
  1. ImgLib2 data structures and primitive types and generic types with the same bounds as the data structure
