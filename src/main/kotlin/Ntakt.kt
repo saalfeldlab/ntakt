@@ -377,8 +377,8 @@ object ntakt {
         val unsignedLong get() = UnsignedLongType()
         val float get() = FloatType()
         val double get() = DoubleType()
-        val complexFloat = ComplexFloatType()
-        val complexDouble = ComplexDoubleType()
+        val complexFloat get() = ComplexFloatType()
+        val complexDouble get() = ComplexDoubleType()
 
         // aliases
         val int8 get() = byte
