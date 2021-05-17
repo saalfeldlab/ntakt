@@ -37,6 +37,8 @@ import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.BooleanType
 import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.ARGBType
+import net.imglib2.type.numeric.ComplexType
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
@@ -52,6 +54,8 @@ import java.util.function.Supplier
 import org.ntakt.io.io as _io
 
 object ntakt {
+
+    // ArrayImg convenience constructors
 
     fun bits(vararg dim: Long) = ArrayImgs.bits(*dim)!!
     fun bits(vararg dim: Int) = bits(*dim.longs)
@@ -226,6 +230,111 @@ object ntakt {
     inline fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Long, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(access, *dim).init(init)
     inline fun <A: DoubleAccess> complexDoubles(access: A, vararg dim: Int, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(access, *dim).init(init)
 
+    // ArrayImg convenience constructors with type aliases
+    fun int8s(vararg dim: Long) = bytes(*dim)
+    fun int8s(vararg dim: Int) = bytes(*dim.longs)
+    fun int16s(vararg dim: Long) = shorts(*dim)
+    fun int16s(vararg dim: Int) = shorts(*dim.longs)
+    fun int32s(vararg dim: Long) = ints(*dim)
+    fun int32s(vararg dim: Int) = ints(*dim.longs)
+    fun int64s(vararg dim: Long) = longs(*dim)
+    fun int64s(vararg dim: Int) = longs(*dim.longs)
+    fun <A: ByteAccess> int8s(access: A, vararg dim: Long) = bytes(access, *dim)
+    fun <A: ByteAccess> int8s(access: A, vararg dim: Int) = bytes(access, *dim.longs)
+    fun <A: ShortAccess> int16s(access: A, vararg dim: Long) = shorts(access, *dim)
+    fun <A: ShortAccess> int16s(access: A, vararg dim: Int) = shorts(access, *dim.longs)
+    fun <A: IntAccess> int32s(access: A, vararg dim: Long) = ints(access, *dim)
+    fun <A: IntAccess> int32s(access: A, vararg dim: Int) = ints(access, *dim.longs)
+    fun <A: LongAccess> int64s(access: A, vararg dim: Long) = longs(access, *dim)
+    fun <A: LongAccess> int64s(access: A, vararg dim: Int) = longs(access, *dim.longs)
+
+    fun uint8s(vararg dim: Long) = unsignedBytes(*dim)
+    fun uint8s(vararg dim: Int) = unsignedBytes(*dim.longs)
+    fun uint16s(vararg dim: Long) = unsignedShorts(*dim)
+    fun uint16s(vararg dim: Int) = unsignedShorts(*dim.longs)
+    fun uint32s(vararg dim: Long) = unsignedInts(*dim)
+    fun uint32s(vararg dim: Int) = unsignedInts(*dim.longs)
+    fun uint64s(vararg dim: Long) = unsignedLongs(*dim)
+    fun uint64s(vararg dim: Int) = unsignedLongs(*dim.longs)
+    fun <A: ByteAccess> uint8s(access: A, vararg dim: Long) = unsignedBytes(access, *dim)
+    fun <A: ByteAccess> uint8s(access: A, vararg dim: Int) = unsignedBytes(access, *dim.longs)
+    fun <A: ShortAccess> uint16s(access: A, vararg dim: Long) = unsignedShorts(access, *dim)
+    fun <A: ShortAccess> uint16s(access: A, vararg dim: Int) = unsignedShorts(access, *dim.longs)
+    fun <A: IntAccess> uint32s(access: A, vararg dim: Long) = unsignedInts(access, *dim)
+    fun <A: IntAccess> uint32s(access: A, vararg dim: Int) = unsignedInts(access, *dim.longs)
+    fun <A: LongAccess> uint64s(access: A, vararg dim: Long) = unsignedLongs(access, *dim)
+    fun <A: LongAccess> uint64s(access: A, vararg dim: Int) = unsignedLongs(access, *dim.longs)
+
+    fun float32s(vararg dim: Long) = floats(*dim)
+    fun float32s(vararg dim: Int) = floats(*dim.longs)
+    fun float64s(vararg dim: Long) = doubles(*dim)
+    fun float64s(vararg dim: Int) = doubles(*dim.longs)
+    fun <A: FloatAccess> float32s(access: A, vararg dim: Long) = floats(access, *dim)
+    fun <A: FloatAccess> float32s(access: A, vararg dim: Int) = floats(access, *dim.longs)
+    fun <A: DoubleAccess> float64s(access: A, vararg dim: Long) = doubles(access, *dim)
+    fun <A: DoubleAccess> float64s(access: A, vararg dim: Int) = doubles(access, *dim.longs)
+
+    fun complex64s(vararg dim: Long) = complexFloats(*dim)
+    fun complex64s(vararg dim: Int) = complexFloats(*dim.longs)
+    fun complex128s(vararg dim: Long) = complexDoubles(*dim)
+    fun complex128s(vararg dim: Int) = complexDoubles(*dim.longs)
+    fun <A: FloatAccess> complex64s(access: A, vararg dim: Long) = complexFloats(access, *dim)
+    fun <A: FloatAccess> complex64s(access: A, vararg dim: Int) = complexFloats(access, *dim.longs)
+    fun <A: DoubleAccess> complex128s(access: A, vararg dim: Long) = complexDoubles(access, *dim)
+    fun <A: DoubleAccess> complex128s(access: A, vararg dim: Int) = complexDoubles(access, *dim.longs)
+
+    inline fun int8s(vararg dim: Long, init: (Int) -> Byte) = bytes(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int8s(vararg dim: Int, init: (Int) -> Byte) = bytes(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int16s(vararg dim: Long, init: (Int) -> Short) = shorts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int16s(vararg dim: Int, init: (Int) -> Short) = shorts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int32s(vararg dim: Long, init: (Int) -> Int) = ints(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int32s(vararg dim: Int, init: (Int) -> Int) = ints(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int64s(vararg dim: Long, init: (Int) -> Long) = longs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun int64s(vararg dim: Int, init: (Int) -> Long) = longs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> int8s(access: A, vararg dim: Long, init: (Int) -> Byte) = bytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> int8s(access: A, vararg dim: Int, init: (Int) -> Byte) = bytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> int16s(access: A, vararg dim: Long, init: (Int) -> Short) = shorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> int16s(access: A, vararg dim: Int, init: (Int) -> Short) = shorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> int32s(access: A, vararg dim: Long, init: (Int) -> Int) = ints(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> int32s(access: A, vararg dim: Int, init: (Int) -> Int) = ints(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> int64s(access: A, vararg dim: Long, init: (Int) -> Long) = longs(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> int64s(access: A, vararg dim: Int, init: (Int) -> Long) = longs(access, *dim).init { i, t -> t.set(init(i)) }
+
+    inline fun uint8s(vararg dim: Long, init: (Int) -> Int) = unsignedBytes(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint8s(vararg dim: Int, init: (Int) -> Int) = unsignedBytes(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint16s(vararg dim: Long, init: (Int) -> Int) = unsignedShorts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint16s(vararg dim: Int, init: (Int) -> Int) = unsignedShorts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint32s(vararg dim: Long, init: (Int) -> Long) = unsignedInts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint32s(vararg dim: Int, init: (Int) -> Long) = unsignedInts(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint64s(vararg dim: Long, init: (Int) -> Long) = unsignedLongs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun uint64s(vararg dim: Int, init: (Int) -> Long) = unsignedLongs(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> uint8s(access: A, vararg dim: Long, init: (Int) -> Int) = unsignedBytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ByteAccess> uint8s(access: A, vararg dim: Int, init: (Int) -> Int) = unsignedBytes(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> uint16s(access: A, vararg dim: Long, init: (Int) -> Int) = unsignedShorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: ShortAccess> uint16s(access: A, vararg dim: Int, init: (Int) -> Int) = unsignedShorts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> uint32s(access: A, vararg dim: Long, init: (Int) -> Long) = unsignedInts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: IntAccess> uint32s(access: A, vararg dim: Int, init: (Int) -> Long) = unsignedInts(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> uint64s(access: A, vararg dim: Long, init: (Int) -> Long) = unsignedLongs(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: LongAccess> uint64s(access: A, vararg dim: Int, init: (Int) -> Long) = unsignedLongs(access, *dim).init { i, t -> t.set(init(i)) }
+
+    inline fun float32s(vararg dim: Long, init: (Int) -> Float) = floats(*dim).init { i, t -> t.set(init(i)) }
+    inline fun float32s(vararg dim: Int, init: (Int) -> Float) = floats(*dim).init { i, t -> t.set(init(i)) }
+    inline fun float64s(vararg dim: Long, init: (Int) -> Double) = doubles(*dim).init { i, t -> t.set(init(i)) }
+    inline fun float64s(vararg dim: Int, init: (Int) -> Double) = doubles(*dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: FloatAccess> float32s(access: A, vararg dim: Long, init: (Int) -> Float) = floats(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: FloatAccess> float32s(access: A, vararg dim: Int, init: (Int) -> Float) = floats(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: DoubleAccess> float64s(access: A, vararg dim: Long, init: (Int) -> Double) = doubles(access, *dim).init { i, t -> t.set(init(i)) }
+    inline fun <A: DoubleAccess> float64s(access: A, vararg dim: Int, init: (Int) -> Double) = doubles(access, *dim).init { i, t -> t.set(init(i)) }
+
+    inline fun complex64s(vararg dim: Long, init: (Int, ComplexFloatType) -> Unit) = complexFloats(*dim).init(init)
+    inline fun complex64s(vararg dim: Int, init: (Int, ComplexFloatType) -> Unit) = complexFloats(*dim).init(init)
+    inline fun complex128s(vararg dim: Long, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(*dim).init(init)
+    inline fun complex128s(vararg dim: Int, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(*dim).init(init)
+    inline fun <A: FloatAccess> complex64s(access: A, vararg dim: Long, init: (Int, ComplexFloatType) -> Unit) = complexFloats(access, *dim).init(init)
+    inline fun <A: FloatAccess> complex64s(access: A, vararg dim: Int, init: (Int, ComplexFloatType) -> Unit) = complexFloats(access, *dim).init(init)
+    inline fun <A: DoubleAccess> complex128s(access: A, vararg dim: Long, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(access, *dim).init(init)
+    inline fun <A: DoubleAccess> complex128s(access: A, vararg dim: Int, init: (Int, ComplexDoubleType) -> Unit) = complexDoubles(access, *dim).init(init)
+
 
     // virtual constant RA & RAI
     fun <T> constant(constant: T, numDimensions: Int) = ConstantUtils.constantRandomAccessible(constant, numDimensions)
@@ -268,8 +377,28 @@ object ntakt {
         val unsignedLong get() = UnsignedLongType()
         val float get() = FloatType()
         val double get() = DoubleType()
+        val complexFloat get() = ComplexFloatType()
+        val complexDouble get() = ComplexDoubleType()
 
-        val realTypes get() = arrayOf<RealType<*>>(byte, short, int, long, unsignedByte, unsignedShort, unsignedInt, unsignedLong, float, double)
+        // aliases
+        val int8 get() = byte
+        val int16 get() = short
+        val int32 get() = int
+        val int64 get() = long
+        val uint8 get() = unsignedByte
+        val uint16 get() = unsignedShort
+        val uint32 get() = unsignedInt
+        val uint64 get() = unsignedLong
+        val float32 get() = float
+        val float64 get() = double
+        val complex64 get() = complexFloat
+        val complex128 get() = complexDouble
+
+        val signedIntTypes get() = arrayOf<IntegerType<*>>(int8, int16, int32, int64)
+        val unsignedIntTypes get() = arrayOf<IntegerType<*>>(uint8, uint16, uint32, uint64)
+        val intTypes get() = signedIntTypes + unsignedIntTypes
+        val realTypes get() = intTypes.map { it as RealType<*> }.toTypedArray() + arrayOf<RealType<*>>(float32, float64)
+        val complexTypes get() = realTypes.map { it as ComplexType<*> }.toTypedArray() + arrayOf<ComplexType<*>>(complex64, complex128)
     }
 
     fun <T: BooleanType<T>> where(rai: RAI<T>) = rai.where()
