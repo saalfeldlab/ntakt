@@ -268,8 +268,28 @@ val ri6: RealRandomAccessibleRealInterval<T> = rra[ri3]
 
 ## Installation
 
-Installation requires Java 8 or later. Currently, nta.kt is not available through remote Maven repositories (it is on the roadmap).
-To install into your local maven repository (typically `~/.m2/repository`), run from the root of the repository:
+At this time, nta.kt is not deployed to Maven repositories
+but we plan to make nta.kt available through the [SciJava public repository](http://maven.scijava.org/). 
+Until then, nta.kt is available through [JitPack](https://jitpack.io/#org.ntakt/ntakt).
+The [JitPack landing page](https://jitpack.io/) has instructions for adding the repository for popular Java build tools.
+
+**Note**: JitPack builds artifacts on demand.
+Expect some delay if a specific version is requested for the first time.
+The build time for nta.kt on a decent laptop is about three minutes.
+
+To track the latest development branch, add the dependency
+```
+org.ntakt:ntakt:main-SNAPSHOT
+```
+to your build file. Replace the `main-SNAPSHOT` version with any of these valid tags:
+ - git commit hash, e.g. `741696bcc1` (recommended for reproducible builds)
+ - git tags, e.g. `example-tag` (recommended for reproducible builds)
+ - latest commi on a git branch: `${BRANCH_NAME}-SNAPSHOT`
+
+For reproducible builds, commit hash or tag are recommended.
+
+Alternatively, nta.kt can be built locally from source with Java 8 or later.
+To install into your local Maven repository (typically `~/.m2/repository`), run from the root of the repository:
 ```shell script
 ./gradlew clean build publishToMavenLocal
 ```
