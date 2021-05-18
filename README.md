@@ -284,7 +284,7 @@ org.ntakt:ntakt:main-SNAPSHOT
 to your build file. Replace the `main-SNAPSHOT` version with any of these valid tags:
  - git commit hash, e.g. `741696bcc1` (recommended for reproducible builds)
  - git tags, e.g. `example-tag` (recommended for reproducible builds)
- - latest commi on a git branch: `${BRANCH_NAME}-SNAPSHOT`
+ - latest commit on a git branch: `${BRANCH_NAME}-SNAPSHOT`
 
 For reproducible builds, commit hash or tag are recommended.
 
