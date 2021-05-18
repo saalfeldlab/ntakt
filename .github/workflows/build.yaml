@@ -16,8 +16,6 @@ jobs:
         with:
           java-version: "8"
           distribution: "adopt"
-      - name: Build nta.kt
-        run: ./gradlew clean build
-      - name: Run nta.kt unit tests
-        run: ./gradlew test
+      - name: Build nta.kt and execute unit tests
+        run: ./gradlew clean build test
       - run: echo "🍏 This job's status is ${{ job.status }}."
