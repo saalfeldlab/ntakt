@@ -22,6 +22,131 @@ jobs:
         with:
           java-version: "8"
           distribution: "adopt"
-      - name: Build nta.kt and execute unit tests
-        run: ./gradlew clean build test
+      - name: Build and execute unit tests
+        run: ./gradlew clean build test publishToMavenLocal
+      - name: Define project environment variables
+        run: |
+          PROJECT_VERSION=$(./gradlew properties | grep 'version:' | sed 's/version: //')
+          PROJECT_NAME=$(./gradlew properties | grep 'name:' | sed 's/name: //')
+          echo PROJECT_VERSION=$PROJECT_VERSION >> $GITHUB_ENV
+          echo PROJECT_VERSION=$PROJECT_VERSION
+          echo PROJECT_NAME=$PROJECT_NAME >> $GITHUB_ENV
+          echo PROJECT_NAME=$PROJECT_NAME
+
+          if [[ "$PROJECT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              IS_RELEASE_VERSION='1'
+          else
+              IS_RELEASE_VERSION='0'
+          fi
+
+          echo IS_RELEASE_VERSION=$IS_RELEASE_VERSION >> $GITHUB_ENV
+          echo IS_RELEASE_VERSION=$IS_RELEASE_VERSION
+
+          BASENAME="$PROJECT_NAME-$PROJECT_VERSION"
+          ARTIFACT_NAME="$BASENAME.jar"
+          ARTIFACT_PATH="build/libs/$ARTIFACT_NAME"
+          POM_NAME="$BASENAME.pom"
+          POM_PATH=build/publications/maven/pom-default.xml
+          MODULE_NAME="$BASENAME.module"
+          MODULE_PATH=build/publications/maven/module.json
+
+          echo ARTIFACT_NAME=${ARTIFACT_NAME} >> $GITHUB_ENV
+          echo ARTIFACT_PATH=${ARTIFACT_PATH} >> $GITHUB_ENV
+          echo POM_NAME=$POM_NAME >> $GITHUB_ENV
+          echo POM_PATH=$POM_PATH >> $GITHUB_ENV
+          echo MODULE_NAME=$MODULE_NAME >> $GITHUB_ENV
+          echo MODULE_PATH=$MODULE_PATH >> $GITHUB_ENV
+      - name: Create Release (main branch and release version only)
+        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}
+          release_name: Nta.kt ${{ env.PROJECT_VERSION }}
+          draft: false
+          prerelease: false
+      - name: Upload jar
+        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ARTIFACT_PATH }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
+          asset_content_type: application/java-archive
+      - name: Upload module json
+        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.MODULE_PATH }}
+          asset_name: ${{ env.MODULE_NAME }}
+          asset_content_type: application/java-archive
+      - name: Upload pom
+        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.POM_PATH }}
+          asset_name: ${{ env.POM_NAME }}
+          asset_content_type: application/java-archive
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  Bump-Development-Cycle:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out code
+        uses: actions/checkout@v2
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: "8"
+          distribution: "adopt"
+      - name: Define new project version if main branch and release
+        run: |
+          PROJECT_VERSION=$(./gradlew properties | grep 'version:' | sed 's/version: //')
+          echo PROJECT_VERSION=$PROJECT_VERSION >> $GITHUB_ENV
+          echo PROJECT_VERSION=$PROJECT_VERSION
+
+          if [[ "$PROJECT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              PATCH=$(echo $PROJECT_VERSION | tr '.' '\n' | tail -n1)
+              MINOR=$(echo $PROJECT_VERSION | tr '.' '\n' | tail -n2 | head -n1)
+              MAJOR=$(echo $PROJECT_VERSION | tr '.' '\n' | head -n1)
+              NEW_PATCH=$((PATCH + 1))
+              NEW_PROJECT_VERSION="$MAJOR.$MINOR.$NEW_PATCH-SNAPSHOT"
+              IS_RELEASE_VERSION='1'
+          else
+              NEW_PROJECT_VERSION=''
+              IS_RELEASE_VERSION='0'
+          fi
+            echo NEW_PROJECT_VERSION=$NEW_PROJECT_VERSION >> $GITHUB_ENV
+            echo NEW_PROJECT_VERSION=$NEW_PROJECT_VERSION
+          echo IS_RELEASE_VERSION=$IS_RELEASE_VERSION >> $GITHUB_ENV
+          echo IS_RELEASE_VERSION=$IS_RELEASE_VERSION
+      - name: Update gradle.properties with bumped version
+        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        run: |
+          sed "s/^version=${{ env.PROJECT_VERSION }}$/version=${{ env.NEW_PROJECT_VERSION }}/" gradle.properties -i
+          PROJECT_VERSION=$(./gradlew properties | grep 'version:' | sed 's/version: //')
+          [ "$PROJECT_VERSION" = "${{ env.NEW_PROJECT_VERSION }}" ]
+      - name: Commit changes and push gradle.properties with bumped version
+        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        # push to github from actions: https://stackoverflow.com/a/58393457/1725687
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add gradle.properties
+          git commit -m "Bump to next development cycle (${{ env.NEW_PROJECT_VERSION }})"
+          git push
