@@ -1,0 +1,9 @@
+mamba create -n ntakt-jep python=3.9 pip
+conda activate ntakt-jep
+python -m pip install numpy jep jupyter kotlin-jupyter-kernel
+# leaving and re-activating is necessary so the correct jupyter executable is used 
+conda deactivate
+conda activate ntakt-jep
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib
+cp $CONDA_PREFIX/lib/python3.9/site-packages/jep/*jep*so $CONDA_PREFIX/lib
+jupyter notebook

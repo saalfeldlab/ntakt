@@ -1,0 +1,1795 @@
+> Task :buildSrc:compileKotlin UP-TO-DATE
+> Task :buildSrc:compileJava NO-SOURCE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:inspectClassesForKotlinIC UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+> Task :buildSrc:assemble UP-TO-DATE
+> Task :buildSrc:compileTestKotlin NO-SOURCE
+> Task :buildSrc:pluginUnderTestMetadata UP-TO-DATE
+> Task :buildSrc:compileTestJava NO-SOURCE
+> Task :buildSrc:compileTestGroovy NO-SOURCE
+> Task :buildSrc:processTestResources NO-SOURCE
+> Task :buildSrc:testClasses UP-TO-DATE
+> Task :buildSrc:test NO-SOURCE
+> Task :buildSrc:validatePlugins UP-TO-DATE
+> Task :buildSrc:check UP-TO-DATE
+> Task :buildSrc:build UP-TO-DATE
+
+> Task :dependencies
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+annotationProcessor - Annotation processors and their dependencies for source set 'main'.
+No dependencies
+
+api - API dependencies for compilation 'main' (target  (jvm)). (n)
++--- net.imglib2:imglib2:5.10.0 (n)
++--- net.imglib2:imglib2-realtransform:3.0.0 (n)
++--- net.imglib2:imglib2-cache:1.0.0-beta-14 (n)
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21 (n)
++--- org.janelia.saalfeldlab:n5:2.2.1 (n)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0 (n)
+\--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (n)
+
+apiDependenciesMetadata
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+\--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
+
+apiElements - API elements for main. (n)
+No dependencies
+
+apiElements-published (n)
+No dependencies
+
+archives - Configuration for archive artifacts. (n)
+No dependencies
+
+compileClasspath - Compile classpath for compilation 'main' (target  (jvm)).
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
++--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains:annotations:13.0
++--- com.squareup:kotlinpoet:1.6.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72
+|         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72
+|              \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+\--- ome:bio-formats_plugins:6.5.0
+     +--- org.openmicroscopy:ome-common:6.0.4
+     |    +--- io.minio:minio:5.0.2
+     |    |    +--- com.google.http-client:google-http-client-xml:1.20.0
+     |    |    |    +--- com.google.http-client:google-http-client:1.20.0
+     |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.0.1 -> 4.5.1
+     |    |    |    |         +--- org.apache.httpcomponents:httpcore:4.4.3
+     |    |    |    |         +--- commons-logging:commons-logging:1.2
+     |    |    |    |         \--- commons-codec:commons-codec:1.9
+     |    |    |    \--- xpp3:xpp3:1.1.4c
+     |    |    +--- com.google.guava:guava:25.1-jre -> 27.1-jre
+     |    |    |    +--- com.google.guava:failureaccess:1.0.1
+     |    |    |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+     |    |    |    +--- org.checkerframework:checker-qual:2.5.2
+     |    |    |    +--- com.google.errorprone:error_prone_annotations:2.2.0
+     |    |    |    +--- com.google.j2objc:j2objc-annotations:1.1
+     |    |    |    \--- org.codehaus.mojo:animal-sniffer-annotations:1.17
+     |    |    +--- com.squareup.okhttp3:okhttp:3.7.0
+     |    |    |    \--- com.squareup.okio:okio:1.12.0
+     |    |    +--- com.squareup.okio:okio:1.12.0
+     |    |    +--- joda-time:joda-time:2.7 -> 2.8.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.6 -> 2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.6 -> 2.9.8
+     |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.9.6 -> 2.9.8
+     |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.9.0 -> 2.9.8
+     |    |         \--- com.fasterxml.jackson.core:jackson-core:2.9.8
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0
+     |    |    +--- com.esotericsoftware.minlog:minlog:1.2
+     |    |    \--- org.objenesis:objenesis:2.1
+     |    +--- joda-time:joda-time:2.2 -> 2.8.1
+     |    +--- com.google.guava:guava:27.1-jre (*)
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- ch.qos.logback:logback-core:1.1.1
+     |    \--- ch.qos.logback:logback-classic:1.1.1
+     |         +--- ch.qos.logback:logback-core:1.1.1
+     |         \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- org.openmicroscopy:ome-xml:6.1.0
+     |    +--- org.openmicroscopy:ome-common:6.0.1 -> 6.0.4 (*)
+     |    +--- org.openmicroscopy:specification:6.1.0
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    \--- joda-time:joda-time:2.2 -> 2.8.1
+     +--- ome:formats-api:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- org.openmicroscopy:ome-codecs:0.3.0
+     |    |    +--- org.openmicroscopy:ome-jai:0.1.0
+     |    |    \--- org.openmicroscopy:ome-common:5.3.2 -> 6.0.4 (*)
+     |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- ome:formats-bsd:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- org.openmicroscopy:specification:6.1.0
+     |    +--- ome:formats-api:6.5.0 (*)
+     |    +--- org.openmicroscopy:ome-codecs:0.3.0 (*)
+     |    +--- ome:turbojpeg:6.5.0
+     |    +--- org.scijava:native-lib-loader:2.1.4
+     |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- com.jgoodies:jgoodies-forms:1.7.2
+     |    |    \--- com.jgoodies:jgoodies-common:1.7.0
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+     |    +--- org.perf4j:perf4j:0.9.16
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- com.drewnoakes:metadata-extractor:2.11.0
+     |    |    \--- com.adobe.xmp:xmpcore:5.1.3
+     |    +--- ome:jxrlib-all:0.2.2
+     |    |    \--- org.scijava:native-lib-loader:2.1.4 (*)
+     |    \--- xerces:xercesImpl:2.8.1
+     |         \--- xml-apis:xml-apis:1.3.03
+     +--- ome:formats-gpl:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- ome:formats-bsd:6.5.0 (*)
+     |    +--- ome:formats-api:6.5.0 (*)
+     |    +--- org.openmicroscopy:ome-mdbtools:5.3.2
+     |    +--- org.openmicroscopy:metakit:5.3.2
+     |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+     |    |    \--- ch.qos.logback:logback-classic:1.1.1 (*)
+     |    +--- org.openmicroscopy:ome-poi:5.3.3
+     |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+     |    |    \--- commons-logging:commons-logging:1.1.1 -> 1.2
+     |    +--- edu.ucar:cdm:4.6.13
+     |    |    +--- edu.ucar:httpservices:4.6.13
+     |    |    |    +--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+     |    |    |    +--- org.apache.httpcomponents:httpmime:4.5.1
+     |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+     |    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+     |    |    +--- joda-time:joda-time:2.8.1
+     |    |    +--- com.mchange:c3p0:0.9.5.3
+     |    |    |    \--- com.mchange:mchange-commons-java:0.2.15
+     |    |    +--- com.google.guava:guava:27.0.1-jre -> 27.1-jre (*)
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.9.8 (*)
+     |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- woolz:JWlz:1.4.0
+     |    +--- joda-time:joda-time:2.2 -> 2.8.1
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+     |    +--- cisd:jhdf5:14.12.6 (*)
+     |    \--- org.json:json:20090211
+     +--- com.jgoodies:jgoodies-forms:1.7.2 (*)
+     +--- net.imagej:ij:1.51r
+     +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- ch.qos.logback:logback-core:1.1.1
+     \--- ch.qos.logback:logback-classic:1.1.1 (*)
+
+compileOnly - Compile only dependencies for compilation 'main' (target  (jvm)). (n)
+No dependencies
+
+compileOnlyDependenciesMetadata
+No dependencies
+
+default - Configuration for default artifacts. (n)
+No dependencies
+
+dokkaGfmPlugin
+\--- org.jetbrains.dokka:dokka-base:1.4.20
+     +--- org.jetbrains.dokka:dokka-analysis:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-intellij:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-compiler:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20
+     |         |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         |    \--- org.jetbrains:annotations:13.0
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |              \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     \--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2
+          +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaGfmRuntime
+\--- org.jetbrains.dokka:dokka-core:1.4.20
+     +--- org.jetbrains:markdown:0.1.45
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.41 -> 1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         \--- org.jetbrains:annotations:13.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    +--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+     |    |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    +--- org.codehaus.woodstox:stax2-api:4.2.1
+     |    \--- com.fasterxml.woodstox:woodstox-core:6.2.1
+     |         \--- org.codehaus.woodstox:stax2-api:4.2.1
+     \--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaHtmlPlugin
+\--- org.jetbrains.dokka:dokka-base:1.4.20
+     +--- org.jetbrains.dokka:dokka-analysis:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-intellij:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-compiler:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20
+     |         |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         |    \--- org.jetbrains:annotations:13.0
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |              \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     \--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2
+          +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaHtmlRuntime
+\--- org.jetbrains.dokka:dokka-core:1.4.20
+     +--- org.jetbrains:markdown:0.1.45
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.41 -> 1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         \--- org.jetbrains:annotations:13.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    +--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+     |    |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    +--- org.codehaus.woodstox:stax2-api:4.2.1
+     |    \--- com.fasterxml.woodstox:woodstox-core:6.2.1
+     |         \--- org.codehaus.woodstox:stax2-api:4.2.1
+     \--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaJavadocPlugin
+\--- org.jetbrains.dokka:dokka-base:1.4.20
+     +--- org.jetbrains.dokka:dokka-analysis:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-intellij:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-compiler:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20
+     |         |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         |    \--- org.jetbrains:annotations:13.0
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |              \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     \--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2
+          +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaJavadocRuntime
+\--- org.jetbrains.dokka:dokka-core:1.4.20
+     +--- org.jetbrains:markdown:0.1.45
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.41 -> 1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         \--- org.jetbrains:annotations:13.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    +--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+     |    |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    +--- org.codehaus.woodstox:stax2-api:4.2.1
+     |    \--- com.fasterxml.woodstox:woodstox-core:6.2.1
+     |         \--- org.codehaus.woodstox:stax2-api:4.2.1
+     \--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaJekyllPlugin
+\--- org.jetbrains.dokka:dokka-base:1.4.20
+     +--- org.jetbrains.dokka:dokka-analysis:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-intellij:1.4.20
+     |    +--- org.jetbrains.dokka:kotlin-analysis-compiler:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20
+     |         |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         |    \--- org.jetbrains:annotations:13.0
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |              \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     \--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2
+          +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaJekyllRuntime
+\--- org.jetbrains.dokka:dokka-core:1.4.20
+     +--- org.jetbrains:markdown:0.1.45
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.41 -> 1.4.20
+     |         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20
+     |         \--- org.jetbrains:annotations:13.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.20
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20
+     |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.20
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.20 (*)
+     +--- org.jsoup:jsoup:1.12.1
+     +--- com.fasterxml.jackson.module:jackson-module-kotlin:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    \--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72 -> 1.4.20 (*)
+     +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    +--- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.1 (*)
+     |    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+     |    |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+     |    +--- org.codehaus.woodstox:stax2-api:4.2.1
+     |    \--- com.fasterxml.woodstox:woodstox-core:6.2.1
+     |         \--- org.codehaus.woodstox:stax2-api:4.2.1
+     \--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.1
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.0 -> 1.4.20 (*)
+          \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0 -> 1.4.20
+
+dokkaPlugin
+No dependencies
+
+dokkaRuntime
+No dependencies
+
+implementation - Implementation only dependencies for compilation 'main' (target  (jvm)). (n)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (n)
++--- com.squareup:kotlinpoet:1.6.0 (n)
+\--- ome:bio-formats_plugins:6.5.0 (n)
+
+implementationDependenciesMetadata
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
++--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains:annotations:13.0
++--- com.squareup:kotlinpoet:1.6.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72
+|         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72
+|              \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+\--- ome:bio-formats_plugins:6.5.0
+     +--- org.openmicroscopy:ome-common:6.0.4
+     |    +--- io.minio:minio:5.0.2
+     |    |    +--- com.google.http-client:google-http-client-xml:1.20.0
+     |    |    |    +--- com.google.http-client:google-http-client:1.20.0
+     |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.0.1 -> 4.5.1
+     |    |    |    |         +--- org.apache.httpcomponents:httpcore:4.4.3
+     |    |    |    |         +--- commons-logging:commons-logging:1.2
+     |    |    |    |         \--- commons-codec:commons-codec:1.9
+     |    |    |    \--- xpp3:xpp3:1.1.4c
+     |    |    +--- com.google.guava:guava:25.1-jre -> 27.1-jre
+     |    |    |    +--- com.google.guava:failureaccess:1.0.1
+     |    |    |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+     |    |    |    +--- org.checkerframework:checker-qual:2.5.2
+     |    |    |    +--- com.google.errorprone:error_prone_annotations:2.2.0
+     |    |    |    +--- com.google.j2objc:j2objc-annotations:1.1
+     |    |    |    \--- org.codehaus.mojo:animal-sniffer-annotations:1.17
+     |    |    +--- com.squareup.okhttp3:okhttp:3.7.0
+     |    |    |    \--- com.squareup.okio:okio:1.12.0
+     |    |    +--- com.squareup.okio:okio:1.12.0
+     |    |    +--- joda-time:joda-time:2.7 -> 2.8.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.6 -> 2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.6 -> 2.9.8
+     |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.9.6 -> 2.9.8
+     |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.9.0 -> 2.9.8
+     |    |         \--- com.fasterxml.jackson.core:jackson-core:2.9.8
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0
+     |    |    +--- com.esotericsoftware.minlog:minlog:1.2
+     |    |    \--- org.objenesis:objenesis:2.1
+     |    +--- joda-time:joda-time:2.2 -> 2.8.1
+     |    +--- com.google.guava:guava:27.1-jre (*)
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- ch.qos.logback:logback-core:1.1.1
+     |    \--- ch.qos.logback:logback-classic:1.1.1
+     |         +--- ch.qos.logback:logback-core:1.1.1
+     |         \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- org.openmicroscopy:ome-xml:6.1.0
+     |    +--- org.openmicroscopy:ome-common:6.0.1 -> 6.0.4 (*)
+     |    +--- org.openmicroscopy:specification:6.1.0
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    \--- joda-time:joda-time:2.2 -> 2.8.1
+     +--- ome:formats-api:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- org.openmicroscopy:ome-codecs:0.3.0
+     |    |    +--- org.openmicroscopy:ome-jai:0.1.0
+     |    |    \--- org.openmicroscopy:ome-common:5.3.2 -> 6.0.4 (*)
+     |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- ome:formats-bsd:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- org.openmicroscopy:specification:6.1.0
+     |    +--- ome:formats-api:6.5.0 (*)
+     |    +--- org.openmicroscopy:ome-codecs:0.3.0 (*)
+     |    +--- ome:turbojpeg:6.5.0
+     |    +--- org.scijava:native-lib-loader:2.1.4
+     |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- com.jgoodies:jgoodies-forms:1.7.2
+     |    |    \--- com.jgoodies:jgoodies-common:1.7.0
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+     |    +--- org.perf4j:perf4j:0.9.16
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- com.drewnoakes:metadata-extractor:2.11.0
+     |    |    \--- com.adobe.xmp:xmpcore:5.1.3
+     |    +--- ome:jxrlib-all:0.2.2
+     |    |    \--- org.scijava:native-lib-loader:2.1.4 (*)
+     |    \--- xerces:xercesImpl:2.8.1
+     |         \--- xml-apis:xml-apis:1.3.03
+     +--- ome:formats-gpl:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- ome:formats-bsd:6.5.0 (*)
+     |    +--- ome:formats-api:6.5.0 (*)
+     |    +--- org.openmicroscopy:ome-mdbtools:5.3.2
+     |    +--- org.openmicroscopy:metakit:5.3.2
+     |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+     |    |    \--- ch.qos.logback:logback-classic:1.1.1 (*)
+     |    +--- org.openmicroscopy:ome-poi:5.3.3
+     |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+     |    |    \--- commons-logging:commons-logging:1.1.1 -> 1.2
+     |    +--- edu.ucar:cdm:4.6.13
+     |    |    +--- edu.ucar:httpservices:4.6.13
+     |    |    |    +--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+     |    |    |    +--- org.apache.httpcomponents:httpmime:4.5.1
+     |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+     |    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+     |    |    +--- joda-time:joda-time:2.8.1
+     |    |    +--- com.mchange:c3p0:0.9.5.3
+     |    |    |    \--- com.mchange:mchange-commons-java:0.2.15
+     |    |    +--- com.google.guava:guava:27.0.1-jre -> 27.1-jre (*)
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.9.8 (*)
+     |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- woolz:JWlz:1.4.0
+     |    +--- joda-time:joda-time:2.2 -> 2.8.1
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+     |    +--- cisd:jhdf5:14.12.6 (*)
+     |    \--- org.json:json:20090211
+     +--- com.jgoodies:jgoodies-forms:1.7.2 (*)
+     +--- net.imagej:ij:1.51r
+     +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- ch.qos.logback:logback-core:1.1.1
+     \--- ch.qos.logback:logback-classic:1.1.1 (*)
+
+jacocoAgent - The Jacoco agent to use to get coverage data.
+\--- org.jacoco:org.jacoco.agent:0.8.5
+
+jacocoAnt - The Jacoco ant tasks to use to get execute Gradle tasks.
+\--- org.jacoco:org.jacoco.ant:0.8.5
+     +--- org.jacoco:org.jacoco.core:0.8.5
+     |    +--- org.ow2.asm:asm:7.2
+     |    +--- org.ow2.asm:asm-commons:7.2
+     |    |    +--- org.ow2.asm:asm:7.2
+     |    |    +--- org.ow2.asm:asm-tree:7.2
+     |    |    |    \--- org.ow2.asm:asm:7.2
+     |    |    \--- org.ow2.asm:asm-analysis:7.2
+     |    |         \--- org.ow2.asm:asm-tree:7.2 (*)
+     |    \--- org.ow2.asm:asm-tree:7.2 (*)
+     +--- org.jacoco:org.jacoco.report:0.8.5
+     |    \--- org.jacoco:org.jacoco.core:0.8.5 (*)
+     \--- org.jacoco:org.jacoco.agent:0.8.5
+
+kotlinCompilerClasspath
+\--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.31
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+     |    \--- org.jetbrains:annotations:13.0
+     +--- org.jetbrains.kotlin:kotlin-script-runtime:1.4.31
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.4.31
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
+     +--- org.jetbrains.kotlin:kotlin-daemon-embeddable:1.4.31
+     \--- org.jetbrains.intellij.deps:trove4j:1.0.20181211
+
+kotlinCompilerPluginClasspath
+\--- org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:1.4.31
+     +--- org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable:1.4.31
+     |    +--- org.jetbrains.kotlin:kotlin-scripting-common:1.4.31
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+     |    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+     |    |    |    \--- org.jetbrains:annotations:13.0
+     |    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8
+     |    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.4.31 (*)
+     |    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.71 -> 1.4.31
+     |    +--- org.jetbrains.kotlin:kotlin-scripting-jvm:1.4.31
+     |    |    +--- org.jetbrains.kotlin:kotlin-script-runtime:1.4.31
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
+     |    |    \--- org.jetbrains.kotlin:kotlin-scripting-common:1.4.31 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8 (*)
+     \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
+
+kotlinKlibCommonizerClasspath
+\--- org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.31
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.31
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
+          +--- org.jetbrains.kotlin:kotlin-script-runtime:1.4.31
+          +--- org.jetbrains.kotlin:kotlin-reflect:1.4.31
+          |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
+          +--- org.jetbrains.kotlin:kotlin-daemon-embeddable:1.4.31
+          \--- org.jetbrains.intellij.deps:trove4j:1.0.20181211
+
+kotlinNativeCompilerPluginClasspath
+No dependencies
+
+kotlinScriptDef - Script filename extensions discovery classpath configuration
+No dependencies
+
+kotlinScriptDefExtensions
+No dependencies
+
+runtimeClasspath - Runtime classpath of compilation 'main' (target  (jvm)).
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
++--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains:annotations:13.0
++--- com.squareup:kotlinpoet:1.6.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+\--- ome:bio-formats_plugins:6.5.0
+     +--- org.openmicroscopy:ome-common:6.0.4
+     |    +--- io.minio:minio:5.0.2
+     |    |    +--- com.google.http-client:google-http-client-xml:1.20.0
+     |    |    |    +--- com.google.http-client:google-http-client:1.20.0
+     |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.0.1 -> 4.5.1
+     |    |    |    |         +--- org.apache.httpcomponents:httpcore:4.4.3
+     |    |    |    |         +--- commons-logging:commons-logging:1.2
+     |    |    |    |         \--- commons-codec:commons-codec:1.9
+     |    |    |    \--- xpp3:xpp3:1.1.4c
+     |    |    +--- com.google.guava:guava:25.1-jre -> 27.1-jre
+     |    |    |    +--- com.google.guava:failureaccess:1.0.1
+     |    |    |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+     |    |    |    +--- org.checkerframework:checker-qual:2.5.2
+     |    |    |    +--- com.google.errorprone:error_prone_annotations:2.2.0
+     |    |    |    +--- com.google.j2objc:j2objc-annotations:1.1
+     |    |    |    \--- org.codehaus.mojo:animal-sniffer-annotations:1.17
+     |    |    +--- com.squareup.okhttp3:okhttp:3.7.0
+     |    |    |    \--- com.squareup.okio:okio:1.12.0
+     |    |    +--- com.squareup.okio:okio:1.12.0
+     |    |    +--- joda-time:joda-time:2.7 -> 2.8.1
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.6 -> 2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.6 -> 2.9.8
+     |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.9.6 -> 2.9.8
+     |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.9.0 -> 2.9.8
+     |    |         \--- com.fasterxml.jackson.core:jackson-core:2.9.8
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0
+     |    |    +--- com.esotericsoftware.minlog:minlog:1.2
+     |    |    \--- org.objenesis:objenesis:2.1
+     |    +--- joda-time:joda-time:2.2 -> 2.8.1
+     |    +--- com.google.guava:guava:27.1-jre (*)
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- ch.qos.logback:logback-core:1.1.1
+     |    +--- ch.qos.logback:logback-classic:1.1.1
+     |    |    +--- ch.qos.logback:logback-core:1.1.1
+     |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- xalan:serializer:2.7.2
+     |    |    \--- xml-apis:xml-apis:1.3.04
+     |    \--- xalan:xalan:2.7.2
+     |         \--- xalan:serializer:2.7.2 (*)
+     +--- org.openmicroscopy:ome-xml:6.1.0
+     |    +--- org.openmicroscopy:ome-common:6.0.1 -> 6.0.4 (*)
+     |    +--- org.openmicroscopy:specification:6.1.0
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    \--- joda-time:joda-time:2.2 -> 2.8.1
+     +--- ome:formats-api:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- org.openmicroscopy:ome-codecs:0.3.0
+     |    |    +--- org.openmicroscopy:ome-jai:0.1.0
+     |    |    \--- org.openmicroscopy:ome-common:5.3.2 -> 6.0.4 (*)
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- xalan:serializer:2.7.2 (*)
+     |    \--- xalan:xalan:2.7.2 (*)
+     +--- ome:formats-bsd:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- org.openmicroscopy:specification:6.1.0
+     |    +--- ome:formats-api:6.5.0 (*)
+     |    +--- org.openmicroscopy:ome-codecs:0.3.0 (*)
+     |    +--- ome:turbojpeg:6.5.0
+     |    +--- org.scijava:native-lib-loader:2.1.4
+     |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- com.jgoodies:jgoodies-forms:1.7.2
+     |    |    \--- com.jgoodies:jgoodies-common:1.7.0
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+     |    +--- org.perf4j:perf4j:0.9.16
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- com.drewnoakes:metadata-extractor:2.11.0
+     |    |    \--- com.adobe.xmp:xmpcore:5.1.3
+     |    +--- ome:jxrlib-all:0.2.2
+     |    |    \--- org.scijava:native-lib-loader:2.1.4 (*)
+     |    +--- xerces:xercesImpl:2.8.1
+     |    |    \--- xml-apis:xml-apis:1.3.03 -> 1.3.04
+     |    +--- xalan:serializer:2.7.2 (*)
+     |    \--- xalan:xalan:2.7.2 (*)
+     +--- ome:formats-gpl:6.5.0
+     |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+     |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+     |    +--- ome:formats-bsd:6.5.0 (*)
+     |    +--- ome:formats-api:6.5.0 (*)
+     |    +--- org.openmicroscopy:ome-mdbtools:5.3.2
+     |    +--- org.openmicroscopy:metakit:5.3.2
+     |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+     |    |    \--- ch.qos.logback:logback-classic:1.1.1 (*)
+     |    +--- org.openmicroscopy:ome-poi:5.3.3
+     |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+     |    |    \--- commons-logging:commons-logging:1.1.1 -> 1.2
+     |    +--- edu.ucar:cdm:4.6.13
+     |    |    +--- edu.ucar:httpservices:4.6.13
+     |    |    |    +--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+     |    |    |    +--- org.apache.httpcomponents:httpmime:4.5.1
+     |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+     |    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+     |    |    +--- joda-time:joda-time:2.8.1
+     |    |    +--- com.mchange:c3p0:0.9.5.3
+     |    |    |    \--- com.mchange:mchange-commons-java:0.2.15
+     |    |    +--- com.google.guava:guava:27.0.1-jre -> 27.1-jre (*)
+     |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.8
+     |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.9.8 (*)
+     |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+     |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     |    +--- woolz:JWlz:1.4.0
+     |    +--- joda-time:joda-time:2.2 -> 2.8.1
+     |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+     |    +--- cisd:jhdf5:14.12.6 (*)
+     |    \--- org.json:json:20090211
+     +--- com.jgoodies:jgoodies-forms:1.7.2 (*)
+     +--- net.imagej:ij:1.51r
+     +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+     +--- ch.qos.logback:logback-core:1.1.1
+     \--- ch.qos.logback:logback-classic:1.1.1 (*)
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeElements-published (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for compilation 'main' (target  (jvm)). (n)
+No dependencies
+
+runtimeOnlyDependenciesMetadata
+No dependencies
+
+sourceArtifacts (n)
+No dependencies
+
+testAnnotationProcessor - Annotation processors and their dependencies for source set 'test'.
+No dependencies
+
+testApi - API dependencies for compilation 'test' (target  (jvm)). (n)
+No dependencies
+
+testApiDependenciesMetadata
+No dependencies
+
+testCompileClasspath - Compile classpath for compilation 'test' (target  (jvm)).
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
++--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains:annotations:13.0
++--- com.squareup:kotlinpoet:1.6.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72
+|         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72
+|              \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
++--- ome:bio-formats_plugins:6.5.0
+|    +--- org.openmicroscopy:ome-common:6.0.4
+|    |    +--- io.minio:minio:5.0.2
+|    |    |    +--- com.google.http-client:google-http-client-xml:1.20.0
+|    |    |    |    +--- com.google.http-client:google-http-client:1.20.0
+|    |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.0.1 -> 4.5.1
+|    |    |    |    |         +--- org.apache.httpcomponents:httpcore:4.4.3
+|    |    |    |    |         +--- commons-logging:commons-logging:1.2
+|    |    |    |    |         \--- commons-codec:commons-codec:1.9
+|    |    |    |    \--- xpp3:xpp3:1.1.4c
+|    |    |    +--- com.google.guava:guava:25.1-jre -> 27.1-jre
+|    |    |    |    +--- com.google.guava:failureaccess:1.0.1
+|    |    |    |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|    |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    |    +--- org.checkerframework:checker-qual:2.5.2
+|    |    |    |    +--- com.google.errorprone:error_prone_annotations:2.2.0
+|    |    |    |    +--- com.google.j2objc:j2objc-annotations:1.1
+|    |    |    |    \--- org.codehaus.mojo:animal-sniffer-annotations:1.17
+|    |    |    +--- com.squareup.okhttp3:okhttp:3.7.0
+|    |    |    |    \--- com.squareup.okio:okio:1.12.0
+|    |    |    +--- com.squareup.okio:okio:1.12.0
+|    |    |    +--- joda-time:joda-time:2.7 -> 2.8.1
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.6 -> 2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.6 -> 2.9.8
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.9.6 -> 2.9.8
+|    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.9.0 -> 2.9.8
+|    |    |         \--- com.fasterxml.jackson.core:jackson-core:2.9.8
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0
+|    |    |    +--- com.esotericsoftware.minlog:minlog:1.2
+|    |    |    \--- org.objenesis:objenesis:2.1
+|    |    +--- joda-time:joda-time:2.2 -> 2.8.1
+|    |    +--- com.google.guava:guava:27.1-jre (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- ch.qos.logback:logback-core:1.1.1
+|    |    \--- ch.qos.logback:logback-classic:1.1.1
+|    |         +--- ch.qos.logback:logback-core:1.1.1
+|    |         \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- org.openmicroscopy:ome-xml:6.1.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.1 -> 6.0.4 (*)
+|    |    +--- org.openmicroscopy:specification:6.1.0
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    \--- joda-time:joda-time:2.2 -> 2.8.1
+|    +--- ome:formats-api:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- org.openmicroscopy:ome-codecs:0.3.0
+|    |    |    +--- org.openmicroscopy:ome-jai:0.1.0
+|    |    |    \--- org.openmicroscopy:ome-common:5.3.2 -> 6.0.4 (*)
+|    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- ome:formats-bsd:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- org.openmicroscopy:specification:6.1.0
+|    |    +--- ome:formats-api:6.5.0 (*)
+|    |    +--- org.openmicroscopy:ome-codecs:0.3.0 (*)
+|    |    +--- ome:turbojpeg:6.5.0
+|    |    +--- org.scijava:native-lib-loader:2.1.4
+|    |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- com.jgoodies:jgoodies-forms:1.7.2
+|    |    |    \--- com.jgoodies:jgoodies-common:1.7.0
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+|    |    +--- org.perf4j:perf4j:0.9.16
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- com.drewnoakes:metadata-extractor:2.11.0
+|    |    |    \--- com.adobe.xmp:xmpcore:5.1.3
+|    |    +--- ome:jxrlib-all:0.2.2
+|    |    |    \--- org.scijava:native-lib-loader:2.1.4 (*)
+|    |    \--- xerces:xercesImpl:2.8.1
+|    |         \--- xml-apis:xml-apis:1.3.03
+|    +--- ome:formats-gpl:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- ome:formats-bsd:6.5.0 (*)
+|    |    +--- ome:formats-api:6.5.0 (*)
+|    |    +--- org.openmicroscopy:ome-mdbtools:5.3.2
+|    |    +--- org.openmicroscopy:metakit:5.3.2
+|    |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+|    |    |    \--- ch.qos.logback:logback-classic:1.1.1 (*)
+|    |    +--- org.openmicroscopy:ome-poi:5.3.3
+|    |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+|    |    |    \--- commons-logging:commons-logging:1.1.1 -> 1.2
+|    |    +--- edu.ucar:cdm:4.6.13
+|    |    |    +--- edu.ucar:httpservices:4.6.13
+|    |    |    |    +--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+|    |    |    |    +--- org.apache.httpcomponents:httpmime:4.5.1
+|    |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+|    |    |    +--- joda-time:joda-time:2.8.1
+|    |    |    +--- com.mchange:c3p0:0.9.5.3
+|    |    |    |    \--- com.mchange:mchange-commons-java:0.2.15
+|    |    |    +--- com.google.guava:guava:27.0.1-jre -> 27.1-jre (*)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.9.8 (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- woolz:JWlz:1.4.0
+|    |    +--- joda-time:joda-time:2.2 -> 2.8.1
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+|    |    +--- cisd:jhdf5:14.12.6 (*)
+|    |    \--- org.json:json:20090211
+|    +--- com.jgoodies:jgoodies-forms:1.7.2 (*)
+|    +--- net.imagej:ij:1.51r
+|    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- ch.qos.logback:logback-core:1.1.1
+|    \--- ch.qos.logback:logback-classic:1.1.1 (*)
++--- org.jetbrains.kotlin:kotlin-test:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test-common:1.4.31
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
++--- org.jetbrains.kotlin:kotlin-test-junit:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test-annotations-common:1.4.31
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test:1.4.31 (*)
+|    \--- junit:junit:4.12
+|         \--- org.hamcrest:hamcrest-core:1.3
+\--- org.junit.jupiter:junit-jupiter:5.6.2
+     +--- org.junit:junit-bom:5.6.2
+     |    +--- org.junit.jupiter:junit-jupiter:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-api:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-params:5.6.2 (c)
+     |    \--- org.junit.platform:junit-platform-commons:1.6.2 (c)
+     +--- org.junit.jupiter:junit-jupiter-api:5.6.2
+     |    +--- org.junit:junit-bom:5.6.2 (*)
+     |    +--- org.apiguardian:apiguardian-api:1.1.0
+     |    +--- org.opentest4j:opentest4j:1.2.0
+     |    \--- org.junit.platform:junit-platform-commons:1.6.2
+     |         +--- org.junit:junit-bom:5.6.2 (*)
+     |         \--- org.apiguardian:apiguardian-api:1.1.0
+     \--- org.junit.jupiter:junit-jupiter-params:5.6.2
+          +--- org.junit:junit-bom:5.6.2 (*)
+          +--- org.apiguardian:apiguardian-api:1.1.0
+          \--- org.junit.jupiter:junit-jupiter-api:5.6.2 (*)
+
+testCompileOnly - Compile only dependencies for compilation 'test' (target  (jvm)). (n)
+No dependencies
+
+testCompileOnlyDependenciesMetadata
+No dependencies
+
+testImplementation - Implementation only dependencies for compilation 'test' (target  (jvm)). (n)
++--- org.jetbrains.kotlin:kotlin-test:1.4.31 (n)
++--- org.jetbrains.kotlin:kotlin-test-junit:1.4.31 (n)
+\--- org.junit.jupiter:junit-jupiter:5.6.2 (n)
+
+testImplementationDependenciesMetadata
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
++--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains:annotations:13.0
++--- com.squareup:kotlinpoet:1.6.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72
+|         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72
+|              \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
++--- ome:bio-formats_plugins:6.5.0
+|    +--- org.openmicroscopy:ome-common:6.0.4
+|    |    +--- io.minio:minio:5.0.2
+|    |    |    +--- com.google.http-client:google-http-client-xml:1.20.0
+|    |    |    |    +--- com.google.http-client:google-http-client:1.20.0
+|    |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.0.1 -> 4.5.1
+|    |    |    |    |         +--- org.apache.httpcomponents:httpcore:4.4.3
+|    |    |    |    |         +--- commons-logging:commons-logging:1.2
+|    |    |    |    |         \--- commons-codec:commons-codec:1.9
+|    |    |    |    \--- xpp3:xpp3:1.1.4c
+|    |    |    +--- com.google.guava:guava:25.1-jre -> 27.1-jre
+|    |    |    |    +--- com.google.guava:failureaccess:1.0.1
+|    |    |    |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|    |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    |    +--- org.checkerframework:checker-qual:2.5.2
+|    |    |    |    +--- com.google.errorprone:error_prone_annotations:2.2.0
+|    |    |    |    +--- com.google.j2objc:j2objc-annotations:1.1
+|    |    |    |    \--- org.codehaus.mojo:animal-sniffer-annotations:1.17
+|    |    |    +--- com.squareup.okhttp3:okhttp:3.7.0
+|    |    |    |    \--- com.squareup.okio:okio:1.12.0
+|    |    |    +--- com.squareup.okio:okio:1.12.0
+|    |    |    +--- joda-time:joda-time:2.7 -> 2.8.1
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.6 -> 2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.6 -> 2.9.8
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.9.6 -> 2.9.8
+|    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.9.0 -> 2.9.8
+|    |    |         \--- com.fasterxml.jackson.core:jackson-core:2.9.8
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0
+|    |    |    +--- com.esotericsoftware.minlog:minlog:1.2
+|    |    |    \--- org.objenesis:objenesis:2.1
+|    |    +--- joda-time:joda-time:2.2 -> 2.8.1
+|    |    +--- com.google.guava:guava:27.1-jre (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- ch.qos.logback:logback-core:1.1.1
+|    |    \--- ch.qos.logback:logback-classic:1.1.1
+|    |         +--- ch.qos.logback:logback-core:1.1.1
+|    |         \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- org.openmicroscopy:ome-xml:6.1.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.1 -> 6.0.4 (*)
+|    |    +--- org.openmicroscopy:specification:6.1.0
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    \--- joda-time:joda-time:2.2 -> 2.8.1
+|    +--- ome:formats-api:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- org.openmicroscopy:ome-codecs:0.3.0
+|    |    |    +--- org.openmicroscopy:ome-jai:0.1.0
+|    |    |    \--- org.openmicroscopy:ome-common:5.3.2 -> 6.0.4 (*)
+|    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- ome:formats-bsd:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- org.openmicroscopy:specification:6.1.0
+|    |    +--- ome:formats-api:6.5.0 (*)
+|    |    +--- org.openmicroscopy:ome-codecs:0.3.0 (*)
+|    |    +--- ome:turbojpeg:6.5.0
+|    |    +--- org.scijava:native-lib-loader:2.1.4
+|    |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- com.jgoodies:jgoodies-forms:1.7.2
+|    |    |    \--- com.jgoodies:jgoodies-common:1.7.0
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+|    |    +--- org.perf4j:perf4j:0.9.16
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- com.drewnoakes:metadata-extractor:2.11.0
+|    |    |    \--- com.adobe.xmp:xmpcore:5.1.3
+|    |    +--- ome:jxrlib-all:0.2.2
+|    |    |    \--- org.scijava:native-lib-loader:2.1.4 (*)
+|    |    \--- xerces:xercesImpl:2.8.1
+|    |         \--- xml-apis:xml-apis:1.3.03
+|    +--- ome:formats-gpl:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- ome:formats-bsd:6.5.0 (*)
+|    |    +--- ome:formats-api:6.5.0 (*)
+|    |    +--- org.openmicroscopy:ome-mdbtools:5.3.2
+|    |    +--- org.openmicroscopy:metakit:5.3.2
+|    |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+|    |    |    \--- ch.qos.logback:logback-classic:1.1.1 (*)
+|    |    +--- org.openmicroscopy:ome-poi:5.3.3
+|    |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+|    |    |    \--- commons-logging:commons-logging:1.1.1 -> 1.2
+|    |    +--- edu.ucar:cdm:4.6.13
+|    |    |    +--- edu.ucar:httpservices:4.6.13
+|    |    |    |    +--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+|    |    |    |    +--- org.apache.httpcomponents:httpmime:4.5.1
+|    |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+|    |    |    +--- joda-time:joda-time:2.8.1
+|    |    |    +--- com.mchange:c3p0:0.9.5.3
+|    |    |    |    \--- com.mchange:mchange-commons-java:0.2.15
+|    |    |    +--- com.google.guava:guava:27.0.1-jre -> 27.1-jre (*)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.9.8 (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- woolz:JWlz:1.4.0
+|    |    +--- joda-time:joda-time:2.2 -> 2.8.1
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+|    |    +--- cisd:jhdf5:14.12.6 (*)
+|    |    \--- org.json:json:20090211
+|    +--- com.jgoodies:jgoodies-forms:1.7.2 (*)
+|    +--- net.imagej:ij:1.51r
+|    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- ch.qos.logback:logback-core:1.1.1
+|    \--- ch.qos.logback:logback-classic:1.1.1 (*)
++--- org.jetbrains.kotlin:kotlin-test:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test-common:1.4.31
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
++--- org.jetbrains.kotlin:kotlin-test-junit:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test-annotations-common:1.4.31
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test:1.4.31 (*)
+|    \--- junit:junit:4.12
+|         \--- org.hamcrest:hamcrest-core:1.3
+\--- org.junit.jupiter:junit-jupiter:5.6.2
+     +--- org.junit:junit-bom:5.6.2
+     |    +--- org.junit.jupiter:junit-jupiter:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-api:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-params:5.6.2 (c)
+     |    \--- org.junit.platform:junit-platform-commons:1.6.2 (c)
+     +--- org.junit.jupiter:junit-jupiter-api:5.6.2
+     |    +--- org.junit:junit-bom:5.6.2 (*)
+     |    +--- org.apiguardian:apiguardian-api:1.1.0
+     |    +--- org.opentest4j:opentest4j:1.2.0
+     |    \--- org.junit.platform:junit-platform-commons:1.6.2
+     |         +--- org.junit:junit-bom:5.6.2 (*)
+     |         \--- org.apiguardian:apiguardian-api:1.1.0
+     \--- org.junit.jupiter:junit-jupiter-params:5.6.2
+          +--- org.junit:junit-bom:5.6.2 (*)
+          +--- org.apiguardian:apiguardian-api:1.1.0
+          \--- org.junit.jupiter:junit-jupiter-api:5.6.2 (*)
+
+testKotlinScriptDef - Script filename extensions discovery classpath configuration
+No dependencies
+
+testKotlinScriptDefExtensions
+No dependencies
+
+testRuntimeClasspath - Runtime classpath of compilation 'test' (target  (jvm)).
++--- net.imglib2:imglib2:5.10.0
++--- net.imglib2:imglib2-realtransform:3.0.0
+|    +--- net.imglib2:imglib2:5.1.0 -> 5.10.0
+|    +--- gov.nist.math:jama:1.0.3
+|    \--- jitk:jitk-tps:3.0.1
+|         +--- com.googlecode.efficient-java-matrix-library:ejml:0.24
+|         \--- log4j:log4j:1.2.17
++--- net.imglib2:imglib2-cache:1.0.0-beta-14
+|    +--- net.imglib2:imglib2:5.9.3 -> 5.10.0
+|    +--- com.github.ben-manes.caffeine:caffeine:2.4.0
+|    \--- org.scijava:scijava-optional:1.0.0
++--- sc.fiji:bigdataviewer-vistools:1.0.0-beta-21
+|    +--- sc.fiji:bigdataviewer-core:9.0.6
+|    |    +--- net.imglib2:imglib2:5.10.0
+|    |    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    |    +--- net.imglib2:imglib2-ui:2.0.1
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    +--- net.imglib2:imglib2-algorithm:0.11.2
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-roi:0.9.0
+|    |    |    |    +--- net.imglib2:imglib2:5.6.0 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-realtransform:2.0.1 -> 3.0.0 (*)
+|    |    |    |    \--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- gov.nist.math:jama:1.0.3
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    \--- org.ojalgo:ojalgo:45.1.1
+|    |    +--- sc.fiji:spim_data:2.2.4
+|    |    |    +--- net.imglib2:imglib2:5.8.0 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-realtransform:2.2.1 -> 3.0.0 (*)
+|    |    |    +--- org.scijava:scijava-common:2.77.0
+|    |    |    |    +--- org.scijava:parsington:1.0.3
+|    |    |    |    \--- org.bushe:eventbus:1.4
+|    |    |    \--- org.jdom:jdom2:2.0.6
+|    |    +--- cisd:jhdf5:14.12.6
+|    |    |    +--- commons-lang:commons-lang:2.4
+|    |    |    \--- commons-io:commons-io:1.4
+|    |    +--- org.jdom:jdom2:2.0.6
+|    |    +--- com.google.code.gson:gson:2.8.6
+|    |    +--- org.scijava:ui-behaviour:2.0.1
+|    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    \--- org.yaml:snakeyaml:1.23
+|    |    +--- org.scijava:scijava-listeners:1.0.0-beta-3
+|    |    +--- org.janelia.saalfeldlab:n5-imglib2:3.5.1
+|    |    |    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1
+|    |    |    |    +--- org.tukaani:xz:1.8
+|    |    |    |    +--- org.lz4:lz4-java:1.5.0
+|    |    |    |    +--- com.google.code.gson:gson:2.8.5 -> 2.8.6
+|    |    |    |    +--- org.scijava:scijava-common:2.77.0 (*)
+|    |    |    |    \--- org.apache.commons:commons-compress:1.19
+|    |    |    +--- net.imglib2:imglib2-label-multisets:0.8.1
+|    |    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    |    +--- net.sf.trove4j:trove4j:3.0.3
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.25
+|    |    |    +--- net.imglib2:imglib2:5.6.3 -> 5.10.0
+|    |    |    +--- net.imglib2:imglib2-cache:1.0.0-beta-11 -> 1.0.0-beta-14 (*)
+|    |    |    \--- net.imglib2:imglib2-realtransform:2.2.0 -> 3.0.0 (*)
+|    |    +--- org.janelia.saalfeldlab:n5:2.2.1 (*)
+|    |    \--- com.miglayout:miglayout-swing:5.2
+|    |         \--- com.miglayout:miglayout-core:5.2
+|    +--- net.imglib2:imglib2:5.10.0
+|    +--- net.imglib2:imglib2-cache:1.0.0-beta-13 -> 1.0.0-beta-14 (*)
+|    +--- net.imglib2:imglib2-realtransform:3.0.0 (*)
+|    +--- net.imglib2:imglib2-ui:2.0.1 (*)
+|    \--- org.scijava:ui-behaviour:2.0.1 (*)
++--- org.janelia.saalfeldlab:n5:2.2.1 (*)
++--- org.janelia.saalfeldlab:n5-hdf5:1.1.0
+|    +--- org.janelia.saalfeldlab:n5:2.2.0 -> 2.2.1 (*)
+|    +--- cisd:jhdf5:14.12.6 (*)
+|    \--- com.google.code.gson:gson:2.8.5 -> 2.8.6
++--- org.janelia.saalfeldlab:n5-imglib2:3.5.1 (*)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains:annotations:13.0
++--- com.squareup:kotlinpoet:1.6.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
+|    \--- org.jetbrains.kotlin:kotlin-reflect:1.3.72
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.3.72 -> 1.4.31 (*)
++--- ome:bio-formats_plugins:6.5.0
+|    +--- org.openmicroscopy:ome-common:6.0.4
+|    |    +--- io.minio:minio:5.0.2
+|    |    |    +--- com.google.http-client:google-http-client-xml:1.20.0
+|    |    |    |    +--- com.google.http-client:google-http-client:1.20.0
+|    |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.0.1 -> 4.5.1
+|    |    |    |    |         +--- org.apache.httpcomponents:httpcore:4.4.3
+|    |    |    |    |         +--- commons-logging:commons-logging:1.2
+|    |    |    |    |         \--- commons-codec:commons-codec:1.9
+|    |    |    |    \--- xpp3:xpp3:1.1.4c
+|    |    |    +--- com.google.guava:guava:25.1-jre -> 27.1-jre
+|    |    |    |    +--- com.google.guava:failureaccess:1.0.1
+|    |    |    |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|    |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    |    +--- org.checkerframework:checker-qual:2.5.2
+|    |    |    |    +--- com.google.errorprone:error_prone_annotations:2.2.0
+|    |    |    |    +--- com.google.j2objc:j2objc-annotations:1.1
+|    |    |    |    \--- org.codehaus.mojo:animal-sniffer-annotations:1.17
+|    |    |    +--- com.squareup.okhttp3:okhttp:3.7.0
+|    |    |    |    \--- com.squareup.okio:okio:1.12.0
+|    |    |    +--- com.squareup.okio:okio:1.12.0
+|    |    |    +--- joda-time:joda-time:2.7 -> 2.8.1
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.6 -> 2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.6 -> 2.9.8
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.9.6 -> 2.9.8
+|    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.9.0 -> 2.9.8
+|    |    |         \--- com.fasterxml.jackson.core:jackson-core:2.9.8
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0
+|    |    |    +--- com.esotericsoftware.minlog:minlog:1.2
+|    |    |    \--- org.objenesis:objenesis:2.1
+|    |    +--- joda-time:joda-time:2.2 -> 2.8.1
+|    |    +--- com.google.guava:guava:27.1-jre (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- ch.qos.logback:logback-core:1.1.1
+|    |    +--- ch.qos.logback:logback-classic:1.1.1
+|    |    |    +--- ch.qos.logback:logback-core:1.1.1
+|    |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- xalan:serializer:2.7.2
+|    |    |    \--- xml-apis:xml-apis:1.3.04
+|    |    \--- xalan:xalan:2.7.2
+|    |         \--- xalan:serializer:2.7.2 (*)
+|    +--- org.openmicroscopy:ome-xml:6.1.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.1 -> 6.0.4 (*)
+|    |    +--- org.openmicroscopy:specification:6.1.0
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    \--- joda-time:joda-time:2.2 -> 2.8.1
+|    +--- ome:formats-api:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- org.openmicroscopy:ome-codecs:0.3.0
+|    |    |    +--- org.openmicroscopy:ome-jai:0.1.0
+|    |    |    \--- org.openmicroscopy:ome-common:5.3.2 -> 6.0.4 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- xalan:serializer:2.7.2 (*)
+|    |    \--- xalan:xalan:2.7.2 (*)
+|    +--- ome:formats-bsd:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- org.openmicroscopy:specification:6.1.0
+|    |    +--- ome:formats-api:6.5.0 (*)
+|    |    +--- org.openmicroscopy:ome-codecs:0.3.0 (*)
+|    |    +--- ome:turbojpeg:6.5.0
+|    |    +--- org.scijava:native-lib-loader:2.1.4
+|    |    |    \--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- com.jgoodies:jgoodies-forms:1.7.2
+|    |    |    \--- com.jgoodies:jgoodies-common:1.7.0
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+|    |    +--- org.perf4j:perf4j:0.9.16
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- com.drewnoakes:metadata-extractor:2.11.0
+|    |    |    \--- com.adobe.xmp:xmpcore:5.1.3
+|    |    +--- ome:jxrlib-all:0.2.2
+|    |    |    \--- org.scijava:native-lib-loader:2.1.4 (*)
+|    |    +--- xerces:xercesImpl:2.8.1
+|    |    |    \--- xml-apis:xml-apis:1.3.03 -> 1.3.04
+|    |    +--- xalan:serializer:2.7.2 (*)
+|    |    \--- xalan:xalan:2.7.2 (*)
+|    +--- ome:formats-gpl:6.5.0
+|    |    +--- org.openmicroscopy:ome-common:6.0.4 (*)
+|    |    +--- org.openmicroscopy:ome-xml:6.1.0 (*)
+|    |    +--- ome:formats-bsd:6.5.0 (*)
+|    |    +--- ome:formats-api:6.5.0 (*)
+|    |    +--- org.openmicroscopy:ome-mdbtools:5.3.2
+|    |    +--- org.openmicroscopy:metakit:5.3.2
+|    |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+|    |    |    \--- ch.qos.logback:logback-classic:1.1.1 (*)
+|    |    +--- org.openmicroscopy:ome-poi:5.3.3
+|    |    |    +--- org.openmicroscopy:ome-common:5.3.1 -> 6.0.4 (*)
+|    |    |    \--- commons-logging:commons-logging:1.1.1 -> 1.2
+|    |    +--- edu.ucar:cdm:4.6.13
+|    |    |    +--- edu.ucar:httpservices:4.6.13
+|    |    |    |    +--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+|    |    |    |    +--- org.apache.httpcomponents:httpmime:4.5.1
+|    |    |    |    |    \--- org.apache.httpcomponents:httpclient:4.5.1 (*)
+|    |    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+|    |    |    +--- joda-time:joda-time:2.8.1
+|    |    |    +--- com.mchange:c3p0:0.9.5.3
+|    |    |    |    \--- com.mchange:mchange-commons-java:0.2.15
+|    |    |    +--- com.google.guava:guava:27.0.1-jre -> 27.1-jre (*)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.9.8
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.9.8 (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.22 -> 1.7.25
+|    |    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    |    +--- woolz:JWlz:1.4.0
+|    |    +--- joda-time:joda-time:2.2 -> 2.8.1
+|    |    +--- com.esotericsoftware.kryo:kryo:2.24.0 (*)
+|    |    +--- cisd:jhdf5:14.12.6 (*)
+|    |    \--- org.json:json:20090211
+|    +--- com.jgoodies:jgoodies-forms:1.7.2 (*)
+|    +--- net.imagej:ij:1.51r
+|    +--- org.slf4j:slf4j-api:1.7.6 -> 1.7.25
+|    +--- ch.qos.logback:logback-core:1.1.1
+|    \--- ch.qos.logback:logback-classic:1.1.1 (*)
++--- org.jetbrains.kotlin:kotlin-test:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test-common:1.4.31
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.4.31 (*)
++--- org.jetbrains.kotlin:kotlin-test-junit:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test-annotations-common:1.4.31
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.4.31
+|    +--- org.jetbrains.kotlin:kotlin-test:1.4.31 (*)
+|    \--- junit:junit:4.12
+|         \--- org.hamcrest:hamcrest-core:1.3
+\--- org.junit.jupiter:junit-jupiter:5.6.2
+     +--- org.junit:junit-bom:5.6.2
+     |    +--- org.junit.jupiter:junit-jupiter:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-api:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-engine:5.6.2 (c)
+     |    +--- org.junit.jupiter:junit-jupiter-params:5.6.2 (c)
+     |    +--- org.junit.platform:junit-platform-commons:1.6.2 (c)
+     |    \--- org.junit.platform:junit-platform-engine:1.6.2 (c)
+     +--- org.junit.jupiter:junit-jupiter-api:5.6.2
+     |    +--- org.junit:junit-bom:5.6.2 (*)
+     |    +--- org.apiguardian:apiguardian-api:1.1.0
+     |    +--- org.opentest4j:opentest4j:1.2.0
+     |    \--- org.junit.platform:junit-platform-commons:1.6.2
+     |         +--- org.junit:junit-bom:5.6.2 (*)
+     |         \--- org.apiguardian:apiguardian-api:1.1.0
+     +--- org.junit.jupiter:junit-jupiter-params:5.6.2
+     |    +--- org.junit:junit-bom:5.6.2 (*)
+     |    +--- org.apiguardian:apiguardian-api:1.1.0
+     |    \--- org.junit.jupiter:junit-jupiter-api:5.6.2 (*)
+     \--- org.junit.jupiter:junit-jupiter-engine:5.6.2
+          +--- org.junit:junit-bom:5.6.2 (*)
+          +--- org.apiguardian:apiguardian-api:1.1.0
+          +--- org.junit.platform:junit-platform-engine:1.6.2
+          |    +--- org.junit:junit-bom:5.6.2 (*)
+          |    +--- org.apiguardian:apiguardian-api:1.1.0
+          |    +--- org.opentest4j:opentest4j:1.2.0
+          |    \--- org.junit.platform:junit-platform-commons:1.6.2 (*)
+          \--- org.junit.jupiter:junit-jupiter-api:5.6.2 (*)
+
+testRuntimeOnly - Runtime only dependencies for compilation 'test' (target  (jvm)). (n)
+No dependencies
+
+testRuntimeOnlyDependenciesMetadata
+No dependencies
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 7.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/6.7.1/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD SUCCESSFUL in 2s
+1 actionable task: 1 executed
