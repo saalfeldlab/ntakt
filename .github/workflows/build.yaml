@@ -89,6 +89,15 @@ jobs:
       - name: Update gradle.properties with bumped version
         if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
         run: .github/workflows/replace-version.sh
-      - name: Commit changes and push gradle.properties with bumped version
-        if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
-        run: .github/workflows/commit-bump-to-next-development-cycle.sh
+      - if: ${{ github.ref == 'refs/heads/main' && env.IS_RELEASE_VERSION == '1' }}
+        name: Create version bump PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Bump to next development cycle ${{ env.NEW_PROJECT_VERSION }}
+          delete-branch: true
+          signoff: false
+          draft: false
+          branch: bump-development-cycle/${{ env.NEW_PROJECT_VERSION }}
+          title: Bump to next development cycle  ${{ env.NEW_PROJECT_VERSION }}
+          labels: |
+            bump development cycle

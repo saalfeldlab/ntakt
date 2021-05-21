@@ -1,0 +1,62 @@
+name: Release
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  Create-Release-PR:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "Issue labels... $ISSUE_LABELS"
+        env:
+          ISSUE_LABELS: ${{ toJSON(github.event.issue.labels) }}
+      - run: echo "IS_RELEASE_REQUEST=1" >> "$GITHUB_ENV"
+        if: contains(github.event.issue.labels.*.name, 'release request')
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Determine release version
+        run: .github/workflows/determine-release-version.sh
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Set version in gradle.properties
+        run: .github/workflows/replace-version.sh
+      - name: Set up Python 3.9
+        if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        run: python -m pip install auto-changelog
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        run: python -m auto_changelog --tag-pattern 'ntakt-[0-9]+\.[0-9]+\.[0-9]+' -v ntakt-${{ env.NEW_PROJECT_VERSION }}
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Create release PR
+        id: release_pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Release nta.kt ${{ env.NEW_PROJECT_VERSION }}
+          delete-branch: true
+          signoff: false
+          draft: false
+          branch: release-request/${{ env.NEW_PROJECT_VERSION }}
+          title: Release ${{ env.NEW_PROJECT_VERSION }}
+          body: 'TBD: auto-generate from history'
+          labels: |
+            release
+            automated pr
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Close release request issue
+        uses: peter-evans/close-issue@v1
+        with:
+          comment: |
+            Created release request PR #${{ steps.release_pr.outputs.pull-request-number }}
+        
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      
+          
