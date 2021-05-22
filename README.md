@@ -380,6 +380,7 @@ This allows for a stream-lined release process with the `gradle.properties` file
  4. On any push (that includes PR merge) to main branch, a GitHub action checks
     - if the commit message indicates bump to next development cycle, and
     - if the parent commit (`HEAD^`) has a non-`SNAPSHOT` version in `gradle.properties`.
+
     If both conditions are fulfilled, a release is created for `HEAD^` with the version in `gradle.properties`.
 
 There are two major issues that I see here:
