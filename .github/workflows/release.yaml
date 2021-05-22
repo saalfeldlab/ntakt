@@ -36,6 +36,8 @@ jobs:
       - if: ${{ env.IS_RELEASE_REQUEST != '' }}
         run: python -m auto_changelog --tag-pattern 'ntakt-[0-9]+\.[0-9]+\.[0-9]+' -v ntakt-${{ env.NEW_PROJECT_VERSION }}
       - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        run: echo RELEASE_BRANCH="release-request/${{ env.NEW_PROJECT_VERSION }}" >> $GITHUB_ENV
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
         name: Create release PR
         id: release_pr
         uses: peter-evans/create-pull-request@v3
@@ -56,7 +58,23 @@ jobs:
         with:
           comment: |
             Created release request PR #${{ steps.release_pr.outputs.pull-request-number }}
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Bump semver to next development cycle
+        run: .github/workflows/bump-semver.sh
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        name: Update gradle.properties with bumped version
+        run: .github/workflows/replace-version.sh
+      - if: ${{ env.IS_RELEASE_REQUEST != '' }}
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: 'gradle.properties'
+          default_author: github_actions
+          message: Bump to next development cycle  ${{ env.NEW_PROJECT_VERSION }}
+          push: true
+          pull_strategy: NO-PULL
+          branch: ${{ env.RELEASE_BRANCH }}
         
       - run: echo "🍏 This job's status is ${{ job.status }}."
+        if: ${{ always() }}
       
           
