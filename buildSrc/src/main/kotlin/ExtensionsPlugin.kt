@@ -24,15 +24,6 @@ class ExtensionsPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         tasks.register(GenerateAllExtensions.name, GenerateAllExtensions::class.java)
         tasks["compileKotlin"].dependsOn(tasks[GenerateAllExtensions.name])
-        tasks.registerExtension(GenerateConverterExtensionsTask.name, GenerateConverterExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticPlusExtensionsTask.name, GenerateArithmeticPlusExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticMinusExtensionsTask.name, GenerateArithmeticMinusExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticTimesExtensionsTask.name, GenerateArithmeticTimesExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticDivExtensionsTask.name, GenerateArithmeticDivExtensionsTask::class.java)
-        tasks.registerExtension(GenerateArithmeticExtensionHelperTask.name, GenerateArithmeticExtensionHelperTask::class.java)
-        // TODO register class that triggers all arithmetic extensions
-        // tasks.registerExtension("generateArithmeticExtensions")
-        tasks.registerExtension(GenerateArithmeticScalarExtensionsTask.name, GenerateArithmeticScalarExtensionsTask::class.java)
         tasks.registerExtension(GenerateLogicalExtensionsTaskContainerEQ.name, GenerateLogicalExtensionsTaskContainerEQ::class.java)
         tasks.registerExtension(GenerateLogicalExtensionsTaskContainerGE.name, GenerateLogicalExtensionsTaskContainerGE::class.java)
         tasks.registerExtension(GenerateLogicalExtensionsTaskContainerLE.name, GenerateLogicalExtensionsTaskContainerLE::class.java)
@@ -50,7 +41,6 @@ class ExtensionsPlugin : Plugin<Project> {
         register(name, type)
         this[GenerateAllExtensions.name].dependsOn(this[name])
         this[name].takeIf { it is ExtensionsTask }?.let { it as ExtensionsTask }?.let { it.header = headerString }
-        this[name].takeIf { it is GenerateArithmeticExtensionHelperTask }?.let { it as GenerateArithmeticExtensionHelperTask }?.let { it.header = headerString }
     }
 }
 

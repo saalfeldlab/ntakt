@@ -32,11 +32,16 @@ plugins {
 repositories {
     mavenCentral()
     maven { url = uri("https://maven.scijava.org/content/groups/public") }
+    mavenLocal()
 }
 
 dependencies {
     // kotlin std lib
     implementation(kotlin("stdlib"))
+
+    // ntakt
+    api("org.ntakt:ntakt-core:0.1.0-SNAPSHOT")
+    api("org.ntakt:ntakt-arithmetic:0.1.0-SNAPSHOT")
 
     // imglib2
     api("net.imglib2:imglib2:5.10.0")
