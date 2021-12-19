@@ -18,9 +18,6 @@ plugins {
     // publish to maven (only local repo for now)
     `maven-publish`
 
-    // code generation
-    extensions
-
     // gradle header plugin
     id("com.github.hierynomus.license") version "0.15.0"
 
@@ -31,6 +28,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://maven.scijava.org/content/groups/public") }
     mavenLocal()
 }
@@ -40,9 +38,9 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // ntakt
-    api("org.ntakt:ntakt-core:0.1.0-SNAPSHOT")
-    api("org.ntakt:ntakt-arithmetic:0.1.0-SNAPSHOT")
-    api("org.ntakt:ntakt-logical:0.1.0-SNAPSHOT")
+    api("org.ntakt:ntakt-core:b2b0062fe8")
+    api("org.ntakt:ntakt-arithmetic:b9fc4d36cb")
+    api("org.ntakt:ntakt-logical:44c45c1279")
 
     // imglib2
     api("net.imglib2:imglib2:5.10.0")
