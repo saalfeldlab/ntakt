@@ -39,7 +39,7 @@ dependencies {
 
     // ntakt
     api("org.ntakt:ntakt-core:b2b0062fe8")
-    api("org.ntakt:ntakt-arithmetic:75dff9280d")
+    api("org.ntakt:ntakt-arithmetic:4b4e26804c")
     api("org.ntakt:ntakt-logical:44c45c1279")
 
     // imglib2
