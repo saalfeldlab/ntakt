@@ -24,6 +24,11 @@ plugins {
     // code coverage
     jacoco
 
+	// code generation
+	`core-extensions`
+	`logical-extensions`
+	`arithmetic-extensions`
+
 }
 
 repositories {

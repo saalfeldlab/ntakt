@@ -43,6 +43,7 @@ operator fun <T> RAI<T>.times(that: RAI<T>): RAI<T> where T : Type<T>, T : Mul<T
 }
 
 @JvmName(name = "times_2")
-operator fun RAI<RealType<*>>.times(that: RAI<RealType<*>>): RAI<RealType<*>> =
-    RandomAccessibleIntervalArithmeticTimesExtensionsJava.times(this, that) as? RAI<RealType<*>> ?:
+operator fun RAI<out RealType<*>>.times(that: RAI<out RealType<*>>): RAI<out RealType<*>> =
+    RandomAccessibleIntervalArithmeticTimesExtensionsJava.times(this, that) as? RAI<out RealType<*>>
+    ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

@@ -1,15 +1,6 @@
-import org.gradle.api.DefaultTask
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.internal.AbstractTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.kotlin.dsl.get
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 
 class LogicalExtensionsPlugin : NtaktPlugin(
     LogicalExtensionsTask.generateAllExtensionsName,
@@ -51,8 +42,8 @@ open class LogicalExtensionsTask(extensionsIdentifier: String) : NtaktExtensions
     fun getFileRAI() = typeFileMapping["RAI"]?.second
 
     companion object {
-        const val generateAllExtensionsName = "generateAllExtensions"
-        const val group = "ntakt extensions"
+        const val generateAllExtensionsName = "generateAllLogicalExtensions"
+        const val group = "ntakt logical extensions"
     }
 
 }

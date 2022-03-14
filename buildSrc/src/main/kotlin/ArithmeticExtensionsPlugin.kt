@@ -1,11 +1,6 @@
-import org.gradle.api.DefaultTask
-import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.internal.AbstractTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.kotlin.dsl.get
 import java.io.File
 import java.nio.file.Files
 
@@ -22,9 +17,7 @@ class ArithmeticExtensionsPlugin : NtaktPlugin(
 
 private open class GenerateAllArithmeticExtensions : GenerateAllExtensionsBase(ArithmeticExtensionsTask.group)
 
-open class ExtensionWithHeaderTask(extensionsIdentifier: String) : AbstractTask() {
-    @Input
-    var header: String? = null
+open class ExtensionWithHeaderTask(extensionsIdentifier: String) : NtaktExtensionsTask(ArithmeticExtensionsTask.group) {
 
     @Input
     protected val typeFileMapping: Map<String, Pair<String, File>> = getTypeFileMapping(extensionsIdentifier)
@@ -46,8 +39,6 @@ open class ExtensionWithHeaderTask(extensionsIdentifier: String) : AbstractTask(
     fun getJavaFileRA() = getFilePathFor("${typeFileMapping["RA"]?.first}Java")
     @OutputFile
     fun getJavaFileRAI() = getFilePathFor("${typeFileMapping["RAI"]?.first}Java")
-
-    val String.withHeader get() = header?.let { "$it$this" } ?: this
 }
 
 open class ArithmeticExtensionsTask(private val operator: arithmetics.Operator) : ExtensionWithHeaderTask("$arithmetic${operator.operation.capitalize()}") {
@@ -62,7 +53,7 @@ open class ArithmeticExtensionsTask(private val operator: arithmetics.Operator) 
             Files.createDirectories(name.second.parentFile.toPath())
             Files.write(
                 name.second.toPath(),
-                generateArithmeticExtensions(`as`, name.first, operator).withHeader.toByteArray())
+                generateArithmeticExtensions(`as`, name.first, operator).withHeader().toByteArray())
             generateArithmeticExtensionsJava(`as`, "${name.first}Java", operator).writeSourceFile(header)
         }
     }
@@ -70,7 +61,7 @@ open class ArithmeticExtensionsTask(private val operator: arithmetics.Operator) 
 
     companion object {
         const val generateAllExtensionsName = "generateAllArithmeticExtensions"
-        const val group = "ntakt extensions"
+        const val group = "ntakt arithmetic extensions"
         private const val arithmetic = "Arithmetic"
     }
 

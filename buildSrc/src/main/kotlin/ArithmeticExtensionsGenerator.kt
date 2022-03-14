@@ -48,7 +48,8 @@ private fun extensionsJavaName(name: String, container: ClassName) =
 
 private fun generateArithmeticOperatorStarProjection(name: String, operator: String, container: ClassName, jvmName: String): FunSpec {
     val rt = RealType::class.asTypeName().parameterizedBy(STAR)
-    val crt = container.parameterizedBy(rt)
+	val ort = WildcardTypeName.producerOf(rt)
+    val crt = container.parameterizedBy(ort)
     val error = "error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{this.type::class}·and·${'$'}{that.type::class}.·Use·any·pairwise·combination·of·${'$'}{types.realTypes.map·{·it::class·}}.\")\n"
     val cb = CodeBlock
         .builder()
@@ -58,7 +59,7 @@ private fun generateArithmeticOperatorStarProjection(name: String, operator: Str
     return typedFuncSpecBuilder(name, crt)
         .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
         .addModifiers(KModifier.OPERATOR)
-        .addParameter("that", container.parameterizedBy(rt))
+        .addParameter("that", crt)
         .returns(crt)
         .addCode(cb)
         .build()
