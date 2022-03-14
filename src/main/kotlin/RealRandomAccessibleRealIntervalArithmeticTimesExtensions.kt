@@ -33,17 +33,25 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Mul
 import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 
-@JvmName(name = "times_1")
+@JvmName(name = "timesGeneric")
 operator fun <T> RRARI<T>.times(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Mul<T> {
   return RealRandomAccessibleRealIntervalArithmeticTimesExtensionsJava.timesGeneric(this, that)
 }
 
-@JvmName(name = "times_2")
+@JvmName(name = "timesIntegerWildcard")
+operator fun RRARI<out IntegerType<*>>.times(that: RRARI<out IntegerType<*>>): RRARI<out
+    IntegerType<*>> =
+    RealRandomAccessibleRealIntervalArithmeticTimesExtensionsJava.timesInteger(this, that) as?
+    RRARI<out IntegerType<*>> ?:
+    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "timesRealWildcard")
 operator fun RRARI<out RealType<*>>.times(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
-    RealRandomAccessibleRealIntervalArithmeticTimesExtensionsJava.times(this, that) as? RRARI<out
-    RealType<*>> ?:
+    RealRandomAccessibleRealIntervalArithmeticTimesExtensionsJava.timesReal(this, that) as?
+    RRARI<out RealType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

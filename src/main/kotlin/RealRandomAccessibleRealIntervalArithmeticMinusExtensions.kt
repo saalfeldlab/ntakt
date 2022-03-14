@@ -33,6 +33,7 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Sub
@@ -41,13 +42,20 @@ import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 operator fun <T : NumericType<T>> RRARI<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
-@JvmName(name = "minus_1")
+@JvmName(name = "minusGeneric")
 operator fun <T> RRARI<T>.minus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Sub<T> {
   return RealRandomAccessibleRealIntervalArithmeticMinusExtensionsJava.minusGeneric(this, that)
 }
 
-@JvmName(name = "minus_2")
+@JvmName(name = "minusIntegerWildcard")
+operator fun RRARI<out IntegerType<*>>.minus(that: RRARI<out IntegerType<*>>): RRARI<out
+    IntegerType<*>> =
+    RealRandomAccessibleRealIntervalArithmeticMinusExtensionsJava.minusInteger(this, that) as?
+    RRARI<out IntegerType<*>> ?:
+    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "minusRealWildcard")
 operator fun RRARI<out RealType<*>>.minus(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
-    RealRandomAccessibleRealIntervalArithmeticMinusExtensionsJava.minus(this, that) as? RRARI<out
-    RealType<*>> ?:
+    RealRandomAccessibleRealIntervalArithmeticMinusExtensionsJava.minusReal(this, that) as?
+    RRARI<out RealType<*>> ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

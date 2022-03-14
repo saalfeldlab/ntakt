@@ -33,6 +33,7 @@ import static org.ntakt.RealRandomAccessibleConverterExtensionsKt.convert;
 import static org.ntakt.RealRandomAccessibleExtensionsKt.getType;
 
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
 public class RealRandomAccessibleArithmeticTimesExtensionsJava {
@@ -41,7 +42,16 @@ public class RealRandomAccessibleArithmeticTimesExtensionsJava {
     return convert(thiz, that, getType(thiz), BiConverterTimes.Companion.instance());
   }
 
-  public static RealRandomAccessible<? extends RealType> times(
+  public static RealRandomAccessible<? extends IntegerType> timesInteger(
+      final RealRandomAccessible<? extends IntegerType> thiz,
+      final RealRandomAccessible<? extends IntegerType> that) {
+    final IntegerType rt1 = getType(thiz);
+    final IntegerType rt2 = getType(that);
+    final IntegerType resultType = ArithmeticTypes.ResultType.get(rt1, rt2);
+    return timesGeneric(asType(thiz, resultType), asType(that, resultType));
+  }
+
+  public static RealRandomAccessible<? extends RealType> timesReal(
       final RealRandomAccessible<? extends RealType> thiz,
       final RealRandomAccessible<? extends RealType> that) {
     final RealType rt1 = getType(thiz);

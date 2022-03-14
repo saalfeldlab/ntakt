@@ -33,16 +33,23 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Mul
 import net.imglib2.RandomAccessible as RA
 
-@JvmName(name = "times_1")
+@JvmName(name = "timesGeneric")
 operator fun <T> RA<T>.times(that: RA<T>): RA<T> where T : Type<T>, T : Mul<T> {
   return RandomAccessibleArithmeticTimesExtensionsJava.timesGeneric(this, that)
 }
 
-@JvmName(name = "times_2")
+@JvmName(name = "timesIntegerWildcard")
+operator fun RA<out IntegerType<*>>.times(that: RA<out IntegerType<*>>): RA<out IntegerType<*>> =
+    RandomAccessibleArithmeticTimesExtensionsJava.timesInteger(this, that) as? RA<out
+    IntegerType<*>> ?:
+    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "timesRealWildcard")
 operator fun RA<out RealType<*>>.times(that: RA<out RealType<*>>): RA<out RealType<*>> =
-    RandomAccessibleArithmeticTimesExtensionsJava.times(this, that) as? RA<out RealType<*>> ?:
+    RandomAccessibleArithmeticTimesExtensionsJava.timesReal(this, that) as? RA<out RealType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

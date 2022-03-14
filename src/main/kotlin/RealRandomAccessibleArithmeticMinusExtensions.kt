@@ -33,6 +33,7 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Sub
@@ -41,12 +42,19 @@ import net.imglib2.RealRandomAccessible as RRA
 operator fun <T : NumericType<T>> RRA<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
-@JvmName(name = "minus_1")
+@JvmName(name = "minusGeneric")
 operator fun <T> RRA<T>.minus(that: RRA<T>): RRA<T> where T : Type<T>, T : Sub<T> {
   return RealRandomAccessibleArithmeticMinusExtensionsJava.minusGeneric(this, that)
 }
 
-@JvmName(name = "minus_2")
+@JvmName(name = "minusIntegerWildcard")
+operator fun RRA<out IntegerType<*>>.minus(that: RRA<out IntegerType<*>>): RRA<out IntegerType<*>> =
+    RealRandomAccessibleArithmeticMinusExtensionsJava.minusInteger(this, that) as? RRA<out
+    IntegerType<*>> ?:
+    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "minusRealWildcard")
 operator fun RRA<out RealType<*>>.minus(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
-    RealRandomAccessibleArithmeticMinusExtensionsJava.minus(this, that) as? RRA<out RealType<*>> ?:
+    RealRandomAccessibleArithmeticMinusExtensionsJava.minusReal(this, that) as? RRA<out RealType<*>>
+    ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

@@ -1,9 +1,13 @@
 import com.squareup.javapoet.*
+import net.imglib2.type.numeric.ComplexType
+import net.imglib2.type.numeric.IntegerType
+import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import javax.lang.model.element.Modifier
+import kotlin.reflect.KClass
 
 fun generateArithmeticExtensionsJava(`as`: String, className: String, operator: arithmetics.Operator): JavaFile {
     val container = containersClasses[`as`] ?: error("Key `$`as`' not present in $containersClasses")
@@ -53,8 +57,23 @@ fun TypeSpec.Builder.makeArithmeticMethodSameGenericTypes(container: Class<*>, o
 }
 
 fun TypeSpec.Builder.makeArithmeticMethod(container: Class<*>, operator: arithmetics.Operator): TypeSpec.Builder {
-    val realTypeClassName = ClassName.get(RealType::class.java)
-    val realTypeWildCard = WildcardTypeName.subtypeOf(RealType::class.java)
+	val classes = listOf(
+//		"Complex" to ComplexType::class, TODO
+		"Integer" to IntegerType::class,
+//		"Numeric" to NumericType::class, TODO
+		"Real" to RealType::class
+	)
+	return classes.fold(this) { b, (identifier, bound) -> b.makeArithmeticMethod(container, operator, bound.java, identifier) }
+}
+
+fun TypeSpec.Builder.makeArithmeticMethod(
+	container: Class<*>,
+	operator: arithmetics.Operator,
+	bound: Class<*>,
+	identifier: String): TypeSpec.Builder
+{
+	val realTypeClassName = ClassName.get(bound)
+    val realTypeWildCard = WildcardTypeName.subtypeOf(bound)
     val containerClassName = ClassName.get(container)
     val parameterizedContainerName = ParameterizedTypeName.get(containerClassName, realTypeWildCard)
     fun makeContainerSpec(name: String) = ParameterSpec.builder(parameterizedContainerName, name, Modifier.FINAL).build()
@@ -73,7 +92,7 @@ fun TypeSpec.Builder.makeArithmeticMethod(container: Class<*>, operator: arithme
         .add("return $operation($asType(thiz, resultType), $asType(that, resultType));\n")
         .build()
     val method = MethodSpec
-        .methodBuilder(operator.operation)
+        .methodBuilder("${operator.operation}$identifier")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .addParameter(makeContainerSpec(thiz))
         .addParameter(makeContainerSpec(that))
