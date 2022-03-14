@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+kotlin-jupyter-kernel = "~=0.11"
+notebook = "~=6.4"
+
+[requires]
+# ipykernel not compatible with Python 3.10 (or only with some work): 
+# https://stackoverflow.com/questions/69785084/running-cells-with-python-3-10-requires-ipykernel-installed
+python_version = "3.9"
+
+[scripts]
+notebook = "jupyter notebook"
