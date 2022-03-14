@@ -25,6 +25,7 @@
  */
 package org.ntakt
 
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
@@ -36,7 +37,10 @@ object ArithmeticTypes {
 
     object ResultType {
         @JvmStatic
-        operator fun get(t1: RealType<*>, t2: RealType<*>) = get(t1::class, t2::class)
+        operator fun get(t1: RealType<*>, t2: RealType<*>): RealType<*> = get(t1::class, t2::class)
+
+		@JvmStatic
+		operator fun get(t1: IntegerType<*>, t2: IntegerType<*>): IntegerType<*> = get(t1::class, t2::class) as IntegerType<*>
 
         @JvmStatic
         operator fun get(c1: KClass<out RealType<*>>, c2: KClass<out RealType<*>>): RealType<*> {

@@ -33,6 +33,7 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Add
@@ -40,12 +41,18 @@ import net.imglib2.RandomAccessible as RA
 
 operator fun <T : NumericType<T>> RA<T>.unaryPlus() = this
 
-@JvmName(name = "plus_1")
+@JvmName(name = "plusGeneric")
 operator fun <T> RA<T>.plus(that: RA<T>): RA<T> where T : Type<T>, T : Add<T> {
   return RandomAccessibleArithmeticPlusExtensionsJava.plusGeneric(this, that)
 }
 
-@JvmName(name = "plus_2")
+@JvmName(name = "plusIntegerWildcard")
+operator fun RA<out IntegerType<*>>.plus(that: RA<out IntegerType<*>>): RA<out IntegerType<*>> =
+    RandomAccessibleArithmeticPlusExtensionsJava.plusInteger(this, that) as? RA<out IntegerType<*>>
+    ?:
+    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "plusRealWildcard")
 operator fun RA<out RealType<*>>.plus(that: RA<out RealType<*>>): RA<out RealType<*>> =
-    RandomAccessibleArithmeticPlusExtensionsJava.plus(this, that) as? RA<out RealType<*>> ?:
+    RandomAccessibleArithmeticPlusExtensionsJava.plusReal(this, that) as? RA<out RealType<*>> ?:
     error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

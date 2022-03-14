@@ -33,16 +33,23 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Div
 import net.imglib2.RealRandomAccessible as RRA
 
-@JvmName(name = "div_1")
+@JvmName(name = "divGeneric")
 operator fun <T> RRA<T>.div(that: RRA<T>): RRA<T> where T : Type<T>, T : Div<T> {
   return RealRandomAccessibleArithmeticDivExtensionsJava.divGeneric(this, that)
 }
 
-@JvmName(name = "div_2")
+@JvmName(name = "divIntegerWildcard")
+operator fun RRA<out IntegerType<*>>.div(that: RRA<out IntegerType<*>>): RRA<out IntegerType<*>> =
+    RealRandomAccessibleArithmeticDivExtensionsJava.divInteger(this, that) as? RRA<out
+    IntegerType<*>> ?:
+    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "divRealWildcard")
 operator fun RRA<out RealType<*>>.div(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
-    RealRandomAccessibleArithmeticDivExtensionsJava.div(this, that) as? RRA<out RealType<*>> ?:
+    RealRandomAccessibleArithmeticDivExtensionsJava.divReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

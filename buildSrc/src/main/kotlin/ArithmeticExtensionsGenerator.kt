@@ -1,6 +1,7 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import kotlin.reflect.KClass
@@ -17,12 +18,12 @@ fun generateArithmeticExtensions(`as`: String, fileName: String, operator: arith
     kotlinFile.addUnaryPlusMinus(container, operator.operation)
     val (name, operatorName, type) = operator
     var index = 0
-    kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type, jvmName = "${name}_${++index}"))
-    kotlinFile.addFunction(generateArithmeticOperatorStarProjection(name, operatorName, container, jvmName = "${name}_${++index}"))
+    kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type))
+	kotlinFile.generateArithmeticOperatorStarProjections(name = name, operator = operatorName, container = container)
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
-private fun generatePlusSameGenericTypes(name: String, operator: String, container: ClassName, t: KClass<*>, jvmName: String): FunSpec {
+private fun generatePlusSameGenericTypes(name: String, operator: String, container: ClassName, t: KClass<*>): FunSpec {
 
     // very helpful GitHub issue: https://github.com/square/kotlinpoet/issues/812
     val genericT = TypeVariableName("T")
@@ -33,7 +34,7 @@ private fun generatePlusSameGenericTypes(name: String, operator: String, contain
 
     return FunSpec
         .builder(name)
-        .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
+        .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "${name}Generic").build())
         .addModifiers(KModifier.OPERATOR)
         .addTypeVariable(boundedT)
         .receiver(parameterizedContainer)
@@ -46,18 +47,28 @@ private fun generatePlusSameGenericTypes(name: String, operator: String, contain
 private fun extensionsJavaName(name: String, container: ClassName) =
     "${container.simpleName}Arithmetic${name.capitalize()}ExtensionsJava"
 
-private fun generateArithmeticOperatorStarProjection(name: String, operator: String, container: ClassName, jvmName: String): FunSpec {
-    val rt = RealType::class.asTypeName().parameterizedBy(STAR)
+private fun FileSpec.Builder.generateArithmeticOperatorStarProjections(name: String, operator: String, container: ClassName): FileSpec.Builder {
+	val classes = listOf(
+//		"Complex" to ComplexType::class, TODO
+		"Integer" to IntegerType::class,
+//		"Numeric" to NumericType::class, TODO
+		"Real" to RealType::class
+	)
+	return classes.fold(this) { b, (identifier, bound) -> b.addFunction(generateArithmeticOperatorStarProjection(name, operator, container, bound, identifier)) }
+}
+
+private fun generateArithmeticOperatorStarProjection(name: String, operator: String, container: ClassName, bound: KClass<*>, identifier: String): FunSpec {
+    val rt = bound.asTypeName().parameterizedBy(STAR)
 	val ort = WildcardTypeName.producerOf(rt)
     val crt = container.parameterizedBy(ort)
     val error = "error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{this.type::class}·and·${'$'}{that.type::class}.·Use·any·pairwise·combination·of·${'$'}{types.realTypes.map·{·it::class·}}.\")\n"
     val cb = CodeBlock
         .builder()
-        .add("return ${extensionsJavaName(name, container)}.$name(this, that) as? %T ?: $error", crt)
+        .add("return ${extensionsJavaName(name, container)}.$name$identifier(this, that) as? %T ?: $error", crt)
         .build()
 
     return typedFuncSpecBuilder(name, crt)
-        .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", jvmName).build())
+        .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "$name${identifier}Wildcard").build())
         .addModifiers(KModifier.OPERATOR)
         .addParameter("that", crt)
         .returns(crt)

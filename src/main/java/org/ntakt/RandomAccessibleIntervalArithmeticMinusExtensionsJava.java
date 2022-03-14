@@ -33,6 +33,7 @@ import static org.ntakt.RandomAccessibleIntervalConverterExtensionsKt.convert;
 import static org.ntakt.RandomAccessibleIntervalExtensionsKt.getType;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
 public class RandomAccessibleIntervalArithmeticMinusExtensionsJava {
@@ -41,7 +42,16 @@ public class RandomAccessibleIntervalArithmeticMinusExtensionsJava {
     return convert(thiz, that, getType(thiz), BiConverterMinus.Companion.instance());
   }
 
-  public static RandomAccessibleInterval<? extends RealType> minus(
+  public static RandomAccessibleInterval<? extends IntegerType> minusInteger(
+      final RandomAccessibleInterval<? extends IntegerType> thiz,
+      final RandomAccessibleInterval<? extends IntegerType> that) {
+    final IntegerType rt1 = getType(thiz);
+    final IntegerType rt2 = getType(that);
+    final IntegerType resultType = ArithmeticTypes.ResultType.get(rt1, rt2);
+    return minusGeneric(asType(thiz, resultType), asType(that, resultType));
+  }
+
+  public static RandomAccessibleInterval<? extends RealType> minusReal(
       final RandomAccessibleInterval<? extends RealType> thiz,
       final RandomAccessibleInterval<? extends RealType> that) {
     final RealType rt1 = getType(thiz);

@@ -33,6 +33,7 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.operators.Add
@@ -40,13 +41,19 @@ import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 
 operator fun <T : NumericType<T>> RRARI<T>.unaryPlus() = this
 
-@JvmName(name = "plus_1")
+@JvmName(name = "plusGeneric")
 operator fun <T> RRARI<T>.plus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Add<T> {
   return RealRandomAccessibleRealIntervalArithmeticPlusExtensionsJava.plusGeneric(this, that)
 }
 
-@JvmName(name = "plus_2")
+@JvmName(name = "plusIntegerWildcard")
+operator fun RRARI<out IntegerType<*>>.plus(that: RRARI<out IntegerType<*>>): RRARI<out
+    IntegerType<*>> = RealRandomAccessibleRealIntervalArithmeticPlusExtensionsJava.plusInteger(this,
+    that) as? RRARI<out IntegerType<*>> ?:
+    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
+@JvmName(name = "plusRealWildcard")
 operator fun RRARI<out RealType<*>>.plus(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
-    RealRandomAccessibleRealIntervalArithmeticPlusExtensionsJava.plus(this, that) as? RRARI<out
+    RealRandomAccessibleRealIntervalArithmeticPlusExtensionsJava.plusReal(this, that) as? RRARI<out
     RealType<*>> ?:
     error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
