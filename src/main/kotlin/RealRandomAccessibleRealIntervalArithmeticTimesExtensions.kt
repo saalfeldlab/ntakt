@@ -43,7 +43,7 @@ operator fun <T> RRARI<T>.times(that: RRARI<T>): RRARI<T> where T : Type<T>, T :
 }
 
 @JvmName(name = "times_2")
-operator fun RRARI<RealType<*>>.times(that: RRARI<RealType<*>>): RRARI<RealType<*>> =
-    RealRandomAccessibleRealIntervalArithmeticTimesExtensionsJava.times(this, that) as?
-    RRARI<RealType<*>> ?:
+operator fun RRARI<out RealType<*>>.times(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
+    RealRandomAccessibleRealIntervalArithmeticTimesExtensionsJava.times(this, that) as? RRARI<out
+    RealType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

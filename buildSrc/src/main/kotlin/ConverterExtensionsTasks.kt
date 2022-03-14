@@ -1,4 +1,3 @@
-import org.gradle.api.tasks.OutputFile
 import java.nio.file.Files
 
 open class GenerateConverterExtensionsTask : CoreExtensionsTask("Converter") {

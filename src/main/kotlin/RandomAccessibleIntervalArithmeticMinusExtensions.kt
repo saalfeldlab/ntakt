@@ -47,6 +47,7 @@ operator fun <T> RAI<T>.minus(that: RAI<T>): RAI<T> where T : Type<T>, T : Sub<T
 }
 
 @JvmName(name = "minus_2")
-operator fun RAI<RealType<*>>.minus(that: RAI<RealType<*>>): RAI<RealType<*>> =
-    RandomAccessibleIntervalArithmeticMinusExtensionsJava.minus(this, that) as? RAI<RealType<*>> ?:
+operator fun RAI<out RealType<*>>.minus(that: RAI<out RealType<*>>): RAI<out RealType<*>> =
+    RandomAccessibleIntervalArithmeticMinusExtensionsJava.minus(this, that) as? RAI<out RealType<*>>
+    ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

@@ -34,7 +34,7 @@ abstract class NtaktPlugin(
     private fun <T: Task> TaskContainer.registerExtension(name: String, type: Class<T>) {
         register(name, type)
         this[generateAllName].dependsOn(this[name])
-        this[name].let { it as? NtaktExtensionsTask }?.let { it.header = headerString }
+        this[name].let { it as? WithHeader }?.let { it.header = headerString }
     }
 
 }

@@ -1,4 +1,3 @@
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import java.io.File
@@ -9,6 +8,9 @@ open class GenerateArithmeticPlusExtensionsTask : ArithmeticExtensionsTask(arith
 
     @org.gradle.api.tasks.TaskAction
     override fun runTask() = super.runTask()
+
+	@Input
+	override var header: String? = null
 
     companion object {
         const val name = "generateArithmeticPlusExtensions"
@@ -50,7 +52,7 @@ open class GenerateArithmeticScalarExtensionsTask : ExtensionWithHeaderTask("Ari
     @org.gradle.api.tasks.TaskAction
     fun runTask() {
         for ((`as`, name) in getTypeFileMapping("ArithmeticScalar")) {
-            Files.write(name.second.toPath(), generateArithmeticScalarExtensions(`as`, name.first).withHeader.toByteArray())
+            Files.write(name.second.toPath(), generateArithmeticScalarExtensions(`as`, name.first).withHeader().toByteArray())
         }
     }
 

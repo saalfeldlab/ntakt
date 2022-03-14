@@ -43,7 +43,7 @@ operator fun <T> RRARI<T>.div(that: RRARI<T>): RRARI<T> where T : Type<T>, T : D
 }
 
 @JvmName(name = "div_2")
-operator fun RRARI<RealType<*>>.div(that: RRARI<RealType<*>>): RRARI<RealType<*>> =
-    RealRandomAccessibleRealIntervalArithmeticDivExtensionsJava.div(this, that) as?
-    RRARI<RealType<*>> ?:
+operator fun RRARI<out RealType<*>>.div(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
+    RealRandomAccessibleRealIntervalArithmeticDivExtensionsJava.div(this, that) as? RRARI<out
+    RealType<*>> ?:
     error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

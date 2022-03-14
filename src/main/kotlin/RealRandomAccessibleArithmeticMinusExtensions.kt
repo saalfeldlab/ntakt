@@ -47,6 +47,6 @@ operator fun <T> RRA<T>.minus(that: RRA<T>): RRA<T> where T : Type<T>, T : Sub<T
 }
 
 @JvmName(name = "minus_2")
-operator fun RRA<RealType<*>>.minus(that: RRA<RealType<*>>): RRA<RealType<*>> =
-    RealRandomAccessibleArithmeticMinusExtensionsJava.minus(this, that) as? RRA<RealType<*>> ?:
+operator fun RRA<out RealType<*>>.minus(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
+    RealRandomAccessibleArithmeticMinusExtensionsJava.minus(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

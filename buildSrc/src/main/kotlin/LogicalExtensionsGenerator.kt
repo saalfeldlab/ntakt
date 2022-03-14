@@ -1,6 +1,5 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import groovyjarjarpicocli.CommandLine
 import net.imglib2.type.BooleanType
 import net.imglib2.type.Type
 import net.imglib2.type.logic.BoolType

@@ -46,6 +46,6 @@ operator fun <T> RRA<T>.plus(that: RRA<T>): RRA<T> where T : Type<T>, T : Add<T>
 }
 
 @JvmName(name = "plus_2")
-operator fun RRA<RealType<*>>.plus(that: RRA<RealType<*>>): RRA<RealType<*>> =
-    RealRandomAccessibleArithmeticPlusExtensionsJava.plus(this, that) as? RRA<RealType<*>> ?:
+operator fun RRA<out RealType<*>>.plus(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
+    RealRandomAccessibleArithmeticPlusExtensionsJava.plus(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

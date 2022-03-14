@@ -62,7 +62,7 @@ class TestContainerArithmetics {
     @Test fun `test RRARI div RRARI`() = testRRARI(2.0, 0.5) { ra1, ra2 -> ra1 / ra2 }
 
 
-    private inline fun testRA(t2Value: Double, expected: Double, operator: (RA<RT<*>>, RA<RT<*>>) -> RA<RT<*>>) {
+    private inline fun testRA(t2Value: Double, expected: Double, operator: (RA<out RT<*>>, RA<out RT<*>>) -> RA<out RT<*>>) {
         for ((i, t1) in types.realTypes.withIndex()) {
             val c1 = ntakt.constant(t1.createVariable().also { it.setOne() }, 1)
             for (k in i until types.realTypes.size) {
@@ -79,7 +79,7 @@ class TestContainerArithmetics {
     }
 
 
-    private inline fun testRAI(t2Value: Double, expected: Double, operator: (RAI<RT<*>>, RAI<RT<*>>) -> RAI<RT<*>>) {
+    private inline fun testRAI(t2Value: Double, expected: Double, operator: (RAI<out RT<*>>, RAI<out RT<*>>) -> RAI<out RT<*>>) {
         for ((i, t1) in types.realTypes.withIndex()) {
             val c1 = ntakt.constant(t1.createVariable().also { it.setOne() }, longArrayOf(1L).interval)
             for (k in i until types.realTypes.size) {
@@ -96,7 +96,7 @@ class TestContainerArithmetics {
     }
 
 
-    private inline fun testRRA(t2Value: Double, expected: Double, operator: (RRA<RT<*>>, RRA<RT<*>>) -> RRA<RT<*>>) {
+    private inline fun testRRA(t2Value: Double, expected: Double, operator: (RRA<out RT<*>>, RRA<out RT<*>>) -> RRA<out RT<*>>) {
         for ((i, t1) in types.realTypes.withIndex()) {
             val c1 = ntakt.function(1, { t1.createVariable() }) { p, t -> t.setOne() }
             for (k in i until types.realTypes.size) {
@@ -113,7 +113,7 @@ class TestContainerArithmetics {
     }
 
 
-    private inline fun testRRARI(t2Value: Double, expected: Double, operator: (RRARI<RT<*>>, RRARI<RT<*>>) -> RRARI<RT<*>>) {
+    private inline fun testRRARI(t2Value: Double, expected: Double, operator: (RRARI<out RT<*>>, RRARI<out RT<*>>) -> RRARI<out RT<*>>) {
         for ((i, t1) in types.realTypes.withIndex()) {
             val c1 = function({ t1.createVariable() }) { p, t -> t.setOne() }
             for (k in i until types.realTypes.size) {
