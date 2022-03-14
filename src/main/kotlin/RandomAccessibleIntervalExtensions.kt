@@ -164,10 +164,10 @@ operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterator: Iterator<T>):
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterable: Iterable<T>): Unit = set(interval, iterable.iterator())
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, rai: RAI<T>): Unit = set(interval, rai.flatIterable)
 
-//operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
-//operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
-//operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
-//operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
+operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
+operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
+operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
+operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
 
 inline fun <T: BooleanType<T>> RAI<T>.where(consumeWhereTrue: (Localizable) -> Unit) {
     val cursor = this.iterable.cursor()
