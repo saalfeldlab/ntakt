@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.Files
 
 
-open class GenerateArithmeticPlusExtensionsTask : ArithmeticExtensionsTask(arithmetics.Operator.PLUS) {
+open class GenerateArithmeticExtensionsTask : ArithmeticExtensionsTask() {
 
     @org.gradle.api.tasks.TaskAction
     override fun runTask() = super.runTask()
@@ -13,37 +13,7 @@ open class GenerateArithmeticPlusExtensionsTask : ArithmeticExtensionsTask(arith
 	override var header: String? = null
 
     companion object {
-        const val name = "generateArithmeticPlusExtensions"
-    }
-}
-
-open class GenerateArithmeticMinusExtensionsTask : ArithmeticExtensionsTask(arithmetics.Operator.MINUS) {
-
-    @org.gradle.api.tasks.TaskAction
-    override fun runTask() = super.runTask()
-
-    companion object {
-        const val name = "generateArithmeticMinusExtensions"
-    }
-}
-
-open class GenerateArithmeticTimesExtensionsTask : ArithmeticExtensionsTask(arithmetics.Operator.TIMES) {
-
-    @org.gradle.api.tasks.TaskAction
-    override fun runTask() = super.runTask()
-
-    companion object {
-        const val name = "generateArithmeticTimesExtensions"
-    }
-}
-
-open class GenerateArithmeticDivExtensionsTask : ArithmeticExtensionsTask(arithmetics.Operator.DIV) {
-
-    @org.gradle.api.tasks.TaskAction
-    override fun runTask() = super.runTask()
-
-    companion object {
-        const val name = "generateArithmeticDivExtensions"
+        const val name = "generateArithmeticExtensions"
     }
 }
 

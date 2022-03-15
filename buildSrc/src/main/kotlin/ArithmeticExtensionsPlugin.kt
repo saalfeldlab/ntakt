@@ -7,10 +7,7 @@ import java.nio.file.Files
 class ArithmeticExtensionsPlugin : NtaktPlugin(
     ArithmeticExtensionsTask.generateAllExtensionsName,
     GenerateAllArithmeticExtensions::class.java,
-    GenerateArithmeticPlusExtensionsTask.name to GenerateArithmeticPlusExtensionsTask::class.java,
-    GenerateArithmeticMinusExtensionsTask.name to GenerateArithmeticMinusExtensionsTask::class.java,
-    GenerateArithmeticTimesExtensionsTask.name to GenerateArithmeticTimesExtensionsTask::class.java,
-    GenerateArithmeticDivExtensionsTask.name to GenerateArithmeticDivExtensionsTask::class.java,
+	GenerateArithmeticExtensionsTask.name to GenerateArithmeticExtensionsTask::class.java,
     GenerateArithmeticExtensionHelperTask.name to GenerateArithmeticExtensionHelperTask::class.java,
     GenerateArithmeticScalarExtensionsTask.name to GenerateArithmeticScalarExtensionsTask::class.java
 )
@@ -41,7 +38,7 @@ open class ExtensionWithHeaderTask(extensionsIdentifier: String) : NtaktExtensio
     fun getJavaFileRAI() = getFilePathFor("${typeFileMapping["RAI"]?.first}Java")
 }
 
-open class ArithmeticExtensionsTask(private val operator: arithmetics.Operator) : ExtensionWithHeaderTask("$arithmetic${operator.operation.capitalize()}") {
+open class ArithmeticExtensionsTask : ExtensionWithHeaderTask(arithmetic) {
 
     init {
         group = Companion.group
@@ -53,8 +50,8 @@ open class ArithmeticExtensionsTask(private val operator: arithmetics.Operator) 
             Files.createDirectories(name.second.parentFile.toPath())
             Files.write(
                 name.second.toPath(),
-                generateArithmeticExtensions(`as`, name.first, operator).withHeader().toByteArray())
-            generateArithmeticExtensionsJava(`as`, "${name.first}Java", operator).writeSourceFile(header)
+                generateArithmeticExtensions(`as`, name.first).withHeader().toByteArray())
+            generateArithmeticExtensionsJava(`as`, "${name.first}Java").writeSourceFile(header)
         }
     }
 

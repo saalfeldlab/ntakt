@@ -9,21 +9,22 @@ import kotlin.reflect.KClass
 
 
 
-fun generateArithmeticExtensions(`as`: String, fileName: String, operator: arithmetics.Operator): String {
+fun generateArithmeticExtensions(`as`: String, fileName: String): String {
     val kotlinFile = FileSpec
         .builder(packageName, fileName)
         .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
     kotlinFile.addAliasedImport(container, `as`)
-    kotlinFile.addUnaryPlusMinus(container, operator.operation)
-    val (name, operatorName, type) = operator
-    var index = 0
-    kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, operator = operatorName, container = container, t = type))
-	kotlinFile.generateArithmeticOperatorStarProjections(name = name, operator = operatorName, container = container)
+	for (operator in arithmetics.Operator.values()) {
+		kotlinFile.addUnaryPlusMinus(container, operator.operation)
+		val (name, operatorName, type) = operator
+		kotlinFile.addFunction(generatePlusSameGenericTypes(name = name, container = container, t = type))
+		kotlinFile.generateArithmeticOperatorStarProjections(name = name, operator = operatorName, container = container)
+	}
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
-private fun generatePlusSameGenericTypes(name: String, operator: String, container: ClassName, t: KClass<*>): FunSpec {
+private fun generatePlusSameGenericTypes(name: String, container: ClassName, t: KClass<*>): FunSpec {
 
     // very helpful GitHub issue: https://github.com/square/kotlinpoet/issues/812
     val genericT = TypeVariableName("T")

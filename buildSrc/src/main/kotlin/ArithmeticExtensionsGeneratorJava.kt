@@ -9,7 +9,7 @@ import java.nio.file.Paths
 import javax.lang.model.element.Modifier
 import kotlin.reflect.KClass
 
-fun generateArithmeticExtensionsJava(`as`: String, className: String, operator: arithmetics.Operator): JavaFile {
+fun generateArithmeticExtensionsJava(`as`: String, className: String): JavaFile {
     val container = containersClasses[`as`] ?: error("Key `$`as`' not present in $containersClasses")
     val containerSimpleName = container.java.simpleName
 
@@ -17,8 +17,7 @@ fun generateArithmeticExtensionsJava(`as`: String, className: String, operator: 
     val javaClass = TypeSpec
         .classBuilder(className)
         .addModifiers(Modifier.PUBLIC)
-        .makeArithmeticMethodSameGenericTypes(container.java, operator)
-        .makeArithmeticMethod(container.java, operator)
+		.let { arithmetics.Operator.values().fold(it) { b, op -> b.makeArithmeticMethodSameGenericTypes(container.java, op).makeArithmeticMethod(container.java, op) } }
         .build()
     return JavaFile
         .builder(packageName, javaClass)
