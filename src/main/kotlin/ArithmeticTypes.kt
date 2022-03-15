@@ -25,8 +25,11 @@
  */
 package org.ntakt
 
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
+import net.imglib2.type.numeric.complex.ComplexDoubleType
+import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
@@ -37,35 +40,45 @@ object ArithmeticTypes {
 
     object ResultType {
         @JvmStatic
-        operator fun get(t1: RealType<*>, t2: RealType<*>): RealType<*> = get(t1::class, t2::class)
+        operator fun get(t1: RealType<*>, t2: RealType<*>): RealType<*> = get(t1::class, t2::class).asValidatedT(t1, t2)
 
 		@JvmStatic
-		operator fun get(t1: IntegerType<*>, t2: IntegerType<*>): IntegerType<*> = get(t1::class, t2::class) as IntegerType<*>
+		operator fun get(t1: IntegerType<*>, t2: IntegerType<*>): IntegerType<*> = get(t1::class, t2::class).asValidatedT(t1, t2)
+
+		@JvmStatic
+		operator fun get(t1: ComplexType<*>, t2: ComplexType<*>): ComplexType<*> = get(t1::class, t2::class).asValidatedT(t1, t2)
 
         @JvmStatic
-        operator fun get(c1: KClass<out RealType<*>>, c2: KClass<out RealType<*>>): RealType<*> {
-            fun checkType(t: KClass<out RealType<*>>) = require(t in arithmeticTypesMap) { "Type $t not supported. Supported types: ${arithmeticTypesMap.keys}"}
-            checkType(c1)
-            checkType(c2)
+        operator fun get(c1: KClass<*>, c2: KClass<*>): Any? {
+			val resultType = if (c1 == c2) c1 else arithmeticTypeCombinationsMap[c1 to c2]
+			return resultType
+				?.let { arithmeticTypesConstructorsMap[it] }
+				?.let { it() }
+		}
 
-            val returnType = if (c1 == c2) c1 else arithmeticTypeCombinationsMap[c1 to c2]!!
-
-            return arithmeticTypesConstructorsMap[returnType]!!()
-        }
+		private inline fun <reified T> Any?.asValidatedT(t1: Any, t2: Any): T {
+			return when(this) {
+				is T -> this
+				(this === null) -> error("Type combination (${t1::class}, ${t2::class}) not supported. Supported type combinations: ${arithmeticTypesMap.keys}")
+				else -> error("Result type for type combination (${t1::class}, ${t2::class}) has unexpected type ${this!!::class} which is not a sub-type of `${T::class}'. Supported type combinations: $arithmeticTypesMap")
+			}
+		}
     }
 
-    private object identifiers {
+    object Identifiers {
         const val complex = "complex"
         const val real = "real"
         const val signedInteger = "signedInteger"
         const val unsignedInteger = "unsignedInteger"
+
+		operator fun get (c: KClass<out ComplexType<*>>) = arithmeticTypesMap[c]
+		operator fun get (t: ComplexType<*>) = this[t::class]
     }
 
-    private val arithmeticTypes = with (identifiers) {
+    private val arithmeticTypes = with (Identifiers) {
         arrayOf<Pair<KClass<*>, String>>(
-            // TOOD complex types not implemented yet
-//            ComplexDoubleType::class to complex,
-//            ComplexFloatType::class to complex,
+            ComplexDoubleType::class to complex,
+            ComplexFloatType::class to complex,
             DoubleType::class to real,
             FloatType::class to real,
             LongType::class to signedInteger,
@@ -81,10 +94,9 @@ object ArithmeticTypes {
 
     private val arithmeticTypesMap = arithmeticTypes.toMap()
 
-    private val arithmeticTypesConstructors = arrayOf<Pair<KClass<*>, () -> RealType<*>>>(
-        // TOOD complex types not implemented yet
-//            ComplexDoubleType::class to complex,
-//            ComplexFloatType::class to complex,
+    private val arithmeticTypesConstructors = arrayOf<Pair<KClass<*>, () -> ComplexType<*>>>(
+		ComplexDoubleType::class to { ComplexDoubleType() },
+		ComplexFloatType::class to { ComplexFloatType() },
         DoubleType::class to { DoubleType() },
         FloatType::class to { FloatType() },
         LongType::class to { LongType() },
@@ -99,15 +111,15 @@ object ArithmeticTypes {
 
     private val arithmeticTypesConstructorsMap = arithmeticTypesConstructors.toMap()
 
-    private val signedIntegers = arithmeticTypes.filter { it.second == identifiers.signedInteger }.map { it.first }
-    private val unsignedIntegers = arithmeticTypes.filter { it.second == identifiers.unsignedInteger }.map { it.first }
+    private val signedIntegers = arithmeticTypes.filter { it.second == Identifiers.signedInteger }.map { it.first }
+    private val unsignedIntegers = arithmeticTypes.filter { it.second == Identifiers.unsignedInteger }.map { it.first }
 
     private val arithmeticTypeCombinations = mutableListOf<Triple<KClass<*>, KClass<*>, KClass<*>>>().also {
         for (i in arithmeticTypes.indices) {
             val (kc1, c1) = arithmeticTypes[i]
             for (k in i + 1 until arithmeticTypes.size) {
                 val (kc2, c2) = arithmeticTypes[k]
-                val o = if (c1 == identifiers.signedInteger && c2 == identifiers.unsignedInteger) {
+                val o = if (c1 == Identifiers.signedInteger && c2 == Identifiers.unsignedInteger) {
                     val idx1 = signedIntegers.indexOf(kc1)
                     val idx2 = unsignedIntegers.indexOf(kc2)
                     if (idx1 < idx2) signedIntegers[idx1] else signedIntegers[Integer.max(idx2 - 1, 0)]
