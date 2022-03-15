@@ -5,6 +5,8 @@ import net.imglib2.type.operators.Add
 import net.imglib2.type.operators.Div
 import net.imglib2.type.operators.Mul
 import net.imglib2.type.operators.Sub
+import net.imglib2.type.numeric.complex.ComplexDoubleType
+import net.imglib2.type.numeric.complex.ComplexFloatType
 import net.imglib2.type.numeric.integer.ByteType
 import net.imglib2.type.numeric.integer.IntType
 import net.imglib2.type.numeric.integer.LongType
@@ -74,9 +76,8 @@ object arithmetics {
 
     val types = with (identifiers) {
         arrayOf<Pair<KClass<*>, String>>(
-            // TOOD complex types not implemented yet
-//            ComplexDoubleType::class to complex,
-//            ComplexFloatType::class to complex,
+            ComplexDoubleType::class to complex,
+            ComplexFloatType::class to complex,
             DoubleType::class to real,
             FloatType::class to real,
             LongType::class to signedInteger,
