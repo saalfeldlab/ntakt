@@ -46,19 +46,18 @@ operator fun <T : NumericType<T>> RRA<T>.unaryPlus() = this
 
 @JvmName(name = "plusGeneric")
 operator fun <T> RRA<T>.plus(that: RRA<T>): RRA<T> where T : Type<T>, T : Add<T> {
-  return RealRandomAccessibleArithmeticPlusExtensionsJava.plusGeneric(this, that)
+  return RealRandomAccessibleArithmeticExtensionsJava.plusGeneric(this, that)
 }
 
 @JvmName(name = "plusIntegerWildcard")
 operator fun RRA<out IntegerType<*>>.plus(that: RRA<out IntegerType<*>>): RRA<out IntegerType<*>> =
-    RealRandomAccessibleArithmeticPlusExtensionsJava.plusInteger(this, that) as? RRA<out
-    IntegerType<*>> ?:
+    RealRandomAccessibleArithmeticExtensionsJava.plusInteger(this, that) as? RRA<out IntegerType<*>>
+    ?:
     error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "plusRealWildcard")
 operator fun RRA<out RealType<*>>.plus(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
-    RealRandomAccessibleArithmeticPlusExtensionsJava.plusReal(this, that) as? RRA<out RealType<*>>
-    ?:
+    RealRandomAccessibleArithmeticExtensionsJava.plusReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 operator fun <T : NumericType<T>> RRA<T>.unaryMinus() =
@@ -66,50 +65,48 @@ operator fun <T : NumericType<T>> RRA<T>.unaryMinus() =
 
 @JvmName(name = "minusGeneric")
 operator fun <T> RRA<T>.minus(that: RRA<T>): RRA<T> where T : Type<T>, T : Sub<T> {
-  return RealRandomAccessibleArithmeticMinusExtensionsJava.minusGeneric(this, that)
+  return RealRandomAccessibleArithmeticExtensionsJava.minusGeneric(this, that)
 }
 
 @JvmName(name = "minusIntegerWildcard")
 operator fun RRA<out IntegerType<*>>.minus(that: RRA<out IntegerType<*>>): RRA<out IntegerType<*>> =
-    RealRandomAccessibleArithmeticMinusExtensionsJava.minusInteger(this, that) as? RRA<out
+    RealRandomAccessibleArithmeticExtensionsJava.minusInteger(this, that) as? RRA<out
     IntegerType<*>> ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "minusRealWildcard")
 operator fun RRA<out RealType<*>>.minus(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
-    RealRandomAccessibleArithmeticMinusExtensionsJava.minusReal(this, that) as? RRA<out RealType<*>>
-    ?:
+    RealRandomAccessibleArithmeticExtensionsJava.minusReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesGeneric")
 operator fun <T> RRA<T>.times(that: RRA<T>): RRA<T> where T : Type<T>, T : Mul<T> {
-  return RealRandomAccessibleArithmeticTimesExtensionsJava.timesGeneric(this, that)
+  return RealRandomAccessibleArithmeticExtensionsJava.timesGeneric(this, that)
 }
 
 @JvmName(name = "timesIntegerWildcard")
 operator fun RRA<out IntegerType<*>>.times(that: RRA<out IntegerType<*>>): RRA<out IntegerType<*>> =
-    RealRandomAccessibleArithmeticTimesExtensionsJava.timesInteger(this, that) as? RRA<out
+    RealRandomAccessibleArithmeticExtensionsJava.timesInteger(this, that) as? RRA<out
     IntegerType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesRealWildcard")
 operator fun RRA<out RealType<*>>.times(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
-    RealRandomAccessibleArithmeticTimesExtensionsJava.timesReal(this, that) as? RRA<out RealType<*>>
-    ?:
+    RealRandomAccessibleArithmeticExtensionsJava.timesReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divGeneric")
 operator fun <T> RRA<T>.div(that: RRA<T>): RRA<T> where T : Type<T>, T : Div<T> {
-  return RealRandomAccessibleArithmeticDivExtensionsJava.divGeneric(this, that)
+  return RealRandomAccessibleArithmeticExtensionsJava.divGeneric(this, that)
 }
 
 @JvmName(name = "divIntegerWildcard")
 operator fun RRA<out IntegerType<*>>.div(that: RRA<out IntegerType<*>>): RRA<out IntegerType<*>> =
-    RealRandomAccessibleArithmeticDivExtensionsJava.divInteger(this, that) as? RRA<out
-    IntegerType<*>> ?:
+    RealRandomAccessibleArithmeticExtensionsJava.divInteger(this, that) as? RRA<out IntegerType<*>>
+    ?:
     error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divRealWildcard")
 operator fun RRA<out RealType<*>>.div(that: RRA<out RealType<*>>): RRA<out RealType<*>> =
-    RealRandomAccessibleArithmeticDivExtensionsJava.divReal(this, that) as? RRA<out RealType<*>> ?:
+    RealRandomAccessibleArithmeticExtensionsJava.divReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
