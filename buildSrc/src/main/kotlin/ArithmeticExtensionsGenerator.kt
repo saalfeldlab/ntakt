@@ -41,12 +41,12 @@ private fun generatePlusSameGenericTypes(name: String, container: ClassName, t: 
         .receiver(parameterizedContainer)
         .addParameter("that", parameterizedContainer)
         .returns(parameterizedContainer)
-            .addStatement("return·${extensionsJavaName(name, container)}.${name}Generic(this,·that)")
+            .addStatement("return·${extensionsJavaName(container)}.${name}Generic(this,·that)")
             .build()
 }
 
-private fun extensionsJavaName(name: String, container: ClassName) =
-    "${container.simpleName}Arithmetic${name.capitalize()}ExtensionsJava"
+private fun extensionsJavaName(container: ClassName) =
+    "${container.simpleName}ArithmeticExtensionsJava"
 
 private fun FileSpec.Builder.generateArithmeticOperatorStarProjections(name: String, operator: String, container: ClassName): FileSpec.Builder {
 	val classes = listOf(
@@ -65,7 +65,7 @@ private fun generateArithmeticOperatorStarProjection(name: String, operator: Str
     val error = "error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{this.type::class}·and·${'$'}{that.type::class}.·Use·any·pairwise·combination·of·${'$'}{types.realTypes.map·{·it::class·}}.\")\n"
     val cb = CodeBlock
         .builder()
-        .add("return ${extensionsJavaName(name, container)}.$name$identifier(this, that) as? %T ?: $error", crt)
+        .add("return ${extensionsJavaName(container)}.$name$identifier(this, that) as? %T ?: $error", crt)
         .build()
 
     return typedFuncSpecBuilder(name, crt)
