@@ -5,17 +5,7 @@ import java.io.File
 class LogicalExtensionsPlugin : NtaktPlugin(
     LogicalExtensionsTask.generateAllExtensionsName,
     GenerateAllLogicalExtensions::class.java,
-    GenerateLogicalExtensionsTaskContainerEQ.name to GenerateLogicalExtensionsTaskContainerEQ::class.java,
-    GenerateLogicalExtensionsTaskContainerGE.name to GenerateLogicalExtensionsTaskContainerGE::class.java,
-    GenerateLogicalExtensionsTaskContainerLE.name to GenerateLogicalExtensionsTaskContainerLE::class.java,
-    GenerateLogicalExtensionsTaskContainerGT.name to GenerateLogicalExtensionsTaskContainerGT::class.java,
-    GenerateLogicalExtensionsTaskContainerLT.name to GenerateLogicalExtensionsTaskContainerLT::class.java,
-    GenerateLogicalExtensionsTaskScalarEQ.name to GenerateLogicalExtensionsTaskScalarEQ::class.java,
-    GenerateLogicalExtensionsTaskScalarGE.name to GenerateLogicalExtensionsTaskScalarGE::class.java,
-    GenerateLogicalExtensionsTaskScalarLE.name to GenerateLogicalExtensionsTaskScalarLE::class.java,
-    GenerateLogicalExtensionsTaskScalarGT.name to GenerateLogicalExtensionsTaskScalarGT::class.java,
-    GenerateLogicalExtensionsTaskScalarLT.name to GenerateLogicalExtensionsTaskScalarLT::class.java,
-    GenerateLogicalExtensionsTaskChoose.name to GenerateLogicalExtensionsTaskChoose::class.java
+    GenerateLogicalExtensionsTask.name to GenerateLogicalExtensionsTask::class.java
 )
 
 private open class GenerateAllLogicalExtensions : GenerateAllExtensionsBase(LogicalExtensionsTask.group)
