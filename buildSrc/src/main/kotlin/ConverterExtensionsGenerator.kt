@@ -7,6 +7,7 @@ import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
 import net.imglib2.converter.readwrite.SamplerConverter
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
@@ -115,14 +116,15 @@ private fun higherOrderFunctionParameter(
 
 private fun FileSpec.Builder.addTypeConversionExtensions(container: ClassName): FileSpec.Builder {
     return this
-            .addFunction(generateRealTypeConversionExtensions(container))
-            .addFunction(generateRealTypeConversionExtensionsFromWildcard(container))
-            .addFunction(generateIntegerTypeConversionExtensions(container))
-            .addFunction(generateIntegerTypeConversionExtensionsFromWildcard(container))
-            .let { generateRealTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
-            .let { generateRealTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
-            .let { generateIntegerTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
-            .let { generateIntegerTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
+		.addFunction(generateRealTypeConversionExtensions(container))
+		.addFunction(generateRealTypeConversionExtensionsFromWildcard(container))
+		.addFunction(generateIntegerTypeConversionExtensions(container))
+		.addFunction(generateIntegerTypeConversionExtensionsFromWildcard(container))
+		.addFunction(generateComplexTypeConversionExtensions(container))
+		.let { generateRealTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+		.let { generateRealTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
+		.let { generateIntegerTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
+		.let { generateIntegerTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
 }
 
 private fun generateIntegerTypeToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateIntegerTypeToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
@@ -151,16 +153,24 @@ private fun generateRealTypeConversionExtensions(container: ClassName)
 private fun generateIntegerTypeConversionExtensions(container: ClassName)
         = generateGenericTypeConversionExtension(container, IntegerType::class.asTypeName(), IntegerType::class.asTypeName(), "integerLong", "setInteger")
 
-private fun generateGenericTypeConversionExtension(container: ClassName, typeT: ClassName, typeU: ClassName, getter: String, setter: String): FunSpec {
+private fun generateComplexTypeConversionExtensions(container: ClassName)
+		= generateGenericTypeConversionExtension(container, ComplexType::class.asTypeName(), ComplexType::class.asTypeName(), "realDouble" to "setReal", "imaginaryDouble" to "setImaginary")
+
+private fun generateGenericTypeConversionExtension(container: ClassName, typeT: ClassName, typeU: ClassName, getter: String, setter: String) = generateGenericTypeConversionExtension(
+	container, typeT, typeU, getter to setter
+)
+
+private fun generateGenericTypeConversionExtension(container: ClassName, typeT: ClassName, typeU: ClassName, vararg getterSetters: Pair<String, String>): FunSpec {
     val t = TypeVariableName("T")
     val u = TypeVariableName("U")
     val typeOfT = typeT.parameterizedBy(t)
     val typeOfU = typeU.parameterizedBy(u)
     val tType = TypeVariableName("T", typeOfT)
     val uType = TypeVariableName("U", typeOfU)
+	val lambdaBody = getterSetters.joinToString("; ") { (getter, setter) -> "t.$setter(s.$getter)" }
     return typedFuncSpecBuilder(asTypeName, container.parameterizedBy(t), tType, uType)
             .addParameter("u", u)
-            .addStatement("return if·(u::class·==·type::class)·this·as·%T else·convert(u)·{·s,·t·->·t.$setter(s.$getter)·}", container.parameterizedBy(u))
+            .addStatement("return if·(u::class·==·type::class)·this·as·%T else·convert(u)·{·s,·t·->·$lambdaBody·}", container.parameterizedBy(u))
             .build()
 }
 

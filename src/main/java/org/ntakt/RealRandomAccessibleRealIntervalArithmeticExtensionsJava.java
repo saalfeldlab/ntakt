@@ -33,6 +33,7 @@ import static org.ntakt.RealRandomAccessibleRealIntervalConverterExtensionsKt.co
 import static org.ntakt.RealRandomAccessibleRealIntervalExtensionsKt.getType;
 
 import net.imglib2.RealRandomAccessibleRealInterval;
+import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
@@ -41,6 +42,15 @@ public class RealRandomAccessibleRealIntervalArithmeticExtensionsJava {
       final RealRandomAccessibleRealInterval<T> thiz,
       final RealRandomAccessibleRealInterval<T> that) {
     return convert(thiz, that, getType(thiz), BiConverterPlus.Companion.instance());
+  }
+
+  public static RealRandomAccessibleRealInterval<? extends ComplexType> plusComplex(
+      final RealRandomAccessibleRealInterval<? extends ComplexType> thiz,
+      final RealRandomAccessibleRealInterval<? extends ComplexType> that) {
+    final ComplexType rt1 = getType(thiz);
+    final ComplexType rt2 = getType(that);
+    final ComplexType resultType = ArithmeticTypes.ResultType.get(rt1, rt2);
+    return plusGeneric(asType(thiz, resultType), asType(that, resultType));
   }
 
   public static RealRandomAccessibleRealInterval<? extends IntegerType> plusInteger(
@@ -67,6 +77,15 @@ public class RealRandomAccessibleRealIntervalArithmeticExtensionsJava {
     return convert(thiz, that, getType(thiz), BiConverterMinus.Companion.instance());
   }
 
+  public static RealRandomAccessibleRealInterval<? extends ComplexType> minusComplex(
+      final RealRandomAccessibleRealInterval<? extends ComplexType> thiz,
+      final RealRandomAccessibleRealInterval<? extends ComplexType> that) {
+    final ComplexType rt1 = getType(thiz);
+    final ComplexType rt2 = getType(that);
+    final ComplexType resultType = ArithmeticTypes.ResultType.get(rt1, rt2);
+    return minusGeneric(asType(thiz, resultType), asType(that, resultType));
+  }
+
   public static RealRandomAccessibleRealInterval<? extends IntegerType> minusInteger(
       final RealRandomAccessibleRealInterval<? extends IntegerType> thiz,
       final RealRandomAccessibleRealInterval<? extends IntegerType> that) {
@@ -91,6 +110,15 @@ public class RealRandomAccessibleRealIntervalArithmeticExtensionsJava {
     return convert(thiz, that, getType(thiz), BiConverterTimes.Companion.instance());
   }
 
+  public static RealRandomAccessibleRealInterval<? extends ComplexType> timesComplex(
+      final RealRandomAccessibleRealInterval<? extends ComplexType> thiz,
+      final RealRandomAccessibleRealInterval<? extends ComplexType> that) {
+    final ComplexType rt1 = getType(thiz);
+    final ComplexType rt2 = getType(that);
+    final ComplexType resultType = ArithmeticTypes.ResultType.get(rt1, rt2);
+    return timesGeneric(asType(thiz, resultType), asType(that, resultType));
+  }
+
   public static RealRandomAccessibleRealInterval<? extends IntegerType> timesInteger(
       final RealRandomAccessibleRealInterval<? extends IntegerType> thiz,
       final RealRandomAccessibleRealInterval<? extends IntegerType> that) {
@@ -113,6 +141,15 @@ public class RealRandomAccessibleRealIntervalArithmeticExtensionsJava {
       final RealRandomAccessibleRealInterval<T> thiz,
       final RealRandomAccessibleRealInterval<T> that) {
     return convert(thiz, that, getType(thiz), BiConverterDiv.Companion.instance());
+  }
+
+  public static RealRandomAccessibleRealInterval<? extends ComplexType> divComplex(
+      final RealRandomAccessibleRealInterval<? extends ComplexType> thiz,
+      final RealRandomAccessibleRealInterval<? extends ComplexType> that) {
+    final ComplexType rt1 = getType(thiz);
+    final ComplexType rt2 = getType(that);
+    final ComplexType resultType = ArithmeticTypes.ResultType.get(rt1, rt2);
+    return divGeneric(asType(thiz, resultType), asType(that, resultType));
   }
 
   public static RealRandomAccessibleRealInterval<? extends IntegerType> divInteger(
