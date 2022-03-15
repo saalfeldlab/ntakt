@@ -1,6 +1,7 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
@@ -50,9 +51,8 @@ private fun extensionsJavaName(container: ClassName) =
 
 private fun FileSpec.Builder.generateArithmeticOperatorStarProjections(name: String, operator: String, container: ClassName): FileSpec.Builder {
 	val classes = listOf(
-//		"Complex" to ComplexType::class, TODO
+		"Complex" to ComplexType::class,
 		"Integer" to IntegerType::class,
-//		"Numeric" to NumericType::class, TODO
 		"Real" to RealType::class
 	)
 	return classes.fold(this) { b, (identifier, bound) -> b.addFunction(generateArithmeticOperatorStarProjection(name, operator, container, bound, identifier)) }

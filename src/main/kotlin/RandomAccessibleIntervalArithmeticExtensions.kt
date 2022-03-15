@@ -33,6 +33,7 @@ package org.ntakt
 import kotlin.Suppress
 import kotlin.jvm.JvmName
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
@@ -48,6 +49,12 @@ operator fun <T : NumericType<T>> RAI<T>.unaryPlus() = this
 operator fun <T> RAI<T>.plus(that: RAI<T>): RAI<T> where T : Type<T>, T : Add<T> {
   return RandomAccessibleIntervalArithmeticExtensionsJava.plusGeneric(this, that)
 }
+
+@JvmName(name = "plusComplexWildcard")
+operator fun RAI<out ComplexType<*>>.plus(that: RAI<out ComplexType<*>>): RAI<out ComplexType<*>> =
+    RandomAccessibleIntervalArithmeticExtensionsJava.plusComplex(this, that) as? RAI<out
+    ComplexType<*>> ?:
+    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "plusIntegerWildcard")
 operator fun RAI<out IntegerType<*>>.plus(that: RAI<out IntegerType<*>>): RAI<out IntegerType<*>> =
@@ -69,6 +76,12 @@ operator fun <T> RAI<T>.minus(that: RAI<T>): RAI<T> where T : Type<T>, T : Sub<T
   return RandomAccessibleIntervalArithmeticExtensionsJava.minusGeneric(this, that)
 }
 
+@JvmName(name = "minusComplexWildcard")
+operator fun RAI<out ComplexType<*>>.minus(that: RAI<out ComplexType<*>>): RAI<out ComplexType<*>> =
+    RandomAccessibleIntervalArithmeticExtensionsJava.minusComplex(this, that) as? RAI<out
+    ComplexType<*>> ?:
+    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
 @JvmName(name = "minusIntegerWildcard")
 operator fun RAI<out IntegerType<*>>.minus(that: RAI<out IntegerType<*>>): RAI<out IntegerType<*>> =
     RandomAccessibleIntervalArithmeticExtensionsJava.minusInteger(this, that) as? RAI<out
@@ -86,6 +99,12 @@ operator fun <T> RAI<T>.times(that: RAI<T>): RAI<T> where T : Type<T>, T : Mul<T
   return RandomAccessibleIntervalArithmeticExtensionsJava.timesGeneric(this, that)
 }
 
+@JvmName(name = "timesComplexWildcard")
+operator fun RAI<out ComplexType<*>>.times(that: RAI<out ComplexType<*>>): RAI<out ComplexType<*>> =
+    RandomAccessibleIntervalArithmeticExtensionsJava.timesComplex(this, that) as? RAI<out
+    ComplexType<*>> ?:
+    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+
 @JvmName(name = "timesIntegerWildcard")
 operator fun RAI<out IntegerType<*>>.times(that: RAI<out IntegerType<*>>): RAI<out IntegerType<*>> =
     RandomAccessibleIntervalArithmeticExtensionsJava.timesInteger(this, that) as? RAI<out
@@ -102,6 +121,12 @@ operator fun RAI<out RealType<*>>.times(that: RAI<out RealType<*>>): RAI<out Rea
 operator fun <T> RAI<T>.div(that: RAI<T>): RAI<T> where T : Type<T>, T : Div<T> {
   return RandomAccessibleIntervalArithmeticExtensionsJava.divGeneric(this, that)
 }
+
+@JvmName(name = "divComplexWildcard")
+operator fun RAI<out ComplexType<*>>.div(that: RAI<out ComplexType<*>>): RAI<out ComplexType<*>> =
+    RandomAccessibleIntervalArithmeticExtensionsJava.divComplex(this, that) as? RAI<out
+    ComplexType<*>> ?:
+    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divIntegerWildcard")
 operator fun RAI<out IntegerType<*>>.div(that: RAI<out IntegerType<*>>): RAI<out IntegerType<*>> =

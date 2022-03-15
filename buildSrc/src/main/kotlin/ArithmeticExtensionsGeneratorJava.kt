@@ -57,9 +57,8 @@ fun TypeSpec.Builder.makeArithmeticMethodSameGenericTypes(container: Class<*>, o
 
 fun TypeSpec.Builder.makeArithmeticMethod(container: Class<*>, operator: arithmetics.Operator): TypeSpec.Builder {
 	val classes = listOf(
-//		"Complex" to ComplexType::class, TODO
+		"Complex" to ComplexType::class,
 		"Integer" to IntegerType::class,
-//		"Numeric" to NumericType::class, TODO
 		"Real" to RealType::class
 	)
 	return classes.fold(this) { b, (identifier, bound) -> b.makeArithmeticMethod(container, operator, bound.java, identifier) }

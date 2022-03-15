@@ -34,6 +34,7 @@ import net.imglib2.converter.BiConverter
 import net.imglib2.converter.Converter
 import net.imglib2.converter.Converters
 import net.imglib2.type.Type
+import net.imglib2.type.numeric.ComplexType
 import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
@@ -88,6 +89,10 @@ fun <T : IntegerType<T>, U : IntegerType<U>> RRA<T>.asType(u: U) =
 fun <T : IntegerType<T>> RRA<out IntegerType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RRA<T>
     else convert(t) { s, u -> u.setInteger(s.getIntegerLong()) }
+
+fun <T : ComplexType<T>, U : ComplexType<U>> RRA<T>.asType(u: U) =
+    if (u::class == type::class) this as RRA<U> else convert(u) { s, t -> t.setReal(s.realDouble);
+    t.setImaginary(s.imaginaryDouble) }
 
 @JvmName(name = "asDoublesFromRealType")
 fun <T : RealType<T>> RRA<T>.asDoubles() = asType(DoubleType())
