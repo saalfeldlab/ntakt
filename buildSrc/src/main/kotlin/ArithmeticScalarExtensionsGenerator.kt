@@ -6,8 +6,8 @@ import kotlin.reflect.KClass
 fun generateArithmeticScalarExtensions(`as`: String, fileName: String): String {
     val kotlinFile =  FileSpec.builder("org.ntakt", fileName)
     val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
-    for ((operation, operatorName, type) in arithmetics.Operator.values()) {
-        kotlinFile.addFunction(generateArithmeticScalarOperatorSameType(operation, operatorName, container, type))
+    for ((operation, operatorName, _) in arithmetics.Operator.values()) {
+        kotlinFile.addFunction(generateArithmeticScalarOperatorSameType(operation, operatorName, container))
         kotlinFile.addArithmeticScalarOperatorsPrimitiveTypes(operation, operatorName, container)
     }
     kotlinFile.addPow(container)
@@ -15,7 +15,7 @@ fun generateArithmeticScalarExtensions(`as`: String, fileName: String): String {
     return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
 }
 
-private fun generateArithmeticScalarOperatorSameType(name: String, operator: String, container: ClassName, type: KClass<*>): FunSpec {
+private fun generateArithmeticScalarOperatorSameType(name: String, operator: String, container: ClassName): FunSpec {
     // TODO for some reason, compilation of generated sources fails with Type::class, type, e.g.
     // val (genericT, boundedT) = "T".genericAndBounded(Type::class, type)
     // java.lang.AssertionError: Empty intersection for types [Type<(T..T?)>, Add<(T..T?)>, Type<T>, Add<T>]
