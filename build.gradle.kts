@@ -7,7 +7,8 @@ compileKotlin.kotlinOptions.jvmTarget = "1.8"
 compileTestKotlin.kotlinOptions.jvmTarget = compileKotlin.kotlinOptions.jvmTarget
 
 plugins {
-    kotlin("jvm") version "1.4.31"
+    // build time extremely slow ith Kotlin 1.5+
+    kotlin("jvm") version "1.4.32"
 
     // generate documentation
     id("org.jetbrains.dokka") version "1.4.20"
