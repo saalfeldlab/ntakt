@@ -19,7 +19,7 @@ plugins {
     `maven-publish`
 
     // gradle header plugin
-    id("com.github.hierynomus.license") version "0.15.0"
+    id("com.github.hierynomus.license") version "0.16.1"
 
     // code coverage
     jacoco
