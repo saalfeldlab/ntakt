@@ -52,7 +52,7 @@ interface WithHeader {
     fun String.withHeader() = "${header ?: ""}${this}"
 }
 
-abstract class NtaktExtensionsTask(group: String) : AbstractTask(), WithHeader {
+abstract class NtaktExtensionsTask(group: String) : DefaultTask(), WithHeader {
 
 	init {
         this.group = group
