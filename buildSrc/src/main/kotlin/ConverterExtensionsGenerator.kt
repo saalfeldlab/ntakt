@@ -52,7 +52,8 @@ private fun FileSpec.Builder.addConverterExtensions(container: ClassName): FileS
     val typeOfV = Type::class.asTypeName().parameterizedBy(v)
     val uType = TypeVariableName("U", typeOfU)
     val vType = TypeVariableName("V", typeOfV)
-    val tIn = TypeVariableName("T", KModifier.IN)
+	// TODO use once variance for SamplerConverter is fixed, see below
+//    val tIn = TypeVariableName("T", KModifier.IN)
     return this
             .addFunction(generateConverterExtension(container, t, uType))
             .addFunction(generateConverterExtensionLambda(container, t, uType))
