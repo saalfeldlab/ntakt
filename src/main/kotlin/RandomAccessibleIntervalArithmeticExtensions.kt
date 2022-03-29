@@ -45,8 +45,28 @@ import net.imglib2.RandomAccessibleInterval as RAI
 
 operator fun <T : NumericType<T>> RAI<T>.unaryPlus() = this
 
-@JvmName(name = "plusGeneric")
+@JvmName(name = "plusGeneric_Type_Add")
 operator fun <T> RAI<T>.plus(that: RAI<T>): RAI<T> where T : Type<T>, T : Add<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_NumericType")
+operator fun <T : NumericType<T>> RAI<T>.plus(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RAI<T>.plus(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RAI<T>.plus(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_RealType")
+operator fun <T : RealType<T>> RAI<T>.plus(that: RAI<T>): RAI<T> {
   return RandomAccessibleIntervalArithmeticExtensionsJava.plusGeneric(this, that)
 }
 
@@ -71,8 +91,28 @@ operator fun RAI<out RealType<*>>.plus(that: RAI<out RealType<*>>): RAI<out Real
 operator fun <T : NumericType<T>> RAI<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
-@JvmName(name = "minusGeneric")
+@JvmName(name = "minusGeneric_Type_Sub")
 operator fun <T> RAI<T>.minus(that: RAI<T>): RAI<T> where T : Type<T>, T : Sub<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_NumericType")
+operator fun <T : NumericType<T>> RAI<T>.minus(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RAI<T>.minus(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RAI<T>.minus(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_RealType")
+operator fun <T : RealType<T>> RAI<T>.minus(that: RAI<T>): RAI<T> {
   return RandomAccessibleIntervalArithmeticExtensionsJava.minusGeneric(this, that)
 }
 
@@ -94,8 +134,28 @@ operator fun RAI<out RealType<*>>.minus(that: RAI<out RealType<*>>): RAI<out Rea
     ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
-@JvmName(name = "timesGeneric")
+@JvmName(name = "timesGeneric_Type_Mul")
 operator fun <T> RAI<T>.times(that: RAI<T>): RAI<T> where T : Type<T>, T : Mul<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_NumericType")
+operator fun <T : NumericType<T>> RAI<T>.times(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RAI<T>.times(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RAI<T>.times(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_RealType")
+operator fun <T : RealType<T>> RAI<T>.times(that: RAI<T>): RAI<T> {
   return RandomAccessibleIntervalArithmeticExtensionsJava.timesGeneric(this, that)
 }
 
@@ -117,8 +177,28 @@ operator fun RAI<out RealType<*>>.times(that: RAI<out RealType<*>>): RAI<out Rea
     ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
-@JvmName(name = "divGeneric")
+@JvmName(name = "divGeneric_Type_Div")
 operator fun <T> RAI<T>.div(that: RAI<T>): RAI<T> where T : Type<T>, T : Div<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_NumericType")
+operator fun <T : NumericType<T>> RAI<T>.div(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RAI<T>.div(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RAI<T>.div(that: RAI<T>): RAI<T> {
+  return RandomAccessibleIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_RealType")
+operator fun <T : RealType<T>> RAI<T>.div(that: RAI<T>): RAI<T> {
   return RandomAccessibleIntervalArithmeticExtensionsJava.divGeneric(this, that)
 }
 

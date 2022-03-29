@@ -45,8 +45,28 @@ import net.imglib2.RealRandomAccessibleRealInterval as RRARI
 
 operator fun <T : NumericType<T>> RRARI<T>.unaryPlus() = this
 
-@JvmName(name = "plusGeneric")
+@JvmName(name = "plusGeneric_Type_Add")
 operator fun <T> RRARI<T>.plus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Add<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_NumericType")
+operator fun <T : NumericType<T>> RRARI<T>.plus(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRARI<T>.plus(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRARI<T>.plus(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_RealType")
+operator fun <T : RealType<T>> RRARI<T>.plus(that: RRARI<T>): RRARI<T> {
   return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusGeneric(this, that)
 }
 
@@ -71,8 +91,28 @@ operator fun RRARI<out RealType<*>>.plus(that: RRARI<out RealType<*>>): RRARI<ou
 operator fun <T : NumericType<T>> RRARI<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
-@JvmName(name = "minusGeneric")
+@JvmName(name = "minusGeneric_Type_Sub")
 operator fun <T> RRARI<T>.minus(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Sub<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_NumericType")
+operator fun <T : NumericType<T>> RRARI<T>.minus(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRARI<T>.minus(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRARI<T>.minus(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_RealType")
+operator fun <T : RealType<T>> RRARI<T>.minus(that: RRARI<T>): RRARI<T> {
   return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusGeneric(this, that)
 }
 
@@ -94,8 +134,28 @@ operator fun RRARI<out RealType<*>>.minus(that: RRARI<out RealType<*>>): RRARI<o
     RealType<*>> ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
-@JvmName(name = "timesGeneric")
+@JvmName(name = "timesGeneric_Type_Mul")
 operator fun <T> RRARI<T>.times(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Mul<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_NumericType")
+operator fun <T : NumericType<T>> RRARI<T>.times(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRARI<T>.times(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRARI<T>.times(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_RealType")
+operator fun <T : RealType<T>> RRARI<T>.times(that: RRARI<T>): RRARI<T> {
   return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesGeneric(this, that)
 }
 
@@ -117,8 +177,28 @@ operator fun RRARI<out RealType<*>>.times(that: RRARI<out RealType<*>>): RRARI<o
     RealType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
-@JvmName(name = "divGeneric")
+@JvmName(name = "divGeneric_Type_Div")
 operator fun <T> RRARI<T>.div(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Div<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_NumericType")
+operator fun <T : NumericType<T>> RRARI<T>.div(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRARI<T>.div(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRARI<T>.div(that: RRARI<T>): RRARI<T> {
+  return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_RealType")
+operator fun <T : RealType<T>> RRARI<T>.div(that: RRARI<T>): RRARI<T> {
   return RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divGeneric(this, that)
 }
 

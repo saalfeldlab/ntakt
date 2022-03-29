@@ -45,8 +45,28 @@ import net.imglib2.RealRandomAccessible as RRA
 
 operator fun <T : NumericType<T>> RRA<T>.unaryPlus() = this
 
-@JvmName(name = "plusGeneric")
+@JvmName(name = "plusGeneric_Type_Add")
 operator fun <T> RRA<T>.plus(that: RRA<T>): RRA<T> where T : Type<T>, T : Add<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_NumericType")
+operator fun <T : NumericType<T>> RRA<T>.plus(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRA<T>.plus(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRA<T>.plus(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.plusGeneric(this, that)
+}
+
+@JvmName(name = "plusGeneric_RealType")
+operator fun <T : RealType<T>> RRA<T>.plus(that: RRA<T>): RRA<T> {
   return RealRandomAccessibleArithmeticExtensionsJava.plusGeneric(this, that)
 }
 
@@ -70,8 +90,28 @@ operator fun RRA<out RealType<*>>.plus(that: RRA<out RealType<*>>): RRA<out Real
 operator fun <T : NumericType<T>> RRA<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
 
-@JvmName(name = "minusGeneric")
+@JvmName(name = "minusGeneric_Type_Sub")
 operator fun <T> RRA<T>.minus(that: RRA<T>): RRA<T> where T : Type<T>, T : Sub<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_NumericType")
+operator fun <T : NumericType<T>> RRA<T>.minus(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRA<T>.minus(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRA<T>.minus(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.minusGeneric(this, that)
+}
+
+@JvmName(name = "minusGeneric_RealType")
+operator fun <T : RealType<T>> RRA<T>.minus(that: RRA<T>): RRA<T> {
   return RealRandomAccessibleArithmeticExtensionsJava.minusGeneric(this, that)
 }
 
@@ -92,8 +132,28 @@ operator fun RRA<out RealType<*>>.minus(that: RRA<out RealType<*>>): RRA<out Rea
     RealRandomAccessibleArithmeticExtensionsJava.minusReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
-@JvmName(name = "timesGeneric")
+@JvmName(name = "timesGeneric_Type_Mul")
 operator fun <T> RRA<T>.times(that: RRA<T>): RRA<T> where T : Type<T>, T : Mul<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_NumericType")
+operator fun <T : NumericType<T>> RRA<T>.times(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRA<T>.times(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRA<T>.times(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.timesGeneric(this, that)
+}
+
+@JvmName(name = "timesGeneric_RealType")
+operator fun <T : RealType<T>> RRA<T>.times(that: RRA<T>): RRA<T> {
   return RealRandomAccessibleArithmeticExtensionsJava.timesGeneric(this, that)
 }
 
@@ -114,8 +174,28 @@ operator fun RRA<out RealType<*>>.times(that: RRA<out RealType<*>>): RRA<out Rea
     RealRandomAccessibleArithmeticExtensionsJava.timesReal(this, that) as? RRA<out RealType<*>> ?:
     error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
-@JvmName(name = "divGeneric")
+@JvmName(name = "divGeneric_Type_Div")
 operator fun <T> RRA<T>.div(that: RRA<T>): RRA<T> where T : Type<T>, T : Div<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_NumericType")
+operator fun <T : NumericType<T>> RRA<T>.div(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_ComplexType")
+operator fun <T : ComplexType<T>> RRA<T>.div(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_IntegerType")
+operator fun <T : IntegerType<T>> RRA<T>.div(that: RRA<T>): RRA<T> {
+  return RealRandomAccessibleArithmeticExtensionsJava.divGeneric(this, that)
+}
+
+@JvmName(name = "divGeneric_RealType")
+operator fun <T : RealType<T>> RRA<T>.div(that: RRA<T>): RRA<T> {
   return RealRandomAccessibleArithmeticExtensionsJava.divGeneric(this, that)
 }
 
