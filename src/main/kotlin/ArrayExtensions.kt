@@ -27,32 +27,32 @@ package org.ntakt
 
 import net.imglib2.img.basictypeaccess.volatiles.array.*
 
-val ByteArray.shorts get() = ShortArray(size) { this[it].toShort() }
+fun ByteArray.asShortArray() = ShortArray(size) { this[it].toShort() }
 
-val ByteArray.ints get() = IntArray(size) { this[it].toInt() }
-val ShortArray.ints get() = IntArray(size) { this[it].toInt() }
+fun ByteArray.asIntArray() = IntArray(size) { this[it].toInt() }
+fun ShortArray.asIntArray() = IntArray(size) { this[it].toInt() }
 
-val ByteArray.longs get() = LongArray(size) { this[it].toLong() }
-val ShortArray.longs get() = LongArray(size) { this[it].toLong() }
-val IntArray.longs get() = LongArray(size) { this[it].toLong() }
+fun ByteArray.asLongArray() = LongArray(size) { this[it].toLong() }
+fun ShortArray.asLongArray() = LongArray(size) { this[it].toLong() }
+fun IntArray.asLongArray() = LongArray(size) { this[it].toLong() }
 
-val ByteArray.floats get() = FloatArray(size) { this[it].toFloat() }
-val ShortArray.floats get() = FloatArray(size) { this[it].toFloat() }
-val IntArray.floats get() = FloatArray(size) { this[it].toFloat() }
-val LongArray.floats get() = FloatArray(size) { this[it].toFloat() }
+fun ByteArray.asFloatArray() = FloatArray(size) { this[it].toFloat() }
+fun ShortArray.asFloatArray() = FloatArray(size) { this[it].toFloat() }
+fun IntArray.asFloatArray() = FloatArray(size) { this[it].toFloat() }
+fun LongArray.asFloatArray() = FloatArray(size) { this[it].toFloat() }
 
-val ByteArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
-val ShortArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
-val IntArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
-val LongArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
-val FloatArray.doubles get() = DoubleArray(size) { this[it].toDouble() }
+fun ByteArray.asDoubleArray() = DoubleArray(size) { this[it].toDouble() }
+fun ShortArray.asDoubleArray() = DoubleArray(size) { this[it].toDouble() }
+fun IntArray.asDoubleArray() = DoubleArray(size) { this[it].toDouble() }
+fun LongArray.asDoubleArray() = DoubleArray(size) { this[it].toDouble() }
+fun FloatArray.asDoubleArray() = DoubleArray(size) { this[it].toDouble() }
 
 // accesses
-val BooleanArray.access get() = VolatileBooleanArray(this, true)
-val CharArray.access get() = VolatileCharArray(this, true)
-val ByteArray.access get() = VolatileByteArray(this, true)
-val ShortArray.access get() = VolatileShortArray(this, true)
-val IntArray.access get() = VolatileIntArray(this, true)
-val LongArray.access get() = VolatileLongArray(this, true)
-val FloatArray.access get() = VolatileFloatArray(this, true)
-val DoubleArray.access get() = VolatileDoubleArray(this, true)
+fun BooleanArray.asAccess() = VolatileBooleanArray(this, true)
+fun CharArray.asAccess() = VolatileCharArray(this, true)
+fun ByteArray.asAccess() = VolatileByteArray(this, true)
+fun ShortArray.asAccess() = VolatileShortArray(this, true)
+fun IntArray.asAccess() = VolatileIntArray(this, true)
+fun LongArray.asAccess() = VolatileLongArray(this, true)
+fun FloatArray.asAccess() = VolatileFloatArray(this, true)
+fun DoubleArray.asAccess() = VolatileDoubleArray(this, true)

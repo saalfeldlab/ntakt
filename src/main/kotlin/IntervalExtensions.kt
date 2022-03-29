@@ -55,9 +55,9 @@ val FloatArray.intervalMinMax get() = map { it.toDouble() }.intervalMinMax
 @JvmName("pairLong") fun Array<out Pair<Long, Long>>.asInterval() = unzip().let { (min, max) -> min .. max }
 @JvmName("rangeToInt") operator fun Collection<Int>.rangeTo(max: Collection<Int>) = this.toIntArray() .. max.toIntArray()
 @JvmName("rangeToLong") operator fun Collection<Long>.rangeTo(max: Collection<Long>) = this.toLongArray() .. max.toLongArray()
-operator fun IntArray.rangeTo(max: IntArray) = this.longs .. max.longs
-operator fun IntArray.rangeTo(max: LongArray) = this.longs .. max
-operator fun LongArray.rangeTo(max: IntArray) = this .. max.longs
+operator fun IntArray.rangeTo(max: IntArray) = this.asLongArray() .. max.asLongArray()
+operator fun IntArray.rangeTo(max: LongArray) = this.asLongArray() .. max
+operator fun LongArray.rangeTo(max: IntArray) = this .. max.asLongArray()
 operator fun LongArray.rangeTo(max: LongArray) = Point(*this) .. Point(*max)
 operator fun Localizable.rangeTo(max: Localizable): Interval {
     require(nDim == max.nDim) { "Dimensionality mismatch for min=$this and max=$max: $nDim != {max.nDim}" }
@@ -74,9 +74,9 @@ operator fun Localizable.rangeTo(max: Localizable): Interval {
 @JvmName("pairDouble") fun Array<out Pair<Double, Double>>.asInterval() = unzip().let { (min, max) -> min .. max }
 @JvmName("rangeToFloat") operator fun Collection<Float>.rangeTo(max: Collection<Float>) = this.toFloatArray() .. max.toFloatArray()
 @JvmName("rangeToDouble") operator fun Collection<Double>.rangeTo(max: Collection<Double>) = this.toDoubleArray() .. max.toDoubleArray()
-operator fun FloatArray.rangeTo(max: FloatArray) = this.doubles .. max.doubles
-operator fun FloatArray.rangeTo(max: DoubleArray) = this.doubles .. max
-operator fun DoubleArray.rangeTo(max: FloatArray) = this .. max.doubles
+operator fun FloatArray.rangeTo(max: FloatArray) = this.asDoubleArray() .. max.asDoubleArray()
+operator fun FloatArray.rangeTo(max: DoubleArray) = this.asDoubleArray() .. max
+operator fun DoubleArray.rangeTo(max: FloatArray) = this .. max.asDoubleArray()
 operator fun DoubleArray.rangeTo(max: DoubleArray) = RealPoint(*this) .. RealPoint(*max)
 operator fun RealLocalizable.rangeTo(max: RealLocalizable): RealInterval {
     require(nDim == max.nDim) { "Dimensionality mismatch for min=$this and max=$max: $nDim != {max.nDim}" }

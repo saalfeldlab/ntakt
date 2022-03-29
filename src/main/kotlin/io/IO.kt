@@ -28,12 +28,10 @@ package org.ntakt.io
 import loci.formats.FormatTools
 import loci.formats.ImageReader
 import net.imglib2.display.screenimage.awt.ARGBScreenImage
-import net.imglib2.img.array.ArrayImgs
 import net.imglib2.type.numeric.ARGBType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.view.Views
 import org.ntakt.*
-import org.ntakt.access.*
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
 import java.io.File
@@ -52,17 +50,17 @@ object io {
         val h = reader.sizeY.toLong()
         val slices = (0 until reader.imageCount).map {
             if (reader.isRGB)
-                reader.readAsBuffer(it).asIntBuffer().access.ints(w, h) as RAI<RealType<*>>
+                reader.readAsBuffer(it).asIntBuffer().asAccess().ints(w, h) as RAI<RealType<*>>
             else
                 when (reader.pixelType) {
-                    FormatTools.INT8 -> reader.readAsBuffer(it).access.bytes(w, h)
-                    FormatTools.INT16 -> reader.readAsBuffer(it).asShortBuffer().access.shorts(w, h)
-                    FormatTools.INT32 -> reader.readAsBuffer(it).asIntBuffer().access.ints(w, h)
-                    FormatTools.UINT8 -> reader.readAsBuffer(it).access.unsignedBytes(w, h)
-                    FormatTools.UINT16 -> reader.readAsBuffer(it).asShortBuffer().access.unsignedShorts(w, h)
-                    FormatTools.UINT32 -> reader.readAsBuffer(it).asIntBuffer().access.unsignedInts(w, h)
-                    FormatTools.FLOAT -> reader.readAsBuffer(it).asFloatBuffer().access.floats(w, h)
-                    FormatTools.DOUBLE -> reader.readAsBuffer(it).asDoubleBuffer().access.doubles(w, h)
+                    FormatTools.INT8 -> reader.readAsBuffer(it).asAccess().bytes(w, h)
+                    FormatTools.INT16 -> reader.readAsBuffer(it).asShortBuffer().asAccess().shorts(w, h)
+                    FormatTools.INT32 -> reader.readAsBuffer(it).asIntBuffer().asAccess().ints(w, h)
+                    FormatTools.UINT8 -> reader.readAsBuffer(it).asAccess().unsignedBytes(w, h)
+                    FormatTools.UINT16 -> reader.readAsBuffer(it).asShortBuffer().asAccess().unsignedShorts(w, h)
+                    FormatTools.UINT32 -> reader.readAsBuffer(it).asIntBuffer().asAccess().unsignedInts(w, h)
+                    FormatTools.FLOAT -> reader.readAsBuffer(it).asFloatBuffer().asAccess().floats(w, h)
+                    FormatTools.DOUBLE -> reader.readAsBuffer(it).asDoubleBuffer().asAccess().doubles(w, h)
                     else -> error("Pixel type not supported: ${reader.pixelType}")
                 } as RAI<RealType<*>>
         }

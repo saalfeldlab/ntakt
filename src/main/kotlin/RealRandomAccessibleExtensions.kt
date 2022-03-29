@@ -80,7 +80,7 @@ fun <T> RRA<T>.realInterval(vararg minMax: Float): RRARI<T> = RealIntervalView(t
 
 private class RealIntervalView<T>(val source: RRA<T>, val realInterval: RealInterval) : RRARI<T>, RRA<T> by source, RealInterval by realInterval {
     constructor(source: RRA<T>, min: DoubleArray, max: DoubleArray) : this(source, FinalRealInterval(min, max))
-    constructor(source: RRA<T>, min: FloatArray, max: FloatArray) : this(source, min.doubles, max.doubles)
+    constructor(source: RRA<T>, min: FloatArray, max: FloatArray) : this(source, min.asDoubleArray(), max.asDoubleArray())
     constructor(source: RRA<T>, min: RealLocalizable, max: RealLocalizable) : this(source, FinalRealInterval(min, max))
     constructor(source: RRA<T>, vararg minMax: Double) : this(source, minMax.minMaxReal)
     constructor(source: RRA<T>, vararg minMax: Float) : this(source, minMax.minMaxReal)

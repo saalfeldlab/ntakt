@@ -25,12 +25,29 @@
  */
 package org.ntakt
 
-import org.ntakt.access.*
-import java.nio.*
+import net.imglib2.img.basictypeaccess.nio.ByteBufferAccess
+import net.imglib2.img.basictypeaccess.nio.DoubleBufferAccess
+import net.imglib2.img.basictypeaccess.nio.FloatBufferAccess
+import net.imglib2.img.basictypeaccess.nio.IntBufferAccess
+import net.imglib2.img.basictypeaccess.nio.LongBufferAccess
+import net.imglib2.img.basictypeaccess.nio.ShortBufferAccess
+import java.nio.ByteBuffer
+import java.nio.DoubleBuffer
+import java.nio.FloatBuffer
+import java.nio.IntBuffer
+import java.nio.LongBuffer
+import java.nio.ShortBuffer
 
-val ByteBuffer.access get() = ByteBufferAccess(this)
-val ShortBuffer.access get() = ShortBufferAccess(this)
-val IntBuffer.access get() = IntBufferAccess(this)
-val LongBuffer.access get() = LongBufferAccess(this)
-val FloatBuffer.access get() = FloatBufferAccess(this)
-val DoubleBuffer.access get() = DoubleBufferAccess(this)
+
+fun ByteBuffer.asAccess(isValid: Boolean = true) = ByteBufferAccess(this, isValid)
+fun ShortBuffer.asAccess(isValid: Boolean = true) = ShortBufferAccess(this, isValid)
+fun IntBuffer.asAccess(isValid: Boolean = true) = IntBufferAccess(this, isValid)
+fun LongBuffer.asAccess(isValid: Boolean = true) = LongBufferAccess(this, isValid)
+fun FloatBuffer.asAccess(isValid: Boolean = true) = FloatBufferAccess(this, isValid)
+fun DoubleBuffer.asAccess(isValid: Boolean = true) = DoubleBufferAccess(this, isValid)
+
+fun ByteBuffer.asShortAccess(isValid: Boolean = true): ShortBufferAccess = ShortBufferAccess(this, isValid)
+fun ByteBuffer.asIntAccess(isValid: Boolean = true): IntBufferAccess = IntBufferAccess(this, isValid)
+fun ByteBuffer.asLongAccess(isValid: Boolean = true): LongBufferAccess = LongBufferAccess(this, isValid)
+fun ByteBuffer.asFloatAccess(isValid: Boolean = true): FloatBufferAccess = FloatBufferAccess(this, isValid)
+fun ByteBuffer.asDoubleAccess(isValid: Boolean = true): DoubleBufferAccess = DoubleBufferAccess(this, isValid)
