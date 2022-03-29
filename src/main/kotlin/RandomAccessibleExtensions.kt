@@ -81,7 +81,7 @@ operator fun <T> RA<T>.get(min: LongArray, max: LongArray): RAI<T> = this[min ..
 operator fun <T> RA<T>.get(interval: Interval): RAI<T> = interval(interval)
 
 fun <T> RA<T>.interval(min: LongArray, max: LongArray): RAI<T> = interval(min .. max)
-fun <T> RA<T>.interval(min: IntArray, max: IntArray): RAI<T> = interval(min.longs, max.longs)
+fun <T> RA<T>.interval(min: IntArray, max: IntArray): RAI<T> = interval(min.asLongArray(), max.asLongArray())
 fun <T> RA<T>.interval(vararg dims: Long) = interval(dims.interval)
 fun <T> RA<T>.interval(vararg dims: Int) = interval(dims.interval)
 fun <T> RA<T>.interval(interval: Interval): RAI<T> {
@@ -94,7 +94,7 @@ fun <T> RA<T>.interval(interval: Interval): RAI<T> {
 @JvmName("cropIntRange") fun <T> RA<T>.crop(vararg minMax: ClosedRange<Int>): RAI<T> = crop(minMax.asInterval())
 @JvmName("cropLongRange") fun <T> RA<T>.crop(vararg minMax: ClosedRange<Long>): RAI<T> = crop(minMax.asInterval())
 fun <T> RA<T>.crop(min: LongArray, max: LongArray): RAI<T> = crop(min .. max)
-fun <T> RA<T>.crop(min: IntArray, max: IntArray): RAI<T> = crop(min.longs, max.longs)
+fun <T> RA<T>.crop(min: IntArray, max: IntArray): RAI<T> = crop(min.asLongArray(), max.asLongArray())
 fun <T> RA<T>.crop(vararg dims: Long) = crop(dims.interval)
 fun <T> RA<T>.crop(vararg dims: Int) = crop(dims.interval)
 fun <T> RA<T>.crop(interval: Interval): RAI<T> = interval(interval).zeroMin

@@ -7,7 +7,7 @@ compileKotlin.kotlinOptions.jvmTarget = "1.8"
 compileTestKotlin.kotlinOptions.jvmTarget = compileKotlin.kotlinOptions.jvmTarget
 
 plugins {
-    // build time extremely slow ith Kotlin 1.5+
+    // build time extremely slow with Kotlin 1.5+
     kotlin("jvm") version "1.4.32"
 
     // generate documentation
@@ -43,7 +43,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // imglib2
-    api("net.imglib2:imglib2:5.10.0")
+    api("net.imglib2:imglib2:5.13.0")
     api("net.imglib2:imglib2-realtransform:3.0.0")
     api("net.imglib2:imglib2-cache:1.0.0-beta-14")
 

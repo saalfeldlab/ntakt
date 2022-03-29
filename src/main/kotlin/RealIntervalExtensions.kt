@@ -39,7 +39,7 @@ val RealInterval.minAsRealPoint: RealPoint get() = minAsRealPoint()
 val RealInterval.maxAsRealPoint: RealPoint get() = RealPoint(numDimensions()).also { realMax(it) }
 
 val DoubleArray.minMaxReal get() = Intervals.createMinMaxReal(*this)
-val FloatArray.minMaxReal get() = Intervals.createMinMaxReal(*doubles)
+val FloatArray.minMaxReal get() = Intervals.createMinMaxReal(*asDoubleArray())
 
 infix fun RealInterval.intersect(that: RealInterval) = Intervals.intersect(this, that)
 infix fun RealInterval.union(that: RealInterval) = Intervals.union(this, that)
