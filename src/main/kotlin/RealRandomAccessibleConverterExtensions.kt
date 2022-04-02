@@ -73,26 +73,17 @@ inline fun <T, U, V : Type<V>> RRA<T>.convert(
   ) -> Unit
 ) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
 
-fun <T : RealType<T>, U : RealType<U>> RRA<T>.asType(u: U) =
-    if (u::class == type::class) this as RRA<U> else convert(u) { s, t -> t.setReal(s.realDouble) }
-
-@JvmName(name = "fromRealTypeWildcard")
 fun <T : RealType<T>> RRA<out RealType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RRA<T>
-    else convert(t) { s, u -> u.setReal(s.getRealDouble()) }
+    else convert(t) { s, u -> u.setReal(s.realDouble) }
 
-fun <T : IntegerType<T>, U : IntegerType<U>> RRA<T>.asType(u: U) =
-    if (u::class == type::class) this as RRA<U>
-    else convert(u) { s, t -> t.setInteger(s.integerLong) }
-
-@JvmName(name = "fromIntegerTypeWildcard")
 fun <T : IntegerType<T>> RRA<out IntegerType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RRA<T>
-    else convert(t) { s, u -> u.setInteger(s.getIntegerLong()) }
+    else convert(t) { s, u -> u.setInteger(s.integerLong) }
 
-fun <T : ComplexType<T>, U : ComplexType<U>> RRA<T>.asType(u: U) =
-    if (u::class == type::class) this as RRA<U> else convert(u) { s, t -> t.setReal(s.realDouble);
-    t.setImaginary(s.imaginaryDouble) }
+fun <T : ComplexType<T>> RRA<out ComplexType<*>>.asType(t: T) =
+    if (t::class == getType()::class) this as RRA<T>
+    else convert(t) { s, u -> u.setReal(s.realDouble); u.setImaginary(s.imaginaryDouble) }
 
 @JvmName(name = "asDoublesFromRealType")
 fun <T : RealType<T>> RRA<T>.asDoubles() = asType(DoubleType())

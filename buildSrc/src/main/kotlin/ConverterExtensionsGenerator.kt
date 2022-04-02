@@ -117,11 +117,9 @@ private fun higherOrderFunctionParameter(
 
 private fun FileSpec.Builder.addTypeConversionExtensions(container: ClassName): FileSpec.Builder {
     return this
-		.addFunction(generateRealTypeConversionExtensions(container))
 		.addFunction(generateRealTypeConversionExtensionsFromWildcard(container))
-		.addFunction(generateIntegerTypeConversionExtensions(container))
 		.addFunction(generateIntegerTypeConversionExtensionsFromWildcard(container))
-		.addFunction(generateComplexTypeConversionExtensions(container))
+		.addFunction(generateComplexTypeConversionExtensionsFromWildcard(container))
 		.let { generateRealTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
 		.let { generateRealTypeWildcardToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f)} }
 		.let { generateIntegerTypeToRealTypeConversionExtensions(container).fold(it) { acc, f -> acc.addFunction(f) } }
@@ -148,33 +146,6 @@ private fun generateRealTypeToRealTypeConversionExtensions(name: String, contain
             .build()
 }
 
-private fun generateRealTypeConversionExtensions(container: ClassName)
-        = generateGenericTypeConversionExtension(container, RealType::class.asTypeName(), RealType::class.asTypeName(), "realDouble", "setReal")
-
-private fun generateIntegerTypeConversionExtensions(container: ClassName)
-        = generateGenericTypeConversionExtension(container, IntegerType::class.asTypeName(), IntegerType::class.asTypeName(), "integerLong", "setInteger")
-
-private fun generateComplexTypeConversionExtensions(container: ClassName)
-		= generateGenericTypeConversionExtension(container, ComplexType::class.asTypeName(), ComplexType::class.asTypeName(), "realDouble" to "setReal", "imaginaryDouble" to "setImaginary")
-
-private fun generateGenericTypeConversionExtension(container: ClassName, typeT: ClassName, typeU: ClassName, getter: String, setter: String) = generateGenericTypeConversionExtension(
-	container, typeT, typeU, getter to setter
-)
-
-private fun generateGenericTypeConversionExtension(container: ClassName, typeT: ClassName, typeU: ClassName, vararg getterSetters: Pair<String, String>): FunSpec {
-    val t = TypeVariableName("T")
-    val u = TypeVariableName("U")
-    val typeOfT = typeT.parameterizedBy(t)
-    val typeOfU = typeU.parameterizedBy(u)
-    val tType = TypeVariableName("T", typeOfT)
-    val uType = TypeVariableName("U", typeOfU)
-	val lambdaBody = getterSetters.joinToString("; ") { (getter, setter) -> "t.$setter(s.$getter)" }
-    return typedFuncSpecBuilder(asTypeName, container.parameterizedBy(t), tType, uType)
-            .addParameter("u", u)
-            .addStatement("return if·(u::class·==·type::class)·this·as·%T else·convert(u)·{·s,·t·->·$lambdaBody·}", container.parameterizedBy(u))
-            .build()
-}
-
 private fun generateIntegerTypeWildcardToRealTypeConversionExtensions(container: ClassName) = realAndIntegerTypes.map { generateIntegerTypeWildcardToRealTypeConversionExtensions("as${it.key.capitalize()}", container, it.value) }
 
 private fun generateIntegerTypeWildcardToRealTypeConversionExtensions(name: String, container: ClassName, to: KClass<out RealType<*>>): FunSpec {
@@ -196,21 +167,28 @@ private fun generateRealTypeWildcardToRealTypeConversionExtensions(name: String,
 }
 
 private fun generateRealTypeConversionExtensionsFromWildcard(container: ClassName)
-        = generateGenericTypeConversionExtensionFromWildcard(container, RealType::class.asTypeName(), "getRealDouble()", "setReal")
+        = generateGenericTypeConversionExtensionFromWildcard(container, RealType::class.asTypeName(), "realDouble", "setReal")
 
 private fun generateIntegerTypeConversionExtensionsFromWildcard(container: ClassName)
-        = generateGenericTypeConversionExtensionFromWildcard(container, IntegerType::class.asTypeName(), "getIntegerLong()", "setInteger")
+        = generateGenericTypeConversionExtensionFromWildcard(container, IntegerType::class.asTypeName(), "integerLong", "setInteger")
+
+private fun generateComplexTypeConversionExtensionsFromWildcard(container: ClassName)
+		= generateGenericTypeConversionExtensionFromWildcard(container, ComplexType::class.asTypeName(), "realDouble" to "setReal", "imaginaryDouble" to "setImaginary")
 
 private fun generateGenericTypeConversionExtensionFromWildcard(container: ClassName, typeT: ClassName, getter: String, setter: String): FunSpec {
+	return generateGenericTypeConversionExtensionFromWildcard(container, typeT, getter to setter)
+}
+
+private fun generateGenericTypeConversionExtensionFromWildcard(container: ClassName, typeT: ClassName, vararg getterSetters: Pair<String, String>): FunSpec {
     val t = TypeVariableName("T")
     val r = TypeVariableName("*")
     val typeOfT = typeT.parameterizedBy(t)
     val typeOfR = typeT.parameterizedBy(r)
     val tType = TypeVariableName("T", typeOfT)
+	val lambdaBody = getterSetters.joinToString("; ") { (getter, setter) -> "u.$setter(s.$getter)" }
     return typedFuncSpecBuilder(asTypeName, container.parameterizedBy(WildcardTypeName.producerOf(typeOfR)), tType)
             .addParameter("t", t)
-            .addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("name = %S", "from${typeT.simpleName}Wildcard").build())
-            .addStatement("return if·(t::class·==·getType()::class)·this·as·%T else·convert(t)·{·s,·u·->·u.$setter(s.$getter)·}", container.parameterizedBy(t))
+            .addStatement("return if·(t::class·==·getType()::class)·this·as·%T else·convert(t)·{·s,·u·->·$lambdaBody·}", container.parameterizedBy(t))
             .build()
 }
 

@@ -73,27 +73,17 @@ inline fun <T, U, V : Type<V>> RRARI<T>.convert(
   ) -> Unit
 ) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
 
-fun <T : RealType<T>, U : RealType<U>> RRARI<T>.asType(u: U) =
-    if (u::class == type::class) this as RRARI<U>
-    else convert(u) { s, t -> t.setReal(s.realDouble) }
-
-@JvmName(name = "fromRealTypeWildcard")
 fun <T : RealType<T>> RRARI<out RealType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RRARI<T>
-    else convert(t) { s, u -> u.setReal(s.getRealDouble()) }
+    else convert(t) { s, u -> u.setReal(s.realDouble) }
 
-fun <T : IntegerType<T>, U : IntegerType<U>> RRARI<T>.asType(u: U) =
-    if (u::class == type::class) this as RRARI<U>
-    else convert(u) { s, t -> t.setInteger(s.integerLong) }
-
-@JvmName(name = "fromIntegerTypeWildcard")
 fun <T : IntegerType<T>> RRARI<out IntegerType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RRARI<T>
-    else convert(t) { s, u -> u.setInteger(s.getIntegerLong()) }
+    else convert(t) { s, u -> u.setInteger(s.integerLong) }
 
-fun <T : ComplexType<T>, U : ComplexType<U>> RRARI<T>.asType(u: U) =
-    if (u::class == type::class) this as RRARI<U> else convert(u) { s, t -> t.setReal(s.realDouble);
-    t.setImaginary(s.imaginaryDouble) }
+fun <T : ComplexType<T>> RRARI<out ComplexType<*>>.asType(t: T) =
+    if (t::class == getType()::class) this as RRARI<T>
+    else convert(t) { s, u -> u.setReal(s.realDouble); u.setImaginary(s.imaginaryDouble) }
 
 @JvmName(name = "asDoublesFromRealType")
 fun <T : RealType<T>> RRARI<T>.asDoubles() = asType(DoubleType())
