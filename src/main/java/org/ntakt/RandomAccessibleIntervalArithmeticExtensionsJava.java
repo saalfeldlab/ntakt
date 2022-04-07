@@ -32,11 +32,13 @@ import static org.ntakt.RandomAccessibleIntervalConverterExtensionsKt.asType;
 import static org.ntakt.RandomAccessibleIntervalConverterExtensionsKt.convert;
 import static org.ntakt.RandomAccessibleIntervalExtensionsKt.getType;
 
+import java.lang.SuppressWarnings;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class RandomAccessibleIntervalArithmeticExtensionsJava {
   public static <T extends net.imglib2.type.Type<T> & net.imglib2.type.operators.Add<T>> RandomAccessibleInterval<T> plusGeneric(
       final RandomAccessibleInterval<T> thiz, final RandomAccessibleInterval<T> that) {

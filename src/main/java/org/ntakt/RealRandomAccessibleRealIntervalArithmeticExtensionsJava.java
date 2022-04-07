@@ -32,11 +32,13 @@ import static org.ntakt.RealRandomAccessibleRealIntervalConverterExtensionsKt.as
 import static org.ntakt.RealRandomAccessibleRealIntervalConverterExtensionsKt.convert;
 import static org.ntakt.RealRandomAccessibleRealIntervalExtensionsKt.getType;
 
+import java.lang.SuppressWarnings;
 import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class RealRandomAccessibleRealIntervalArithmeticExtensionsJava {
   public static <T extends net.imglib2.type.Type<T> & net.imglib2.type.operators.Add<T>> RealRandomAccessibleRealInterval<T> plusGeneric(
       final RealRandomAccessibleRealInterval<T> thiz,

@@ -32,11 +32,13 @@ import static org.ntakt.RandomAccessibleConverterExtensionsKt.asType;
 import static org.ntakt.RandomAccessibleConverterExtensionsKt.convert;
 import static org.ntakt.RandomAccessibleExtensionsKt.getType;
 
+import java.lang.SuppressWarnings;
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class RandomAccessibleArithmeticExtensionsJava {
   public static <T extends net.imglib2.type.Type<T> & net.imglib2.type.operators.Add<T>> RandomAccessible<T> plusGeneric(
       final RandomAccessible<T> thiz, final RandomAccessible<T> that) {

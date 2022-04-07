@@ -63,8 +63,9 @@ fun <T: NativeType<T>> cacheRAI(
         blockSize: IntArray,
         loaderCache: LoaderCache<Long, Cell<VolatileArrayDataAccess<*>>>): RAI<T> {
     require(blockSize.size == rai.nDim || blockSize.size == 1)
-    val blockSize = if (blockSize.size == rai.nDim) blockSize else IntArray(rai.nDim) { blockSize[0] }
-    val grid = CellGrid(rai.dimensionsAsLongArray(), blockSize)
+    val bs = if (blockSize.size == rai.nDim) blockSize else IntArray(rai.nDim) { blockSize[0] }
+    val grid = CellGrid(rai.dimensionsAsLongArray(), bs)
+    @Suppress("UNCHECKED_CAST")
     val cached = when (rai.type) {
         is ByteType -> createCellImg<ByteType, BA, VolatileByteArray>(rai.zeroMin as RAI<ByteType>, grid, loaderCache as LoaderCache<Long, Cell<VolatileByteArray>>)
         is ShortType -> createCellImg<ShortType, SA, VolatileShortArray>(rai.zeroMin as RAI<ShortType>, grid, loaderCache as LoaderCache<Long, Cell<VolatileShortArray>>)

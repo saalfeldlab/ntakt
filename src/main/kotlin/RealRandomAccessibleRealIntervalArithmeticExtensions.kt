@@ -74,19 +74,19 @@ operator fun <T : RealType<T>> RRARI<T>.plus(that: RRARI<T>): RRARI<T> {
 operator fun RRARI<out ComplexType<*>>.plus(that: RRARI<out ComplexType<*>>): RRARI<out
     ComplexType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusComplex(this,
     that) as? RRARI<out ComplexType<*>> ?:
-    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator + (plus) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "plusIntegerWildcard")
 operator fun RRARI<out IntegerType<*>>.plus(that: RRARI<out IntegerType<*>>): RRARI<out
     IntegerType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusInteger(this,
     that) as? RRARI<out IntegerType<*>> ?:
-    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator + (plus) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "plusRealWildcard")
 operator fun RRARI<out RealType<*>>.plus(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
     RealRandomAccessibleRealIntervalArithmeticExtensionsJava.plusReal(this, that) as? RRARI<out
     RealType<*>> ?:
-    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator + (plus) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 operator fun <T : NumericType<T>> RRARI<T>.unaryMinus() =
     convert(type) { s, t -> t.set(s); t.mul(-1.0) }
@@ -120,19 +120,19 @@ operator fun <T : RealType<T>> RRARI<T>.minus(that: RRARI<T>): RRARI<T> {
 operator fun RRARI<out ComplexType<*>>.minus(that: RRARI<out ComplexType<*>>): RRARI<out
     ComplexType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusComplex(this,
     that) as? RRARI<out ComplexType<*>> ?:
-    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator - (minus) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "minusIntegerWildcard")
 operator fun RRARI<out IntegerType<*>>.minus(that: RRARI<out IntegerType<*>>): RRARI<out
     IntegerType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusInteger(this,
     that) as? RRARI<out IntegerType<*>> ?:
-    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator - (minus) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "minusRealWildcard")
 operator fun RRARI<out RealType<*>>.minus(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
     RealRandomAccessibleRealIntervalArithmeticExtensionsJava.minusReal(this, that) as? RRARI<out
     RealType<*>> ?:
-    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator - (minus) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesGeneric_Type_Mul")
 operator fun <T> RRARI<T>.times(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Mul<T> {
@@ -163,19 +163,19 @@ operator fun <T : RealType<T>> RRARI<T>.times(that: RRARI<T>): RRARI<T> {
 operator fun RRARI<out ComplexType<*>>.times(that: RRARI<out ComplexType<*>>): RRARI<out
     ComplexType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesComplex(this,
     that) as? RRARI<out ComplexType<*>> ?:
-    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator * (times) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesIntegerWildcard")
 operator fun RRARI<out IntegerType<*>>.times(that: RRARI<out IntegerType<*>>): RRARI<out
     IntegerType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesInteger(this,
     that) as? RRARI<out IntegerType<*>> ?:
-    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator * (times) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesRealWildcard")
 operator fun RRARI<out RealType<*>>.times(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
     RealRandomAccessibleRealIntervalArithmeticExtensionsJava.timesReal(this, that) as? RRARI<out
     RealType<*>> ?:
-    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator * (times) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divGeneric_Type_Div")
 operator fun <T> RRARI<T>.div(that: RRARI<T>): RRARI<T> where T : Type<T>, T : Div<T> {
@@ -206,16 +206,16 @@ operator fun <T : RealType<T>> RRARI<T>.div(that: RRARI<T>): RRARI<T> {
 operator fun RRARI<out ComplexType<*>>.div(that: RRARI<out ComplexType<*>>): RRARI<out
     ComplexType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divComplex(this,
     that) as? RRARI<out ComplexType<*>> ?:
-    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator / (div) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divIntegerWildcard")
 operator fun RRARI<out IntegerType<*>>.div(that: RRARI<out IntegerType<*>>): RRARI<out
     IntegerType<*>> = RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divInteger(this,
     that) as? RRARI<out IntegerType<*>> ?:
-    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator / (div) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divRealWildcard")
 operator fun RRARI<out RealType<*>>.div(that: RRARI<out RealType<*>>): RRARI<out RealType<*>> =
     RealRandomAccessibleRealIntervalArithmeticExtensionsJava.divReal(this, that) as? RRARI<out
     RealType<*>> ?:
-    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator / (div) not supported for combination of types ${type::class} and ${(that as RRARI<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

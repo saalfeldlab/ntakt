@@ -1,4 +1,3 @@
-import org.gradle.api.internal.AbstractTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import java.io.File

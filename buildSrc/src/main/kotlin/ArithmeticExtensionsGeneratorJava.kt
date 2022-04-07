@@ -1,3 +1,4 @@
+import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.JavaFile
@@ -19,10 +20,10 @@ fun generateArithmeticExtensionsJava(`as`: String, className: String): JavaFile 
     val container = containersClasses[`as`] ?: error("Key `$`as`' not present in $containersClasses")
     val containerSimpleName = container.java.simpleName
 
-
     val javaClass = TypeSpec
         .classBuilder(className)
         .addModifiers(Modifier.PUBLIC)
+        .addAnnotation(AnnotationSpec.builder(SuppressWarnings::class.java).addMember("value", "{\$S,\$S}", "unchecked", "rawtypes").build())
         .let { arithmetics.Operator.values().fold(it) { b, op -> b.makeArithmeticMethodSameGenericTypes(container.java, op).makeArithmeticMethod(container.java, op) } }
         .build()
     return JavaFile

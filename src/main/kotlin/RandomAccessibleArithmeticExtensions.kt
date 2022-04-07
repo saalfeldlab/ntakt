@@ -73,17 +73,17 @@ operator fun <T : RealType<T>> RA<T>.plus(that: RA<T>): RA<T> {
 @JvmName(name = "plusComplexWildcard")
 operator fun RA<out ComplexType<*>>.plus(that: RA<out ComplexType<*>>): RA<out ComplexType<*>> =
     RandomAccessibleArithmeticExtensionsJava.plusComplex(this, that) as? RA<out ComplexType<*>> ?:
-    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator + (plus) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "plusIntegerWildcard")
 operator fun RA<out IntegerType<*>>.plus(that: RA<out IntegerType<*>>): RA<out IntegerType<*>> =
     RandomAccessibleArithmeticExtensionsJava.plusInteger(this, that) as? RA<out IntegerType<*>> ?:
-    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator + (plus) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "plusRealWildcard")
 operator fun RA<out RealType<*>>.plus(that: RA<out RealType<*>>): RA<out RealType<*>> =
     RandomAccessibleArithmeticExtensionsJava.plusReal(this, that) as? RA<out RealType<*>> ?:
-    error("Arithmetic operator + (plus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator + (plus) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 operator fun <T : NumericType<T>> RA<T>.unaryMinus() = convert(type) { s, t -> t.set(s); t.mul(-1.0)
     }
@@ -116,17 +116,17 @@ operator fun <T : RealType<T>> RA<T>.minus(that: RA<T>): RA<T> {
 @JvmName(name = "minusComplexWildcard")
 operator fun RA<out ComplexType<*>>.minus(that: RA<out ComplexType<*>>): RA<out ComplexType<*>> =
     RandomAccessibleArithmeticExtensionsJava.minusComplex(this, that) as? RA<out ComplexType<*>> ?:
-    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator - (minus) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "minusIntegerWildcard")
 operator fun RA<out IntegerType<*>>.minus(that: RA<out IntegerType<*>>): RA<out IntegerType<*>> =
     RandomAccessibleArithmeticExtensionsJava.minusInteger(this, that) as? RA<out IntegerType<*>> ?:
-    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator - (minus) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "minusRealWildcard")
 operator fun RA<out RealType<*>>.minus(that: RA<out RealType<*>>): RA<out RealType<*>> =
     RandomAccessibleArithmeticExtensionsJava.minusReal(this, that) as? RA<out RealType<*>> ?:
-    error("Arithmetic operator - (minus) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator - (minus) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesGeneric_Type_Mul")
 operator fun <T> RA<T>.times(that: RA<T>): RA<T> where T : Type<T>, T : Mul<T> {
@@ -156,17 +156,17 @@ operator fun <T : RealType<T>> RA<T>.times(that: RA<T>): RA<T> {
 @JvmName(name = "timesComplexWildcard")
 operator fun RA<out ComplexType<*>>.times(that: RA<out ComplexType<*>>): RA<out ComplexType<*>> =
     RandomAccessibleArithmeticExtensionsJava.timesComplex(this, that) as? RA<out ComplexType<*>> ?:
-    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator * (times) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesIntegerWildcard")
 operator fun RA<out IntegerType<*>>.times(that: RA<out IntegerType<*>>): RA<out IntegerType<*>> =
     RandomAccessibleArithmeticExtensionsJava.timesInteger(this, that) as? RA<out IntegerType<*>> ?:
-    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator * (times) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "timesRealWildcard")
 operator fun RA<out RealType<*>>.times(that: RA<out RealType<*>>): RA<out RealType<*>> =
     RandomAccessibleArithmeticExtensionsJava.timesReal(this, that) as? RA<out RealType<*>> ?:
-    error("Arithmetic operator * (times) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator * (times) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divGeneric_Type_Div")
 operator fun <T> RA<T>.div(that: RA<T>): RA<T> where T : Type<T>, T : Div<T> {
@@ -196,14 +196,14 @@ operator fun <T : RealType<T>> RA<T>.div(that: RA<T>): RA<T> {
 @JvmName(name = "divComplexWildcard")
 operator fun RA<out ComplexType<*>>.div(that: RA<out ComplexType<*>>): RA<out ComplexType<*>> =
     RandomAccessibleArithmeticExtensionsJava.divComplex(this, that) as? RA<out ComplexType<*>> ?:
-    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator / (div) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divIntegerWildcard")
 operator fun RA<out IntegerType<*>>.div(that: RA<out IntegerType<*>>): RA<out IntegerType<*>> =
     RandomAccessibleArithmeticExtensionsJava.divInteger(this, that) as? RA<out IntegerType<*>> ?:
-    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator / (div) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
 
 @JvmName(name = "divRealWildcard")
 operator fun RA<out RealType<*>>.div(that: RA<out RealType<*>>): RA<out RealType<*>> =
     RandomAccessibleArithmeticExtensionsJava.divReal(this, that) as? RA<out RealType<*>> ?:
-    error("Arithmetic operator / (div) not supported for combination of types ${this.type::class} and ${that.type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")
+    error("Arithmetic operator / (div) not supported for combination of types ${type::class} and ${(that as RA<*>).type::class}. Use any pairwise combination of ${types.realTypes.map { it::class }}.")

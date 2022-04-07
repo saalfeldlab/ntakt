@@ -74,10 +74,12 @@ private fun generateArithmeticOperatorStarProjection(name: String, operator: Str
     val rt = bound.asTypeName().parameterizedBy(STAR)
     val ort = WildcardTypeName.producerOf(rt)
     val crt = container.parameterizedBy(ort)
-    val error = "error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{this.type::class}·and·${'$'}{that.type::class}.·Use·any·pairwise·combination·of·${'$'}{types.realTypes.map·{·it::class·}}.\")\n"
+    val cst = container.parameterizedBy(STAR)
+    // need to cast that to cst to avoid warning: Type mismatch: inferred type is RealType<*>! but CapturedType(out RealType<*>) was expected
+    val error = "error(\"Arithmetic·operator·$operator·($name)·not·supported·for·combination·of·types·${'$'}{type::class}·and·${'$'}{(that·as·%T).type::class}.·Use·any·pairwise·combination·of·${'$'}{types.realTypes.map·{·it::class·}}.\")\n"
     val cb = CodeBlock
         .builder()
-        .add("return ${extensionsJavaName(container)}.$name$identifier(this, that) as? %T ?: $error", crt)
+        .add("return ${extensionsJavaName(container)}.$name$identifier(this, that) as? %T ?: $error", crt, cst)
         .build()
 
     return typedFuncSpecBuilder(name, crt)
