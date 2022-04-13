@@ -43,22 +43,22 @@ class TestContainerArithmetics {
 
     @Test fun `test RA + RA`() = testRA(2.0, 3.0) { ra1, ra2 -> ra1 + ra2 }
     @Test fun `test RA - RA`() = testRA(1.0, 0.0) { ra1, ra2 -> ra1 - ra2 }
-    @Test fun `test Ra * RA`() = testRA(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
+    @Test fun `test Ra x RA`() = testRA(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
     @Test fun `test RA div RA`() = testRA(2.0, 0.5) { ra1, ra2 -> ra1 / ra2 }
 
     @Test fun `test RAI + RAI`() = testRAI(2.0, 3.0) { ra1, ra2 -> ra1 + ra2 }
     @Test fun `test RAI - RAI`() = testRAI(1.0, 0.0) { ra1, ra2 -> ra1 - ra2 }
-    @Test fun `test RAI * RAI`() = testRAI(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
+    @Test fun `test RAI x RAI`() = testRAI(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
     @Test fun `test RAI div RAI`() = testRAI(2.0, 0.5) { ra1, ra2 -> ra1 / ra2 }
 
     @Test fun `test RRA + RRA`() = testRRA(2.0, 3.0) { ra1, ra2 -> ra1 + ra2 }
     @Test fun `test RRA - RRA`() = testRRA(1.0, 0.0) { ra1, ra2 -> ra1 - ra2 }
-    @Test fun `test RRA * RRA`() = testRRA(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
+    @Test fun `test RRA x RRA`() = testRRA(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
     @Test fun `test RRA div RRA`() = testRRA(2.0, 0.5) { ra1, ra2 -> ra1 / ra2 }
 
     @Test fun `test RRARI + RRARI`() = testRRARI(2.0, 3.0) { ra1, ra2 -> ra1 + ra2 }
     @Test fun `test RRARI - RRARI`() = testRRARI(1.0, 0.0) { ra1, ra2 -> ra1 - ra2 }
-    @Test fun `test RRARI * RRARI`() = testRRARI(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
+    @Test fun `test RRARI x RRARI`() = testRRARI(2.0, 2.0) { ra1, ra2 -> ra1 * ra2 }
     @Test fun `test RRARI div RRARI`() = testRRARI(2.0, 0.5) { ra1, ra2 -> ra1 / ra2 }
 
 
@@ -71,8 +71,8 @@ class TestContainerArithmetics {
                 val c3 = operator(c1, c2)
                 val v = c3.randomAccess().get()
                 when (v) {
-                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.getIntegerLong())
-                    else -> Assert.assertEquals(expected, v.getRealDouble(), 0.0)
+                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.integerLong)
+                    else -> Assert.assertEquals(expected, v.realDouble, 0.0)
                 }
             }
         }
@@ -86,10 +86,9 @@ class TestContainerArithmetics {
                 val t2 = types.realTypes[k]
                 val c2 = ntakt.constant(t2.createVariable().also { it.setReal(t2Value) }, longArrayOf(1L).interval)
                 val c3 = operator(c1, c2)
-                val v = c3.randomAccess().get()
-                when (v) {
-                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.getIntegerLong())
-                    else -> Assert.assertEquals(expected, v.getRealDouble(), 0.0)
+				when (val v = c3.randomAccess().get()) {
+                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.integerLong)
+                    else -> Assert.assertEquals(expected, v.realDouble, 0.0)
                 }
             }
         }
@@ -98,15 +97,14 @@ class TestContainerArithmetics {
 
     private inline fun testRRA(t2Value: Double, expected: Double, operator: (RRA<out RT<*>>, RRA<out RT<*>>) -> RRA<out RT<*>>) {
         for ((i, t1) in types.realTypes.withIndex()) {
-            val c1 = ntakt.function(1, { t1.createVariable() }) { p, t -> t.setOne() }
+            val c1 = ntakt.function(1, { t1.createVariable() }) { _, t -> t.setOne() }
             for (k in i until types.realTypes.size) {
                 val t2 = types.realTypes[k]
-                val c2 = ntakt.function(1, { t2.createVariable() }) { p, t -> t.setReal(t2Value) }
+                val c2 = ntakt.function(1, { t2.createVariable() }) { _, t -> t.setReal(t2Value) }
                 val c3 = operator(c1, c2)
-                val v = c3.realRandomAccess().get()
-                when (v) {
-                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.getIntegerLong())
-                    else -> Assert.assertEquals(expected, v.getRealDouble(), 0.0)
+				when (val v = c3.realRandomAccess().get()) {
+                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.integerLong)
+                    else -> Assert.assertEquals(expected, v.realDouble, 0.0)
                 }
             }
         }
@@ -115,15 +113,14 @@ class TestContainerArithmetics {
 
     private inline fun testRRARI(t2Value: Double, expected: Double, operator: (RRARI<out RT<*>>, RRARI<out RT<*>>) -> RRARI<out RT<*>>) {
         for ((i, t1) in types.realTypes.withIndex()) {
-            val c1 = function({ t1.createVariable() }) { p, t -> t.setOne() }
+            val c1 = function({ t1.createVariable() }) { _, t -> t.setOne() }
             for (k in i until types.realTypes.size) {
                 val t2 = types.realTypes[k]
-                val c2 = function({ t2.createVariable() }) { p, t -> t.setReal(t2Value) }
+                val c2 = function({ t2.createVariable() }) { _, t -> t.setReal(t2Value) }
                 val c3 = operator(c1, c2)
-                val v = c3.realRandomAccess().get()
-                when (v) {
-                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.getIntegerLong())
-                    else -> Assert.assertEquals(expected, v.getRealDouble(), 0.0)
+				when (val v = c3.realRandomAccess().get()) {
+                    is IntegerType<*> -> Assert.assertEquals(expected.toLong(), v.integerLong)
+                    else -> Assert.assertEquals(expected, v.realDouble, 0.0)
                 }
             }
         }
@@ -143,9 +140,4 @@ private class FunctionRealInterval<T>(
 
 private inline fun <T> function(
         crossinline typeSupplier: () -> T,
-        crossinline f: (RealLocalizable, T) -> Unit) = function(0.0, 1.0, typeSupplier = typeSupplier, f = f)
-
-private inline fun <T> function(
-        vararg minMax: Double,
-        crossinline typeSupplier: () -> T,
-        crossinline f: (RealLocalizable, T) -> Unit) = FunctionRealInterval(ntakt.function(minMax.size / 2, typeSupplier, f), *minMax)
+        crossinline f: (RealLocalizable, T) -> Unit) = FunctionRealInterval(ntakt.function(1, typeSupplier, f), 0.0, 1.0)
