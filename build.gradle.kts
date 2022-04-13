@@ -7,11 +7,11 @@ compileKotlin.kotlinOptions.jvmTarget = "1.8"
 compileTestKotlin.kotlinOptions.jvmTarget = compileKotlin.kotlinOptions.jvmTarget
 
 plugins {
-    // build time extremely slow with Kotlin 1.5+
+    // build time extremely slow with Kotlin 1.5.20+
     kotlin("jvm") version "1.4.32"
 
     // generate documentation
-    id("org.jetbrains.dokka") version "1.4.20"
+    id("org.jetbrains.dokka") version "1.6.10"
 
     // add support for building CLI application
     application
@@ -55,31 +55,18 @@ dependencies {
     api("org.janelia.saalfeldlab:n5-hdf5:1.1.0")
     api("org.janelia.saalfeldlab:n5-imglib2:3.5.1")
 
-    // code generation
-    implementation("com.squareup:kotlinpoet:1.6.0")
-
     // image io
     implementation("ome:bio-formats_plugins:6.5.0")
 
     // tests
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
 application {
     // Define the main class for the application.
      mainClass.set("NtaktExampleKt")
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("net.imglib2:imglib2:5.10.0")
-        classpath("com.squareup:kotlinpoet:1.6.0")
-    }
 }
 
 tasks.register("publishToFiji", Copy::class) {
@@ -100,11 +87,11 @@ tasks.test {
 tasks.jacocoTestReport {
     dependsOn(tasks.test) // tests are required to run before generating the report
     reports {
-        xml.isEnabled = true
-        csv.isEnabled = true
-        xml.destination = file("${buildDir}/jacoco.xml")
-        csv.destination = file("${buildDir}/jacoco.csv")
-        html.destination = file("${buildDir}/jacocoHtml")
+        xml.required.set(true)
+        csv.required.set(true)
+        xml.outputLocation.set(file("${buildDir}/jacoco.xml"))
+        csv.outputLocation.set(file("${buildDir}/jacoco.csv"))
+        html.outputLocation.set(file("${buildDir}/jacocoHtml"))
     }
 }
 
@@ -142,7 +129,6 @@ publishing {
                                 it.appendNode("id", "scijava.public")
                                 it.appendNode("url", "https://maven.scijava.org/content/groups/public")
                             }
-//                            .appendNode("scijava.public", "https://maven.scijava.org/content/groups/public")
                 }
             }
         }
