@@ -36,15 +36,9 @@ import net.imglib2.loops.LoopBuilder
 import net.imglib2.position.FunctionRealRandomAccessible
 import net.imglib2.type.BooleanType
 import net.imglib2.type.NativeType
-import net.imglib2.type.numeric.ARGBType
-import net.imglib2.type.numeric.ComplexType
-import net.imglib2.type.numeric.IntegerType
-import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.complex.ComplexDoubleType
 import net.imglib2.type.numeric.complex.ComplexFloatType
-import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
-import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.type.operators.SetOne
 import net.imglib2.type.operators.SetZero
 import java.math.BigInteger
@@ -52,6 +46,7 @@ import java.util.function.BiConsumer
 import java.util.function.Supplier
 import org.ntakt.io.io as _io
 
+@Suppress("unused")
 object ntakt {
 
     // ArrayImg convenience constructors

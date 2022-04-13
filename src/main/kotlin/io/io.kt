@@ -41,6 +41,7 @@ import java.nio.ByteOrder
 import javax.imageio.ImageIO
 import net.imglib2.RandomAccessibleInterval as RAI
 
+@Suppress("unused")
 object io {
 
     fun open(source: String): RAI<RealType<*>> {
@@ -49,21 +50,23 @@ object io {
         val w = reader.sizeX.toLong()
         val h = reader.sizeY.toLong()
         val slices = (0 until reader.imageCount).map {
-            if (reader.isRGB)
-                reader.readAsBuffer(it).asIntBuffer().asAccess().ints(w, h) as RAI<RealType<*>>
-            else
-                when (reader.pixelType) {
-                    FormatTools.INT8 -> reader.readAsBuffer(it).asAccess().bytes(w, h)
-                    FormatTools.INT16 -> reader.readAsBuffer(it).asShortBuffer().asAccess().shorts(w, h)
-                    FormatTools.INT32 -> reader.readAsBuffer(it).asIntBuffer().asAccess().ints(w, h)
-                    FormatTools.UINT8 -> reader.readAsBuffer(it).asAccess().unsignedBytes(w, h)
-                    FormatTools.UINT16 -> reader.readAsBuffer(it).asShortBuffer().asAccess().unsignedShorts(w, h)
-                    FormatTools.UINT32 -> reader.readAsBuffer(it).asIntBuffer().asAccess().unsignedInts(w, h)
-                    FormatTools.FLOAT -> reader.readAsBuffer(it).asFloatBuffer().asAccess().floats(w, h)
-                    FormatTools.DOUBLE -> reader.readAsBuffer(it).asDoubleBuffer().asAccess().doubles(w, h)
-                    else -> error("Pixel type not supported: ${reader.pixelType}")
-                } as RAI<RealType<*>>
-        }
+
+			@Suppress("UNCHECKED_CAST")
+			if (reader.isRGB)
+				reader.readAsBuffer(it).asIntBuffer().asAccess().ints(w, h) as RAI<RealType<*>>
+			else
+				when (reader.pixelType) {
+					FormatTools.INT8 -> reader.readAsBuffer(it).asAccess().bytes(w, h)
+					FormatTools.INT16 -> reader.readAsBuffer(it).asShortBuffer().asAccess().shorts(w, h)
+					FormatTools.INT32 -> reader.readAsBuffer(it).asIntBuffer().asAccess().ints(w, h)
+					FormatTools.UINT8 -> reader.readAsBuffer(it).asAccess().unsignedBytes(w, h)
+					FormatTools.UINT16 -> reader.readAsBuffer(it).asShortBuffer().asAccess().unsignedShorts(w, h)
+					FormatTools.UINT32 -> reader.readAsBuffer(it).asIntBuffer().asAccess().unsignedInts(w, h)
+					FormatTools.FLOAT -> reader.readAsBuffer(it).asFloatBuffer().asAccess().floats(w, h)
+					FormatTools.DOUBLE -> reader.readAsBuffer(it).asDoubleBuffer().asAccess().doubles(w, h)
+					else -> error("Pixel type not supported: ${reader.pixelType}")
+				} as RAI<RealType<*>>
+		}
         return if (slices.size == 1) slices[0] else Views.stack(slices)
     }
 
