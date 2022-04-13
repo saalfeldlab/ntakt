@@ -45,11 +45,11 @@ private fun generateArithmeticScalarOperatorsPrimitiveType(name: String, operato
 
 private fun FileSpec.Builder.addPow(container: ClassName): FileSpec.Builder {
     addFunction(generatePow(container))
-    addFunction(`generate**Infix`(container))
+    addFunction(`generate^Infix`(container))
     addFunction(generatePowContainer(container))
-    addFunction(`generate**InfixContainer`(container))
+    addFunction(`generate^InfixContainer`(container))
     return arrayOf(Double::class.asTypeName(), Float::class.asTypeName()).fold(this) { b, t ->
-        b.addFunction(generatePow(container, t)).addFunction(`generate**Infix`(container, t))
+        b.addFunction(generatePow(container, t)).addFunction(`generate^Infix`(container, t))
     }
 }
 
@@ -63,9 +63,9 @@ private fun generatePowContainer(container: ClassName): FunSpec {
 }
 
 // TODO this should probably live in a different file
-private fun `generate**InfixContainer`(container: ClassName): FunSpec {
+private fun `generate^InfixContainer`(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
-    return typedFuncSpecBuilder("**", container.parameterizedBy(genericT), boundedT)
+    return typedFuncSpecBuilder("^", container.parameterizedBy(genericT), boundedT)
             .addParameter("exponent", container.parameterizedBy(genericT))
             .addModifiers(KModifier.INFIX)
             .addStatement("return pow(exponent)")
@@ -80,9 +80,9 @@ private fun generatePow(container: ClassName): FunSpec {
             .build()
 }
 
-private fun `generate**Infix`(container: ClassName): FunSpec {
+private fun `generate^Infix`(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
-    return typedFuncSpecBuilder("**", container.parameterizedBy(genericT), boundedT)
+    return typedFuncSpecBuilder("^", container.parameterizedBy(genericT), boundedT)
             .addParameter("exponent", genericT)
             .addModifiers(KModifier.INFIX)
             .addStatement("return pow(exponent)")
@@ -97,9 +97,9 @@ private fun generatePow(container: ClassName, type: TypeName): FunSpec {
             .build()
 }
 
-private fun `generate**Infix`(container: ClassName, type: TypeName): FunSpec {
+private fun `generate^Infix`(container: ClassName, type: TypeName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
-    return typedFuncSpecBuilder("**", container.parameterizedBy(genericT), boundedT)
+    return typedFuncSpecBuilder("^", container.parameterizedBy(genericT), boundedT)
             .addParameter("exponent", type)
             .addModifiers(KModifier.INFIX)
             .addStatement("return pow(exponent)")
@@ -140,7 +140,7 @@ private fun generateExp(container: ClassName, type: TypeName, defaultValue: Any?
             .build()
 }
 
-//infix fun <T: RealType<T>> RandomAccessibleInterval<T>.`**`(exponent: RandomAccessibleInterval<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
+//infix fun <T: RealType<T>> RandomAccessibleInterval<T>.`^`(exponent: RandomAccessibleInterval<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }
 
 //fun <T: RealType<T>> RandomAccessibleInterval<T>.exp(base: RandomAccessibleInterval<T>) = convert(base, type) { t, u, v -> v.set(u); v.pow(t) }
 

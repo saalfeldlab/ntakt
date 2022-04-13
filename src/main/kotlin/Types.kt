@@ -23,6 +23,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+@file:Suppress("ClassName")
+
 package org.ntakt
 
 import net.imglib2.type.numeric.ARGBType
@@ -36,6 +38,7 @@ import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.numeric.real.FloatType
 
 
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 object types {
     val argb get() = ARGBType()
     val byte get() = ByteType()
@@ -68,6 +71,8 @@ object types {
     val signedIntTypes get() = arrayOf<IntegerType<*>>(int8, int16, int32, int64)
     val unsignedIntTypes get() = arrayOf<IntegerType<*>>(uint8, uint16, uint32, uint64)
     val intTypes get() = signedIntTypes + unsignedIntTypes
-    val realTypes get() = intTypes.map { it as RealType<*> }.toTypedArray() + arrayOf<RealType<*>>(float32, float64)
-    val complexTypes get() = realTypes.map { it as ComplexType<*> }.toTypedArray() + arrayOf<ComplexType<*>>(complex64, complex128)
+    @Suppress("USELESS_CAST")
+	val realTypes get() = intTypes.map { it as RealType<*> }.toTypedArray() + arrayOf<RealType<*>>(float32, float64)
+    @Suppress("USELESS_CAST")
+	val complexTypes get() = realTypes.map { it as ComplexType<*> }.toTypedArray() + arrayOf<ComplexType<*>>(complex64, complex128)
 }

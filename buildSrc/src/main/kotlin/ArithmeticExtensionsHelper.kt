@@ -29,6 +29,7 @@ private fun FileSpec.Builder.makeArithmeticConverterObject(): FileSpec.Builder {
         .addStatement("else·->·error(\"Operator not supported: \$operator\")")
         .unindent()
         .addStatement("}")
+	val suppressUnusedParameter = AnnotationSpec.builder(Suppress::class).addMember("%S", "UNUSED_PARAMETER").build()
     val obj = TypeSpec
         .objectBuilder("ArithmeticConverters")
         .addFunction(FunSpec
@@ -46,7 +47,7 @@ private fun FileSpec.Builder.makeArithmeticConverterObject(): FileSpec.Builder {
             .addModifiers(KModifier.OPERATOR)
             .addTypeVariable(genericAndBounded.second)
             .addParameter("operator", String::class)
-            .addParameter("type", genericAndBounded.first)
+            .addParameter(ParameterSpec.builder("type", genericAndBounded.first).addAnnotation(suppressUnusedParameter).build())
             .returns(BiConverter::class.asTypeName().parameterizedBy(List(3) { genericAndBounded.first }))
             .addStatement("return get(operator)")
             .build())

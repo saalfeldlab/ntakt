@@ -23,6 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+@file:Suppress("unused")
 package org.ntakt
 
 import bdv.util.BdvFunctions
@@ -76,7 +77,7 @@ val <T> RAI<T>.iterable get(): IterableInterval<T> = Views.iterable(this)
 val <T> RAI<T>.flatIterable get(): IterableInterval<T> = Views.flatIterable(this)
 fun <T> RAI<T>.iterable(useFlatIterationOrder: Boolean): IterableInterval<T> = if (useFlatIterationOrder) flatIterable else iterable
 
-fun <T: Type<T>> RAI<T>.extendValue(extension: T): RA<T> = Views.extendValue(this, extension)
+fun <T> RAI<T>.extendValue(extension: T): RA<T> = Views.extendValue(this, extension)
 fun <T: RealType<T>> RAI<T>.extendValue(extension: Float): RA<T> = Views.extendValue(this, extension)
 fun <T: RealType<T>> RAI<T>.extendValue(extension: Double): RA<T> = Views.extendValue(this, extension)
 fun <T: IntegerType<T>> RAI<T>.extendValue(extension: Int): RA<T> = Views.extendValue(this, extension)
@@ -88,7 +89,7 @@ fun <T> RAI<T>.extendMirrorSingle(): RA<T> = Views.extendMirrorSingle(this)
 fun <T> RAI<T>.extendPeriodic(): RA<T> = Views.extendPeriodic(this)
 fun <T: RealType<T>> RAI<T>.extendRandom(min: Double, max: Double): RA<T> = Views.extendRandom(this, min, max)
 
-fun <T: Type<T>> RAI<T>.expandValue(extension: T, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
+fun <T> RAI<T>.expandValue(extension: T, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
 fun <T: RealType<T>> RAI<T>.expandValue(extension: Float, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
 fun <T: RealType<T>> RAI<T>.expandValue(extension: Double, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
 fun <T: IntegerType<T>> RAI<T>.expandValue(extension: Int, vararg border: Long): RAI<T> = Views.expandValue(this, extension, *border)
@@ -164,10 +165,10 @@ operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterator: Iterator<T>):
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, iterable: Iterable<T>): Unit = set(interval, iterable.iterator())
 operator fun <T: Type<T>> RAI<T>.set(interval: Interval, rai: RAI<T>): Unit = set(interval, rai.flatIterable)
 
-operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
-operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
-operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
-operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<RealType<*>>): Unit = type.let { set(this, (this as RAI<RealType<*>> + other[this]).asType(it)); Unit }
+operator fun <T: RealType<T>> RAI<T>.plusAssign(other: RA<out RealType<*>>): Unit = set(this, (this as RAI<out RealType<*>> + other[this]).asType(type))
+operator fun <T: RealType<T>> RAI<T>.minusAssign(other: RA<out RealType<*>>): Unit = set(this, (this as RAI<out RealType<*>> + other[this]).asType(type))
+operator fun <T: RealType<T>> RAI<T>.timesAssign(other: RA<out RealType<*>>): Unit = set(this, (this as RAI<out RealType<*>> + other[this]).asType(type))
+operator fun <T: RealType<T>> RAI<T>.divAssign(other: RA<out RealType<*>>): Unit = set(this, (this as RAI<out RealType<*>> + other[this]).asType(type))
 
 inline fun <T: BooleanType<T>> RAI<T>.where(consumeWhereTrue: (Localizable) -> Unit) {
     val cursor = this.iterable.cursor()
@@ -220,14 +221,14 @@ fun RAI<BooleanType<*>>.any(): Boolean = iterable.cursor().let { c ->
     false
 }
 
-public fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true): IntArray =
-    IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.getInteger() } }
-public fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true): LongArray =
-    LongArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getIntegerLong() } }
-public fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true): FloatArray =
-    FloatArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealFloat() } }
-public fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true): DoubleArray =
-    DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.getRealDouble() } }
+fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true): IntArray =
+    IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.integer } }
+fun RAI<out IntegerType<*>>.toLongArray(flatIterationOrder: Boolean = true): LongArray =
+    LongArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.integerLong } }
+fun RAI<RealType<*>>.toFloatArray(flatIterationOrder: Boolean = true): FloatArray =
+    FloatArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.realFloat } }
+fun RAI<RealType<*>>.toDoubleArray(flatIterationOrder: Boolean = true): DoubleArray =
+    DoubleArray(numElements.toInt()).also { a -> iterable(flatIterationOrder).forEachIndexed { i, type -> a[i] = type.realDouble } }
 
 /**
  * Add slicing access to [RAI] similar to Python. Slices are used to create a sub-interval view that is contained in the
@@ -280,8 +281,8 @@ operator fun <T> RAI<T>.get(vararg slicing: Slicing): RAI<T> {
 
 @JvmName("getArraySlicing")
 operator fun <T> RAI<T>.get(slicing: Array<out Slicing>): RAI<T> = get(*slicing)
-operator fun <T> RAI<T>.get(slicing: Collection<out Slicing>): RAI<T> = this[slicing.toTypedArray()]
-operator fun <T> RAI<T>.get(slicing: Iterable<out Slicing>): RAI<T> = this[slicing.map { it }]
+operator fun <T> RAI<T>.get(slicing: Collection<Slicing>): RAI<T> = this[slicing.toTypedArray()]
+operator fun <T> RAI<T>.get(slicing: Iterable<Slicing>): RAI<T> = this[slicing.map { it }]
 
 private fun Dimensions.sanitizeSlicing(slicing: List<Slicing>): List<Sanitized> {
     require(slicing.size <= nDim) { "Number of slices has to be smalller or equal to number of dimensions but got: ${slicing.size} > $nDim. Slicing: ${slicing.toList()}" }

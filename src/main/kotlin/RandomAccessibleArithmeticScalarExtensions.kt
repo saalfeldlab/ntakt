@@ -125,22 +125,22 @@ operator fun <T : RealType<T>> RandomAccessible<T>.div(value: Double) =
 fun <T : RealType<T>> RandomAccessible<T>.pow(exponent: T) = convert(type) { s, t -> t.set(s);
     t.pow(exponent) }
 
-infix fun <T : RealType<T>> RandomAccessible<T>.`**`(exponent: T) = pow(exponent)
+infix fun <T : RealType<T>> RandomAccessible<T>.`^`(exponent: T) = pow(exponent)
 
 fun <T : RealType<T>> RandomAccessible<T>.pow(exponent: RandomAccessible<T>) = convert(exponent,
     type) { s, t, u -> t.set(s); t.pow(u) }
 
-infix fun <T : RealType<T>> RandomAccessible<T>.`**`(exponent: RandomAccessible<T>) = pow(exponent)
+infix fun <T : RealType<T>> RandomAccessible<T>.`^`(exponent: RandomAccessible<T>) = pow(exponent)
 
 fun <T : RealType<T>> RandomAccessible<T>.pow(exponent: Double) = convert(type) { s, t -> t.set(s);
     t.pow(exponent) }
 
-infix fun <T : RealType<T>> RandomAccessible<T>.`**`(exponent: Double) = pow(exponent)
+infix fun <T : RealType<T>> RandomAccessible<T>.`^`(exponent: Double) = pow(exponent)
 
 fun <T : RealType<T>> RandomAccessible<T>.pow(exponent: Float) = convert(type) { s, t -> t.set(s);
     t.pow(exponent) }
 
-infix fun <T : RealType<T>> RandomAccessible<T>.`**`(exponent: Float) = pow(exponent)
+infix fun <T : RealType<T>> RandomAccessible<T>.`^`(exponent: Float) = pow(exponent)
 
 fun <T : RealType<T>> RandomAccessible<T>.exp(base: T) = convert(type) { s, t -> t.set(s);
     t.exp(base) }

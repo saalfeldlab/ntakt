@@ -187,6 +187,7 @@ private fun generateGenericTypeConversionExtensionFromWildcard(container: ClassN
     val tType = TypeVariableName("T", typeOfT)
 	val lambdaBody = getterSetters.joinToString("; ") { (getter, setter) -> "u.$setter(s.$getter)" }
     return typedFuncSpecBuilder(asTypeName, container.parameterizedBy(WildcardTypeName.producerOf(typeOfR)), tType)
+            .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build())
             .addParameter("t", t)
             .addStatement("return if·(t::class·==·getType()::class)·this·as·%T else·convert(t)·{·s,·u·->·$lambdaBody·}", container.parameterizedBy(t))
             .build()

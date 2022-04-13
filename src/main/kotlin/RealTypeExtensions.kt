@@ -187,10 +187,10 @@ fun <T: RealType<T>> Float.pow(exponent: T) = pow(exponent.realFloat)
 fun <T: RealType<T>> Int.pow(exponent: T) = toDouble().pow(exponent.realDouble)
 fun <T: RealType<T>> T.pow(exponent: RealType<*>) = pow(exponent.getRealDouble())
 fun <T: RealType<T>> T.pow(exponent: IntegerType<*>) = pow(exponent.getInteger())
-infix fun <T: RealType<T>> T.`**`(exponent: Double) = copy().also { pow(exponent) }
-infix fun <T: RealType<T>> T.`**`(exponent: Float) = copy().also { pow(exponent) }
-infix fun <T: RealType<T>> T.`**`(exponent: RealType<*>) = copy().also { pow(exponent) }
-infix fun <T: RealType<T>> T.`**`(exponent: IntegerType<*>) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`^`(exponent: Double) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`^`(exponent: Float) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`^`(exponent: RealType<*>) = copy().also { pow(exponent) }
+infix fun <T: RealType<T>> T.`^`(exponent: IntegerType<*>) = copy().also { pow(exponent) }
 
 // exp
 fun <T: RealType<T>> T.exp(base: Double = E) = setReal(base.pow(realDouble))

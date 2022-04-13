@@ -29,6 +29,7 @@
 package org.ntakt
 
 import kotlin.String
+import kotlin.Suppress
 import kotlin.jvm.JvmStatic
 import net.imglib2.converter.BiConverter
 import net.imglib2.type.Type
@@ -123,6 +124,6 @@ object ArithmeticConverters {
   }
 
   @JvmStatic
-  operator fun <T : NumericType<T>> get(operator: String, type: T): BiConverter<T, T, T> =
-      get(operator)
+  operator fun <T : NumericType<T>> get(operator: String, @Suppress("UNUSED_PARAMETER") type: T):
+      BiConverter<T, T, T> = get(operator)
 }

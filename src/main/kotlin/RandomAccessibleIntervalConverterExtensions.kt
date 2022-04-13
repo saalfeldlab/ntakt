@@ -28,6 +28,7 @@
 
 package org.ntakt
 
+import kotlin.Suppress
 import kotlin.Unit
 import kotlin.jvm.JvmName
 import net.imglib2.converter.BiConverter
@@ -74,14 +75,17 @@ inline fun <T, U, V : Type<V>> RAI<T>.convert(
   ) -> Unit
 ) = convert(that, v, BiConverter { a, b, c -> converter(a, b, c) })
 
+@Suppress("UNCHECKED_CAST")
 fun <T : RealType<T>> RAI<out RealType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RAI<T>
     else convert(t) { s, u -> u.setReal(s.realDouble) }
 
+@Suppress("UNCHECKED_CAST")
 fun <T : IntegerType<T>> RAI<out IntegerType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RAI<T>
     else convert(t) { s, u -> u.setInteger(s.integerLong) }
 
+@Suppress("UNCHECKED_CAST")
 fun <T : ComplexType<T>> RAI<out ComplexType<*>>.asType(t: T) =
     if (t::class == getType()::class) this as RAI<T>
     else convert(t) { s, u -> u.setReal(s.realDouble); u.setImaginary(s.imaginaryDouble) }
