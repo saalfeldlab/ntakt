@@ -45,8 +45,6 @@ import net.imglib2.type.numeric.IntegerType
 import net.imglib2.type.numeric.NumericType
 import net.imglib2.type.numeric.RealType
 import net.imglib2.type.numeric.integer.IntType
-import net.imglib2.type.numeric.integer.LongType
-import net.imglib2.type.numeric.real.DoubleType
 import net.imglib2.type.operators.Add
 import net.imglib2.type.operators.Div
 import net.imglib2.type.operators.Mul
@@ -205,21 +203,10 @@ fun <T, U> RAI<T>.fold(d: Int, initial: U, operation: (U, RAI<T>) -> U): U = hyp
 //@JvmName("meanInt") fun <T: IntegerType<T>> RAI<T>.mean(d: Int): RAI<LongType> = mean(d, types.long)
 //@JvmName("meanReal") fun <T: RealType<T>> RAI<T>.mean(d: Int): RAI<DoubleType> = mean(d, types.double)
 
-fun RAI<out BooleanType<*>>.all(): Boolean = iterable.cursor().let { c ->
-    while (c.hasNext()) {
-        if (!c.next().get())
-            return@let false
-    }
-    true
-}
-
-fun RAI<BooleanType<*>>.any(): Boolean = iterable.cursor().let { c ->
-    while (c.hasNext()) {
-        if (c.next().get())
-            return@let true
-    }
-    false
-}
+inline fun <T> RAI<T>.all(crossinline predicate: (T) -> Boolean): Boolean = iterable.all(predicate)
+inline fun <T> RAI<T>.any(crossinline predicate: (T) -> Boolean): Boolean = iterable.any(predicate)
+fun RAI<out BooleanType<*>>.any(): Boolean = any { it.get() }
+fun RAI<out BooleanType<*>>.all(): Boolean = all { it.get() }
 
 fun RAI<out IntegerType<*>>.toIntArray(useFlatIterationOrder: Boolean = true): IntArray =
     IntArray(numElements.toInt()).also { a -> iterable(useFlatIterationOrder).forEachIndexed { i, type -> a[i] = type.integer } }
