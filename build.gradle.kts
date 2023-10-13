@@ -16,7 +16,7 @@ plugins {
     // gradle header plugin
     id("com.github.hierynomus.license") version "0.16.1"
 
-    `jvm-test-suite`
+//    `jvm-test-suite`
 
     // code coverage
     jacoco
@@ -29,9 +29,9 @@ sourceSets.main {
 
 kotlin.jvmToolchain(8)
 
-testing.suites {
-    val test by getting(JvmTestSuite::class) { useJUnitJupiter() }
-}
+//testing.suites {
+//    val test by getting(JvmTestSuite::class) { useJUnitJupiter() }
+//}
 
 repositories {
     mavenCentral()
@@ -62,7 +62,7 @@ dependencies {
     // tests
     testImplementation(embeddedKotlin("test"))
     testImplementation(embeddedKotlin("test-junit"))
-//    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
 application {
