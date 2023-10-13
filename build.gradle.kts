@@ -1,14 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-val compileKotlin: KotlinCompile by tasks
-val compileTestKotlin: KotlinCompile by tasks
-
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
-compileTestKotlin.kotlinOptions.jvmTarget = compileKotlin.kotlinOptions.jvmTarget
+import ntakt.GenerateCode
 
 plugins {
     // build time extremely slow with Kotlin 1.5.20+
-    kotlin("jvm") version "1.4.32"
+    embeddedKotlin("jvm") //"1.4.32"
 
     // generate documentation
     id("org.jetbrains.dokka") version "1.6.10"
@@ -22,25 +16,32 @@ plugins {
     // gradle header plugin
     id("com.github.hierynomus.license") version "0.16.1"
 
+    `jvm-test-suite`
+
     // code coverage
     jacoco
+}
 
-	// code generation
-	`core-extensions`
-	`logical-extensions`
-	`arithmetic-extensions`
+sourceSets.main {
+    java.srcDir("src/generatedMainJava")
+    kotlin.srcDir("src/generatedMainKotlin")
+}
 
+kotlin.jvmToolchain(8)
+
+testing.suites {
+    val test by getting(JvmTestSuite::class) { useJUnitJupiter() }
 }
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://maven.scijava.org/content/groups/public") }
+    maven("https://maven.scijava.org/content/groups/public")
     mavenLocal()
 }
 
 dependencies {
-    // kotlin std lib
-    implementation(kotlin("stdlib"))
+    // kotlin std lib, implicit
+    //    implementation(kotlin("stdlib"))
 
     // imglib2
     api("net.imglib2:imglib2:5.13.0")
@@ -59,40 +60,45 @@ dependencies {
     implementation("ome:bio-formats_plugins:6.5.0")
 
     // tests
-    testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testImplementation(embeddedKotlin("test"))
+    testImplementation(embeddedKotlin("test-junit"))
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
 application {
     // Define the main class for the application.
-     mainClass.set("NtaktExampleKt")
+    mainClass = "NtaktExampleKt"
 }
 
-tasks.register("publishToFiji", Copy::class) {
-    dependsOn("jar")
-    val fijiAppDir = project.properties["fiji.app.dir"]
-    if (fijiAppDir == null)
-        println("Fiji app dir not defined. Specify -Pfiji.app.dir=/path/to/Fiji.app")
-    else {
-        from("build/libs/${project.name}-${project.version}.jar")
-        destinationDir = File("$fijiAppDir/jars")
+tasks {
+    register<Copy>("publishToFiji") {
+        dependsOn("jar")
+        val fijiAppDir = project.properties["fiji.app.dir"]
+        if (fijiAppDir == null)
+            println("Fiji app dir not defined. Specify -Pfiji.app.dir=/path/to/Fiji.app")
+        else {
+            from("build/libs/${project.name}-${project.version}.jar")
+            destinationDir = File("$fijiAppDir/jars")
+        }
     }
-}
 
-tasks.test {
-    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
-    reports {
-        xml.required.set(true)
-        csv.required.set(true)
-        xml.outputLocation.set(file("${buildDir}/jacoco.xml"))
-        csv.outputLocation.set(file("${buildDir}/jacoco.csv"))
-        html.outputLocation.set(file("${buildDir}/jacocoHtml"))
+    test {
+        finalizedBy(jacocoTestReport) // report is always generatedMain after tests run
     }
+
+    jacocoTestReport {
+        dependsOn(test) // tests are required to run before generating the report
+        reports {
+            xml.required = true
+            csv.required = true
+            xml.outputLocation = file("${layout.buildDirectory}/jacoco.xml")
+            csv.outputLocation = file("${layout.buildDirectory}/jacoco.csv")
+            html.outputLocation = file("${layout.buildDirectory}/jacocoHtml")
+        }
+    }
+
+    val generateCode by registering(GenerateCode::class)
+    kotlin.sourceSets.main { kotlin.srcDir(generateCode) }
 }
 
 publishing {
@@ -124,11 +130,11 @@ publishing {
                 }
                 withXml {
                     asNode()
-                            .appendNode("repositories")
-                            .appendNode("repository").also {
-                                it.appendNode("id", "scijava.public")
-                                it.appendNode("url", "https://maven.scijava.org/content/groups/public")
-                            }
+                        .appendNode("repositories")
+                        .appendNode("repository").also {
+                            it.appendNode("id", "scijava.public")
+                            it.appendNode("url", "https://maven.scijava.org/content/groups/public")
+                        }
                 }
             }
         }

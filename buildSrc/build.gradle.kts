@@ -2,26 +2,9 @@ plugins {
     `kotlin-dsl`
 }
 
-gradlePlugin {
-    plugins {
-        register("core-extensions-plugin") {
-            id = "core-extensions"
-            implementationClass = "CoreExtensionsPlugin"
-        }
-        register("logical-extensions-plugin") {
-            id = "logical-extensions"
-            implementationClass = "LogicalExtensionsPlugin"
-        }
-        register("arithmetic-extensions-plugin") {
-            id = "arithmetic-extensions"
-            implementationClass = "ArithmeticExtensionsPlugin"
-        }
-    }
-}
-
 repositories {
     mavenCentral()
-    maven { url = uri("https://maven.scijava.org/content/groups/public") }
+    maven("https://maven.scijava.org/content/groups/public")
 }
 
 dependencies {
