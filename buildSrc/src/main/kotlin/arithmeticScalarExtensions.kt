@@ -1,18 +1,27 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import net.imglib2.type.numeric.RealType
+import ntakt.GenerateCode
 import kotlin.reflect.KClass
 
-fun generateArithmeticScalarExtensions(`as`: String, fileName: String): String {
-    val kotlinFile =  FileSpec.builder("org.ntakt", fileName)
-    val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
-    for ((operation, operatorName, _) in arithmetics.Operator.values()) {
-        kotlinFile.addFunction(generateArithmeticScalarOperatorSameType(operation, operatorName, container))
-        kotlinFile.addArithmeticScalarOperatorsPrimitiveTypes(operation, operatorName, container)
+fun GenerateCode.arithmeticScalarExtensions() {
+    for ((`as`, name) in getTypeFileMapping("ArithmeticScalar")) {
+//        println("generating arithmetic scalar extensions for $`as` ($name)")
+        arithmeticScalarExtensions(`as`, name.first).writeTo(targetDir.asFile)
     }
-    kotlinFile.addPow(container)
-    kotlinFile.addExp(container)
-    return StringBuilder().also { sb -> kotlinFile.build().writeTo(sb) }.toString()
+}
+
+fun arithmeticScalarExtensions(`as`: String, fileName: String): FileSpec {
+    val kotlinFile = FileSpec.builder(packageName, fileName)
+    val container = containers[`as`] ?: error("Key `$`as`' not present in $containers")
+    for ((operation, operatorName, _) in arithmetics.Operator.values())
+        kotlinFile
+            .addFunction(generateArithmeticScalarOperatorSameType(operation, operatorName, container))
+            .addArithmeticScalarOperatorsPrimitiveTypes(operation, operatorName, container)
+    return kotlinFile
+        .addPow(container)
+        .addExp(container)
+        .build()
 }
 
 private fun generateArithmeticScalarOperatorSameType(name: String, operator: String, container: ClassName): FunSpec {
@@ -22,10 +31,10 @@ private fun generateArithmeticScalarOperatorSameType(name: String, operator: Str
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
 
     return typedFuncSpecBuilder(name, container.parameterizedBy(genericT), boundedT)
-            .addModifiers(KModifier.OPERATOR)
-            .addParameter("value", genericT)
-            .addStatement("return convert(type)·{·s,·t ->·t.set(s); t $operator= value }")
-            .build()
+        .addModifiers(KModifier.OPERATOR)
+        .addParameter("value", genericT)
+        .addStatement("return convert(type)·{·s,·t ->·t.set(s); t $operator= value }")
+        .build()
 }
 
 private fun FileSpec.Builder.addArithmeticScalarOperatorsPrimitiveTypes(name: String, operator: String, container: ClassName): FileSpec.Builder {
@@ -37,10 +46,10 @@ private fun generateArithmeticScalarOperatorsPrimitiveType(name: String, operato
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     // TODO consider possible range of value based on primitiveType and choose return type accordingly
     return typedFuncSpecBuilder(name, container.parameterizedBy(genericT), boundedT)
-            .addModifiers(KModifier.OPERATOR)
-            .addParameter("value", primitiveType)
-            .addStatement("return this·$operator·type.also·{·it.setTo(value) }")
-            .build()
+        .addModifiers(KModifier.OPERATOR)
+        .addParameter("value", primitiveType)
+        .addStatement("return this·$operator·type.also·{·it.setTo(value) }")
+        .build()
 }
 
 private fun FileSpec.Builder.addPow(container: ClassName): FileSpec.Builder {
@@ -57,53 +66,53 @@ private fun FileSpec.Builder.addPow(container: ClassName): FileSpec.Builder {
 private fun generatePowContainer(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("pow", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", container.parameterizedBy(genericT))
-            .addStatement("return convert(exponent, type) { s, t, u -> t.set(s); t.pow(u) }")
-            .build()
+        .addParameter("exponent", container.parameterizedBy(genericT))
+        .addStatement("return convert(exponent, type) { s, t, u -> t.set(s); t.pow(u) }")
+        .build()
 }
 
 // TODO this should probably live in a different file
 private fun `generate^InfixContainer`(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("^", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", container.parameterizedBy(genericT))
-            .addModifiers(KModifier.INFIX)
-            .addStatement("return pow(exponent)")
-            .build()
+        .addParameter("exponent", container.parameterizedBy(genericT))
+        .addModifiers(KModifier.INFIX)
+        .addStatement("return pow(exponent)")
+        .build()
 }
 
 private fun generatePow(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("pow", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", genericT)
-            .addStatement("return convert(type) { s, t -> t.set(s); t.pow(exponent) }")
-            .build()
+        .addParameter("exponent", genericT)
+        .addStatement("return convert(type) { s, t -> t.set(s); t.pow(exponent) }")
+        .build()
 }
 
 private fun `generate^Infix`(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("^", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", genericT)
-            .addModifiers(KModifier.INFIX)
-            .addStatement("return pow(exponent)")
-            .build()
+        .addParameter("exponent", genericT)
+        .addModifiers(KModifier.INFIX)
+        .addStatement("return pow(exponent)")
+        .build()
 }
 
 private fun generatePow(container: ClassName, type: TypeName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("pow", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", type)
-            .addStatement("return convert(type) { s, t -> t.set(s); t.pow(exponent) }")
-            .build()
+        .addParameter("exponent", type)
+        .addStatement("return convert(type) { s, t -> t.set(s); t.pow(exponent) }")
+        .build()
 }
 
 private fun `generate^Infix`(container: ClassName, type: TypeName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("^", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", type)
-            .addModifiers(KModifier.INFIX)
-            .addStatement("return pow(exponent)")
-            .build()
+        .addParameter("exponent", type)
+        .addModifiers(KModifier.INFIX)
+        .addStatement("return pow(exponent)")
+        .build()
 }
 
 private fun FileSpec.Builder.addExp(container: ClassName): FileSpec.Builder {
@@ -118,26 +127,26 @@ private fun FileSpec.Builder.addExp(container: ClassName): FileSpec.Builder {
 private fun generateExp(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
-            .addParameter("base", genericT)
-            .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
-            .build()
+        .addParameter("base", genericT)
+        .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
+        .build()
 }
 
 // TODO this should probably live in a different file
 private fun generateExpContainer(container: ClassName): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
-            .addParameter("exponent", container.parameterizedBy(genericT))
-            .addStatement("return convert(exponent, type) { s, t, u -> t.set(s); t.exp(u) }")
-            .build()
+        .addParameter("exponent", container.parameterizedBy(genericT))
+        .addStatement("return convert(exponent, type) { s, t, u -> t.set(s); t.exp(u) }")
+        .build()
 }
 
 private fun generateExp(container: ClassName, type: TypeName, defaultValue: Any? = null): FunSpec {
     val (genericT, boundedT) = "T".genericAndBounded(RealType::class)
     return typedFuncSpecBuilder("exp", container.parameterizedBy(genericT), boundedT)
-            .let { b -> defaultValue?.let { b.addParameter(ParameterSpec.builder("base", type).defaultValue("$defaultValue").build()) } ?: b.addParameter("base", type) }
-            .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
-            .build()
+        .let { b -> defaultValue?.let { b.addParameter(ParameterSpec.builder("base", type).defaultValue("$defaultValue").build()) } ?: b.addParameter("base", type) }
+        .addStatement("return convert(type) { s, t -> t.set(s); t.exp(base) }")
+        .build()
 }
 
 //infix fun <T: RealType<T>> RandomAccessibleInterval<T>.`^`(exponent: RandomAccessibleInterval<T>) = convert(exponent, type) { t, u, v -> v.set(t); v.pow(u) }

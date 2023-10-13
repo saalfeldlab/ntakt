@@ -1,26 +1,23 @@
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import net.imglib2.*
+import net.imglib2.RandomAccessible
+import net.imglib2.RandomAccessibleInterval
+import net.imglib2.RealRandomAccessible
+import net.imglib2.RealRandomAccessibleRealInterval
+import net.imglib2.type.numeric.complex.ComplexDoubleType
+import net.imglib2.type.numeric.complex.ComplexFloatType
+import net.imglib2.type.numeric.integer.*
+import net.imglib2.type.numeric.real.DoubleType
+import net.imglib2.type.numeric.real.FloatType
 import net.imglib2.type.operators.Add
 import net.imglib2.type.operators.Div
 import net.imglib2.type.operators.Mul
 import net.imglib2.type.operators.Sub
-import net.imglib2.type.numeric.complex.ComplexDoubleType
-import net.imglib2.type.numeric.complex.ComplexFloatType
-import net.imglib2.type.numeric.integer.ByteType
-import net.imglib2.type.numeric.integer.IntType
-import net.imglib2.type.numeric.integer.LongType
-import net.imglib2.type.numeric.integer.ShortType
-import net.imglib2.type.numeric.integer.UnsignedByteType
-import net.imglib2.type.numeric.integer.UnsignedIntType
-import net.imglib2.type.numeric.integer.UnsignedLongType
-import net.imglib2.type.numeric.integer.UnsignedShortType
-import net.imglib2.type.numeric.real.DoubleType
-import net.imglib2.type.numeric.real.FloatType
 import java.io.File
 import kotlin.reflect.KClass
 
 val packageName = "org.ntakt"
+val packagePath = "org/ntakt"
 
 val primitiveTypes = arrayOf(
         Byte::class,
@@ -31,8 +28,8 @@ val primitiveTypes = arrayOf(
         Double::class
 )
 
-val outputDir = File("src/main/kotlin")
-val outputDirJava = File("src/main/java")
+val outputDir = File("src/generatedMainKotlin")
+val outputDirJava = File("src/generatedMainJava")
 
 val accessibles = listOf(
     RandomAccessible::class,
@@ -48,7 +45,7 @@ val containers = containersClasses.mapValues { it.value.asTypeName() }
 
 val extensionTypes = accessibles.map { it.simpleName!! }
 
-val extensionTypeToAbbreviationMapping = extensionTypes.associateBy({ it }, { it.filter { it.isUpperCase() } })
+val extensionTypeToAbbreviationMapping = extensionTypes.associateBy({ it }, { it.filter { n -> n.isUpperCase() } })
 val abbreviationToExtensionTypeMapping = extensionTypes.associateBy({ it.filter { n -> n.isUpperCase() } }, { it })
 
 fun getTypeFileMapping(extensionIdentifier: String) = abbreviationToExtensionTypeMapping
